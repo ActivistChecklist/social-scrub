@@ -1,40 +1,9 @@
 // Random name and username generators for privacy
 
-// Placeholder names (will be enhanced later with more sophisticated generation)
-const FIRST_NAMES = [
-  'Alex', 'Jordan', 'Sam', 'Taylor', 'Morgan',
-  'Casey', 'Riley', 'Avery', 'Quinn', 'Reese',
-  'Parker', 'Skylar', 'River', 'Dakota', 'Phoenix',
-];
-
-const LAST_NAMES = [
-  'Smith', 'Chen', 'Garcia', 'Patel', 'Kim',
-  'Johnson', 'Rodriguez', 'Lopez', 'Lee', 'Brown',
-  'Martinez', 'Davis', 'Anderson', 'Wilson', 'Taylor',
-];
-
-// Import session-id word lists for username generation
-const ADJECTIVES = [
-  'happy', 'bright', 'quick', 'calm', 'bold',
-  'clever', 'gentle', 'swift', 'wise', 'brave',
-  'kind', 'cool', 'warm', 'fresh', 'pure',
-  'fair', 'neat', 'fine', 'keen', 'sharp',
-  'clear', 'smooth', 'crisp', 'light', 'soft',
-  'sweet', 'rich', 'grand', 'proud', 'royal',
-  'noble', 'prime', 'super', 'ultra', 'mega',
-  'great', 'best', 'top', 'star', 'ace',
-];
-
-const NOUNS = [
-  'dolphin', 'eagle', 'tiger', 'bear', 'wolf',
-  'hawk', 'lion', 'fox', 'deer', 'owl',
-  'falcon', 'raven', 'panda', 'koala', 'otter',
-  'penguin', 'robin', 'sparrow', 'swan', 'crane',
-  'forest', 'mountain', 'river', 'ocean', 'lake',
-  'valley', 'meadow', 'canyon', 'glacier', 'coast',
-  'breeze', 'thunder', 'lightning', 'rainbow', 'sunset',
-  'aurora', 'comet', 'nebula', 'galaxy', 'cosmos',
-];
+import { FIRST_NAMES } from './wordlists/first-names';
+import { LAST_NAMES } from './wordlists/last-names';
+import { ADJECTIVES } from './wordlists/adjectives';
+import { NOUNS } from './wordlists/nouns';
 
 /**
  * Generate a random display name
