@@ -25,8 +25,7 @@ export default function PrivacyPage() {
             </h2>
             <p>
               Social Scrub is designed to help you protect your privacy, so we try to collect as
-              little data as possible. Your session data stays in your browser&apos;s local storage
-              unless you choose to save it for later.
+              little data as possible. Your session data stays in your browser&apos;s local storage.
             </p>
           </section>
 
@@ -74,10 +73,8 @@ export default function PrivacyPage() {
               Your data
             </h2>
             <p>
-              All your progress and platform selections are stored locally in your browser. If you
-              use the &quot;Save for Later&quot; feature, your session is temporarily stored on our
-              server so you can access it from another device. This data is not linked to any
-              personal information.
+              All your progress and platform selections are stored locally in your browser. 
+              Nothing is ever stored on our servers.
             </p>
           </section>
 
