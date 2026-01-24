@@ -21,10 +21,10 @@ export default function ContinueCTA({ nextPlatform }: ContinueCTAProps) {
   return (
     <button
       onClick={() => router.push(`/platform/${nextPlatform.platformId}`)}
-      className="w-full group"
+      className="w-full md:w-auto group text-left"
     >
       {/* Bright, attention-grabbing card */}
-      <div className="bg-emerald-600 dark:bg-emerald-700 rounded-2xl p-5 hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 dark:shadow-emerald-900/50">
+      <div className="bg-emerald-600 dark:bg-emerald-700 rounded-2xl p-5 hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 dark:shadow-emerald-900/50 md:pr-8">
         <div className="flex items-center gap-4">
           {/* Platform icon in white container */}
           <div className="flex-shrink-0 bg-white rounded-xl p-3">
