@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
@@ -43,6 +43,31 @@ function sortPlatformsWithinGroup(platforms: PlatformProgress[]): PlatformProgre
   });
 }
 
+// Sort by status for initial load, returning sorted IDs per priority
+function getSortedPlatformIds(
+  platforms: PlatformProgress[],
+  getPlatformFn: typeof getPlatform
+): Record<string, string[]> {
+  const groups: Record<string, PlatformProgress[]> = {};
+
+  platforms.forEach((progress) => {
+    const platform = getPlatformFn(progress.platformId);
+    if (!platform) return;
+    const priority = platform.priority || 'low';
+    if (!groups[priority]) {
+      groups[priority] = [];
+    }
+    groups[priority].push(progress);
+  });
+
+  const result: Record<string, string[]> = {};
+  Object.keys(groups).forEach(priority => {
+    result[priority] = sortPlatformsWithinGroup(groups[priority]).map(p => p.platformId);
+  });
+
+  return result;
+}
+
 type ViewMode = 'cards' | 'spreadsheet';
 
 type PriorityLevel = 'highest' | 'high' | 'medium' | 'low';
@@ -63,12 +88,35 @@ export default function Dashboard() {
   const [showAddPlatformsModal, setShowAddPlatformsModal] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
 
+  // Stable sort order - captured on initial load and only updated when switching to spreadsheet view
+  const stableSortOrderRef = useRef<Record<string, string[]> | null>(null);
+  const [sortKey, setSortKey] = useState(0); // Used to trigger re-sort
+
   useEffect(() => {
     // Redirect to home if no session
     if (!isLoading && !hasSession) {
       router.push('/');
     }
   }, [isLoading, hasSession, router]);
+
+  // Capture initial sort order when session loads or when entering spreadsheet view
+  useEffect(() => {
+    if (session && viewMode === 'spreadsheet' && !stableSortOrderRef.current) {
+      stableSortOrderRef.current = getSortedPlatformIds(session.platforms, getPlatform);
+    }
+  }, [session, viewMode]);
+
+  // Re-sort when switching to spreadsheet view
+  const handleViewModeChange = (newMode: ViewMode) => {
+    if (newMode === 'spreadsheet') {
+      // Capture fresh sort order when entering spreadsheet view
+      if (session) {
+        stableSortOrderRef.current = getSortedPlatformIds(session.platforms, getPlatform);
+        setSortKey(k => k + 1);
+      }
+    }
+    setViewMode(newMode);
+  };
 
   // Find the next platform to work on
   const nextPlatform = useMemo(() => {
@@ -124,11 +172,13 @@ export default function Dashboard() {
     });
   }, [session]);
 
-  // Get grouped platforms with their info for compact/spreadsheet views, sorted within each group
+  // Get grouped platforms with their info for compact/spreadsheet views
+  // Use stable sort order that only updates when entering spreadsheet view
   const groupedPlatformsWithInfo = useMemo(() => {
     if (!session) return {};
 
     const groups: Record<string, Array<{ platform: Platform; progress: typeof session.platforms[0] }>> = {};
+    const stableOrder = stableSortOrderRef.current;
 
     session.platforms.forEach((progress) => {
       const platform = getPlatform(progress.platformId);
@@ -141,30 +191,45 @@ export default function Dashboard() {
       groups[priority].push({ platform, progress });
     });
 
-    // Sort each group: completed, deleted, in-progress, then not started
-    // Within each status group, maintain original order (priority order)
-    Object.keys(groups).forEach(priority => {
-      groups[priority].sort((a, b) => {
-        const aDeleted = a.progress.method === 'deleted';
-        const bDeleted = b.progress.method === 'deleted';
-        const aCompleted = a.progress.status === 'secured' && !aDeleted;
-        const bCompleted = b.progress.status === 'secured' && !bDeleted;
-        const aInProgress = a.progress.status === 'in_progress';
-        const bInProgress = b.progress.status === 'in_progress';
-
-        if (aCompleted && !bCompleted) return -1;
-        if (!aCompleted && bCompleted) return 1;
-        if (aDeleted && !bDeleted) return -1;
-        if (!aDeleted && bDeleted) return 1;
-        if (aInProgress && !bInProgress) return -1;
-        if (!aInProgress && bInProgress) return 1;
-        // Maintain original order within same status group
-        return 0;
+    // If we have a stable order, use it instead of re-sorting
+    if (stableOrder) {
+      Object.keys(groups).forEach(priority => {
+        const order = stableOrder[priority] || [];
+        groups[priority].sort((a, b) => {
+          const aIndex = order.indexOf(a.platform.id);
+          const bIndex = order.indexOf(b.platform.id);
+          // Items not in original order go to the end
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
       });
-    });
+    } else {
+      // Fall back to status-based sort if no stable order yet
+      Object.keys(groups).forEach(priority => {
+        groups[priority].sort((a, b) => {
+          const aDeleted = a.progress.method === 'deleted';
+          const bDeleted = b.progress.method === 'deleted';
+          const aCompleted = a.progress.status === 'secured' && !aDeleted;
+          const bCompleted = b.progress.status === 'secured' && !bDeleted;
+          const aInProgress = a.progress.status === 'in_progress';
+          const bInProgress = b.progress.status === 'in_progress';
+
+          if (aCompleted && !bCompleted) return -1;
+          if (!aCompleted && bCompleted) return 1;
+          if (aDeleted && !bDeleted) return -1;
+          if (!aDeleted && bDeleted) return 1;
+          if (aInProgress && !bInProgress) return -1;
+          if (!aInProgress && bInProgress) return 1;
+          return 0;
+        });
+      });
+    }
 
     return groups;
-  }, [session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, sortKey]);
 
 
   const handleAddPlatforms = (platformIds: string[]) => {
@@ -191,7 +256,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                Your Dashboard
+                Social Scrub Dashboard
               </h1>
               {session.storageType === 'server' && (
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -244,7 +309,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-end">
                 <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                   <button
-                    onClick={() => setViewMode('cards')}
+                    onClick={() => handleViewModeChange('cards')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                       viewMode === 'cards'
                         ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
@@ -255,7 +320,7 @@ export default function Dashboard() {
                     Cards
                   </button>
                   <button
-                    onClick={() => setViewMode('spreadsheet')}
+                    onClick={() => handleViewModeChange('spreadsheet')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                       viewMode === 'spreadsheet'
                         ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'

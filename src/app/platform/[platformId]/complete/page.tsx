@@ -8,7 +8,7 @@ import { TOTAL_STEPS } from '@/lib/steps';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
 import Celebration from '@/components/Celebration';
-import { ChevronRight, Shield, Trash2, ArrowLeft, Check, LayoutDashboard, Save } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Check, LayoutDashboard, Save } from 'lucide-react';
 
 interface CompletePageProps {
   params: { platformId: string };
@@ -56,20 +56,60 @@ export default function PlatformComplete({ params }: CompletePageProps) {
   const { session, isLoading, getPlatform: getPlatformProgress, completePlatform } = useSession();
   const [showCelebration, setShowCelebration] = useState(false);
 
-  const platform = getPlatform(platformId);
+  // Try to get built-in platform first, then check custom sites
+  let platform = getPlatform(platformId);
+
+  if (!platform && session) {
+    const customSite = session.customSites.find(s => s.id === platformId);
+    if (customSite) {
+      platform = {
+        id: customSite.id,
+        name: customSite.name,
+        icon: undefined,
+        category: 'other' as const,
+        priority: customSite.priority === 'high' ? 'high' : customSite.priority === 'medium' ? 'medium' : 'low',
+      };
+    }
+  }
+
   const progress = getPlatformProgress(platformId);
 
-  // Find the next platform to work on
+  // Find the next platform to work on (including custom platforms)
   const nextPlatform = useMemo(() => {
     if (!session) return null;
 
-    const notStarted = session.platforms.find(
+    // First check built-in platforms
+    const notStartedBuiltIn = session.platforms.find(
       p => p.status === 'not_started' && p.platformId !== platformId
     );
-    if (!notStarted) return null;
+    if (notStartedBuiltIn) {
+      const platformInfo = getPlatform(notStartedBuiltIn.platformId);
+      return platformInfo ? { progress: notStartedBuiltIn, info: platformInfo, isCustom: false } : null;
+    }
 
-    const platformInfo = getPlatform(notStarted.platformId);
-    return platformInfo ? { progress: notStarted, info: platformInfo } : null;
+    // Then check custom platforms
+    const notStartedCustom = session.customSites.find(
+      s => s.status === 'not_started' && s.id !== platformId
+    );
+    if (notStartedCustom) {
+      const customInfo = {
+        id: notStartedCustom.id,
+        name: notStartedCustom.name,
+        icon: undefined,
+        category: 'other' as const,
+        priority: notStartedCustom.priority === 'high' ? 'high' : notStartedCustom.priority === 'medium' ? 'medium' : 'low',
+      };
+      return {
+        progress: {
+          platformId: notStartedCustom.id,
+          status: notStartedCustom.status
+        },
+        info: customInfo,
+        isCustom: true
+      };
+    }
+
+    return null;
   }, [session, platformId]);
 
   // Trigger celebration on mount
@@ -110,7 +150,9 @@ export default function PlatformComplete({ params }: CompletePageProps) {
     }
   };
 
-  const allPlatformsSecured = session && session.platforms.filter(p => p.status === 'secured').length === session.platforms.length;
+  const allPlatformsSecured = session &&
+    session.platforms.filter(p => p.status === 'secured').length === session.platforms.length &&
+    session.customSites.filter(s => s.status === 'secured').length === session.customSites.length;
 
   return (
     <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
@@ -136,20 +178,13 @@ export default function PlatformComplete({ params }: CompletePageProps) {
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
             {/* Left side: Success info */}
             <div className="flex-1 text-center lg:text-left mb-8 lg:mb-0 animate-fade-in">
-              {/* Platform icon - moved to top, success icon integrated */}
-              <div className="mb-6 flex justify-center lg:justify-start items-center gap-4">
+              {/* Platform icon */}
+              <div className="mb-6 flex justify-center lg:justify-start">
                 <PlatformIcon
                   iconName={platform.icon}
                   platformName={platform.name}
                   size={48}
                 />
-                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                  {wasDeleted ? (
-                    <Trash2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <Shield className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                  )}
-                </div>
               </div>
 
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">

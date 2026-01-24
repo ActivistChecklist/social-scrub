@@ -123,7 +123,12 @@ export function markStepComplete(
     : [...completedSteps, stepNumber];
 
   const nextStep = stepNumber + 1;
-  const isComplete = newCompletedSteps.length + newSkippedSteps.length >= TOTAL_STEPS;
+
+  // For completion, only count non-delete steps (2-9)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = newCompletedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = newSkippedSteps.filter(s => s > 1).length;
+  const isComplete = completedNonDeleteSteps + skippedNonDeleteSteps >= nonDeleteStepsCount;
 
   return updatePlatformProgress(session, platformId, {
     completedSteps: newCompletedSteps,
@@ -152,7 +157,12 @@ export function markStepSkipped(
     : [...skippedSteps, stepNumber];
 
   const nextStep = stepNumber + 1;
-  const isComplete = newCompletedSteps.length + newSkippedSteps.length >= TOTAL_STEPS;
+
+  // For completion, only count non-delete steps (2-9)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = newCompletedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = newSkippedSteps.filter(s => s > 1).length;
+  const isComplete = completedNonDeleteSteps + skippedNonDeleteSteps >= nonDeleteStepsCount;
 
   return updatePlatformProgress(session, platformId, {
     completedSteps: newCompletedSteps,
@@ -202,9 +212,12 @@ export function clearStep(
   const newCompletedSteps = progress.completedSteps.filter(s => s !== stepNumber);
   const newSkippedSteps = progress.skippedSteps.filter(s => s !== stepNumber);
 
-  // Recalculate status
-  const totalHandled = newCompletedSteps.length + newSkippedSteps.length;
-  const isComplete = totalHandled >= TOTAL_STEPS;
+  // Recalculate status (only count non-delete steps 2-9)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = newCompletedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = newSkippedSteps.filter(s => s > 1).length;
+  const totalHandled = completedNonDeleteSteps + skippedNonDeleteSteps;
+  const isComplete = totalHandled >= nonDeleteStepsCount;
   const isInProgress = totalHandled > 0 && !isComplete;
 
   return updatePlatformProgress(session, platformId, {
@@ -247,6 +260,16 @@ export function calculatePlatformProgress(progress: PlatformProgress): number {
     return 100;
   }
 
-  const totalHandled = progress.completedSteps.length + progress.skippedSteps.length;
-  return Math.round((totalHandled / TOTAL_STEPS) * 100);
+  // If account was deleted, it's 100% complete
+  if (progress.method === 'deleted') {
+    return 100;
+  }
+
+  // For non-deleted accounts, only count steps 2-9 (exclude delete step 1)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = progress.completedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = progress.skippedSteps.filter(s => s > 1).length;
+  const totalHandled = completedNonDeleteSteps + skippedNonDeleteSteps;
+
+  return Math.round((totalHandled / nonDeleteStepsCount) * 100);
 }

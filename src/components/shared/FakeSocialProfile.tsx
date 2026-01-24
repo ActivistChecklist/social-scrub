@@ -18,7 +18,7 @@ export const BEFORE_PROFILE: ProfileData = {
   hasPhoto: true,
   name: 'Luke Skywalker',
   username: '@lukeskywalker',
-  bio: 'Jedi Knight | Tatooine native | Rebel Alliance',
+  bio: 'Tatooine native | Rebel Alliance leader',
   email: 'luke@gmail.com',
   postsCount: '847',
   friendsCount: '1.2K',

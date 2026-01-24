@@ -55,7 +55,7 @@ export default function OnboardingWelcome() {
                   profiles, and you can lock it down.
                 </p>
                 <a
-                  href="https://activistchecklist.org/"
+                  href="https://activistchecklist.org/doxxing/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium text-sm underline"
