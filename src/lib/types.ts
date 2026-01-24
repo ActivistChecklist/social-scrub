@@ -42,6 +42,7 @@ export interface Platform {
   hasBlockParty?: boolean;
   privacyUrl?: string;
   deleteUrl?: string;
+  importanceReason?: string; // Why this platform is important for privacy
 }
 
 export type PlatformCategory =

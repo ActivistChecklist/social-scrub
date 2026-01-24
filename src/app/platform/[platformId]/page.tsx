@@ -215,6 +215,20 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
             </p>
           </div>
 
+          {/* Why this platform is important */}
+          {platform.importanceReason && (
+            <div className="mb-8 max-w-xl mx-auto">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-left">
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2">
+                  Why this matters:
+                </p>
+                <p className="text-sm text-blue-800 dark:text-blue-300">
+                  {platform.importanceReason}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Before/After Preview */}
           <div className="mb-8">
             <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">
