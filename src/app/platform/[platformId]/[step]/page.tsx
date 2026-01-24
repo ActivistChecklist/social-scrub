@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatform } from '@/lib/platforms';
 import { getStep, TOTAL_STEPS } from '@/lib/steps';
 import Button from '@/components/ui/Button';
@@ -35,6 +36,7 @@ export default function StepPage({ params }: StepPageProps) {
     skipStep,
     deletePlatform,
   } = useSession();
+  const { trackStepComplete, trackStepSkip, trackPlatformDelete } = useAnalytics();
 
   // State for delete step flow
   const [showDeleteInstructions, setShowDeleteInstructions] = useState(false);
@@ -87,6 +89,7 @@ export default function StepPage({ params }: StepPageProps) {
   const handleDone = () => {
     setIsNavigating(true);
     completeStep(platformId, stepNumber);
+    trackStepComplete(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
       // Check if there are skipped steps (excluding delete step 1)
       // After completing this step, the skipped steps remain the same
@@ -100,6 +103,7 @@ export default function StepPage({ params }: StepPageProps) {
   const handleSkip = () => {
     setIsNavigating(true);
     skipStep(platformId, stepNumber);
+    trackStepSkip(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
       // After skipping this step, we'll have at least this step as skipped
       // So always go to incomplete
@@ -111,6 +115,7 @@ export default function StepPage({ params }: StepPageProps) {
 
   const handleDeleteAccount = () => {
     deletePlatform(platformId);
+    trackPlatformDelete(platformId);
     router.push(`/platform/${platformId}/complete`);
   };
 

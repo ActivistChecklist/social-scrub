@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatformsByPriority, PRIORITY_LABELS } from '@/lib/platforms';
 import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
@@ -12,6 +13,7 @@ import { Plus, X, Check, ArrowDown } from 'lucide-react';
 export default function PlatformSelection() {
   const router = useRouter();
   const { completeOnboarding, addCustomPlatforms } = useSession();
+  const { trackOnboardingComplete } = useAnalytics();
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set());
   const [expanded, setExpanded] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
@@ -83,6 +85,7 @@ export default function PlatformSelection() {
     if (customPlatforms.length > 0) {
       addCustomPlatforms(customPlatforms);
     }
+    trackOnboardingComplete(totalSelected);
     router.push('/dashboard');
   };
 

@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
@@ -18,8 +19,10 @@ export default function PlatformComplete({ params }: CompletePageProps) {
   const { platformId } = params;
   const router = useRouter();
   const { session, isLoading, getPlatform: getPlatformProgress } = useSession();
+  const { trackPlatformComplete } = useAnalytics();
   const [showCelebration, setShowCelebration] = useState(false);
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
+  const hasTrackedCompletion = useRef(false);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -77,11 +80,21 @@ export default function PlatformComplete({ params }: CompletePageProps) {
     return null;
   }, [session, platformId]);
 
-  // Trigger celebration on mount
+  // Trigger celebration and track completion on mount
   useEffect(() => {
     const timer = setTimeout(() => setShowCelebration(true), 300);
     return () => clearTimeout(timer);
   }, []);
+
+  // Track platform completion (only once)
+  useEffect(() => {
+    if (!hasTrackedCompletion.current && progress) {
+      hasTrackedCompletion.current = true;
+      const method = progress.method === 'deleted' ? 'deleted' :
+                     (progress.skippedSteps?.length ?? 0) > 0 ? 'skipped' : 'secured';
+      trackPlatformComplete(platformId, method);
+    }
+  }, [progress, platformId, trackPlatformComplete]);
 
   useEffect(() => {
     if (!isLoading && !platform) {
