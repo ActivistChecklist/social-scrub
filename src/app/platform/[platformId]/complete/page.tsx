@@ -89,14 +89,7 @@ export default function PlatformComplete({ params }: CompletePageProps) {
     }
   }, [isLoading, platform, router]);
 
-  // If there are skipped steps and not deleted, redirect to incomplete page
   const wasDeleted = progress?.method === 'deleted';
-  const skippedCount = progress?.skippedSteps.filter(s => s > 1).length || 0;
-  useEffect(() => {
-    if (!isLoading && progress && !wasDeleted && skippedCount > 0) {
-      router.replace(`/platform/${platformId}/incomplete`);
-    }
-  }, [isLoading, progress, wasDeleted, skippedCount, platformId, router]);
 
   if (isLoading || !platform) {
     return (

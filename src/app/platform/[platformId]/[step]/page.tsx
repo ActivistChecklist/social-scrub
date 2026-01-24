@@ -88,7 +88,10 @@ export default function StepPage({ params }: StepPageProps) {
     setIsNavigating(true);
     completeStep(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
-      router.push(`/platform/${platformId}/complete`);
+      // Check if there are skipped steps (excluding delete step 1)
+      // After completing this step, the skipped steps remain the same
+      const hasSkippedSteps = skippedSteps.filter(s => s > 1).length > 0;
+      router.push(`/platform/${platformId}/${hasSkippedSteps ? 'incomplete' : 'complete'}`);
     } else {
       router.push(`/platform/${platformId}/${stepNumber + 1}`);
     }
@@ -98,7 +101,9 @@ export default function StepPage({ params }: StepPageProps) {
     setIsNavigating(true);
     skipStep(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
-      router.push(`/platform/${platformId}/complete`);
+      // After skipping this step, we'll have at least this step as skipped
+      // So always go to incomplete
+      router.push(`/platform/${platformId}/incomplete`);
     } else {
       router.push(`/platform/${platformId}/${stepNumber + 1}`);
     }

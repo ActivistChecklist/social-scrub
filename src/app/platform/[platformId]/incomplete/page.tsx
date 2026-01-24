@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
@@ -8,7 +8,7 @@ import { TOTAL_STEPS } from '@/lib/steps';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
 import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
-import { ChevronRight, ArrowLeft, Check, LayoutDashboard, Save, Info } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Save, Info } from 'lucide-react';
 
 interface IncompletePageProps {
   params: { platformId: string };
@@ -72,44 +72,6 @@ export default function PlatformIncomplete({ params }: IncompletePageProps) {
 
   const progress = getPlatformProgress(platformId);
 
-  // Find the next platform to work on (including custom platforms)
-  const nextPlatform = useMemo(() => {
-    if (!session) return null;
-
-    // First check built-in platforms
-    const notStartedBuiltIn = session.platforms.find(
-      p => p.status === 'not_started' && p.platformId !== platformId
-    );
-    if (notStartedBuiltIn) {
-      const platformInfo = getPlatform(notStartedBuiltIn.platformId);
-      return platformInfo ? { progress: notStartedBuiltIn, info: platformInfo, isCustom: false } : null;
-    }
-
-    // Then check custom platforms
-    const notStartedCustom = session.customSites.find(
-      s => s.status === 'not_started' && s.id !== platformId
-    );
-    if (notStartedCustom) {
-      const customInfo = {
-        id: notStartedCustom.id,
-        name: notStartedCustom.name,
-        icon: undefined,
-        category: 'other' as const,
-        priority: notStartedCustom.priority === 'high' ? 'high' : notStartedCustom.priority === 'medium' ? 'medium' : 'low',
-      };
-      return {
-        progress: {
-          platformId: notStartedCustom.id,
-          status: notStartedCustom.status
-        },
-        info: customInfo,
-        isCustom: true
-      };
-    }
-
-    return null;
-  }, [session, platformId]);
-
   useEffect(() => {
     if (!isLoading && !platform) {
       router.push('/dashboard');
@@ -148,20 +110,14 @@ export default function PlatformIncomplete({ params }: IncompletePageProps) {
   };
 
   const handleContinueLater = () => {
-    if (nextPlatform) {
-      router.push(`/platform/${nextPlatform.progress.platformId}`);
-    } else {
-      router.push('/dashboard');
-    }
+    // Don't mark complete - just move on (they'll come back later)
+    router.push(`/platform/${platformId}/complete`);
   };
 
   const handleMarkComplete = () => {
+    // Mark as complete even with skipped steps
     completePlatform(platformId);
-    if (nextPlatform) {
-      router.push(`/platform/${nextPlatform.progress.platformId}`);
-    } else {
-      router.push('/dashboard');
-    }
+    router.push(`/platform/${platformId}/complete`);
   };
 
   return (
@@ -216,34 +172,14 @@ export default function PlatformIncomplete({ params }: IncompletePageProps) {
 
             {/* Right side: Actions */}
             <div className="lg:w-96 space-y-3">
-              {/* Option 1 (Default): Continue to next platform, come back later */}
+              {/* Option 1 (Default): Come back to skipped steps later */}
               <Button
                 size="lg"
                 onClick={handleContinueLater}
-                className="w-full flex flex-col items-center justify-center gap-0.5 py-4"
+                className="w-full flex items-center justify-center gap-2 py-4"
               >
-                <span className="flex items-center gap-2">
-                  {nextPlatform ? (
-                    <>
-                      <PlatformIcon
-                        iconName={nextPlatform.info.icon}
-                        platformName={nextPlatform.info.name}
-                        size={18}
-                        variant="light"
-                      />
-                      Continue to {nextPlatform.info.name}
-                    </>
-                  ) : (
-                    <>
-                      <LayoutDashboard size={18} />
-                      Go to Dashboard
-                    </>
-                  )}
-                  <ChevronRight size={18} />
-                </span>
-                <span className="text-xs opacity-80">
-                  I&apos;ll come back to these {skippedCount} step{skippedCount !== 1 ? 's' : ''} later
-                </span>
+                I&apos;ll come back to these {skippedCount} step{skippedCount !== 1 ? 's' : ''} later
+                <ChevronRight size={18} />
               </Button>
 
               {/* Option 2: Mark as finished anyway */}
@@ -251,27 +187,19 @@ export default function PlatformIncomplete({ params }: IncompletePageProps) {
                 size="lg"
                 variant="outline"
                 onClick={handleMarkComplete}
-                className="w-full flex flex-col items-center justify-center gap-0.5 py-3"
+                className="w-full py-3"
               >
-                <span className="flex items-center gap-2">
-                  <Check size={18} />
-                  Mark {platform.name} as done
-                </span>
-                <span className="text-xs opacity-70">
-                  (even with {skippedCount} step{skippedCount !== 1 ? 's' : ''} incomplete)
-                </span>
+                Mark as done (with {skippedCount} step{skippedCount !== 1 ? 's' : ''} incomplete)
               </Button>
 
               {/* Option 3: Go back to skipped steps */}
-              <Button
-                size="lg"
-                variant="ghost"
+              <button
                 onClick={handleGoBack}
-                className="w-full flex items-center justify-center gap-2"
+                className="w-full flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 py-2 transition-colors"
               >
                 <ArrowLeft size={18} />
                 Go back to skipped steps
-              </Button>
+              </button>
 
               {/* Info note */}
               <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
