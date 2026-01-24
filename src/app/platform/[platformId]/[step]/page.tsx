@@ -166,10 +166,10 @@ export default function StepPage({ params }: StepPageProps) {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-4 group">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowStorageInfoModal(true)}
-                className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-all duration-200 opacity-0 group-hover:opacity-100 font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 <Save size={16} />
                 <span>Auto-saved locally</span>
