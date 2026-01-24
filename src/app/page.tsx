@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import Button from '@/components/ui/Button';
@@ -10,22 +9,7 @@ import { Shield, ListChecks, Target, Clock, ExternalLink } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
-  const { session, isLoading, hasSession } = useSession();
-
-  useEffect(() => {
-    // If user has completed onboarding, redirect to dashboard
-    if (!isLoading && hasSession) {
-      router.push('/dashboard');
-    }
-  }, [isLoading, hasSession, router]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-gray-500">Loading...</div>
-      </div>
-    );
-  }
+  const { hasSession } = useSession();
 
   return (
     <main className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
@@ -50,20 +34,34 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button
-              size="lg"
-              onClick={() => router.push('/onboarding/select')}
-              className="text-lg py-4 px-10"
-            >
-              Start Securing Your Accounts
-            </Button>
+            {hasSession ? (
+              <>
+                <Button
+                  size="lg"
+                  onClick={() => router.push('/dashboard')}
+                  className="text-lg py-4 px-10"
+                >
+                  Continue to Dashboard
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => router.push('/onboarding/select')}
+                  className="text-lg py-4 px-10"
+                >
+                  Start Fresh
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="lg"
+                onClick={() => router.push('/onboarding/select')}
+                className="text-lg py-4 px-10"
+              >
+                Start Securing Your Accounts
+              </Button>
+            )}
           </div>
-
-          {session && !session.onboardingComplete && (
-            <p className="text-sm text-gray-500 mb-6">
-              You have progress saved. Click to continue.
-            </p>
-          )}
 
           {/* Trust badges - more prominent */}
           <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-gray-600 dark:text-gray-400">

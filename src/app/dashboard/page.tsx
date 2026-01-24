@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
+import Logo from '@/components/ui/Logo';
 import PlatformCard from '@/components/PlatformCard';
 import VisualProgressBar from '@/components/dashboard/VisualProgressBar';
 import ContinueCTA from '@/components/dashboard/ContinueCTA';
@@ -254,16 +255,20 @@ export default function Dashboard() {
       <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                Social Scrub Dashboard
-              </h1>
-              {session.storageType === 'server' && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Session: {session.id}
+            <button
+              onClick={() => router.push('/')}
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            >
+              <Logo size="md" showText={false} />
+              <div className="text-left">
+                <h1 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100">
+                  Social Scrub
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Dashboard
                 </p>
-              )}
-            </div>
+              </div>
+            </button>
             <button
               onClick={() => setShowStorageInfoModal(true)}
               className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
