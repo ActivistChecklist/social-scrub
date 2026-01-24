@@ -6,14 +6,14 @@ import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import PlatformCard from '@/components/PlatformCard';
-import SaveForLaterModal from '@/components/SaveForLaterModal';
 import VisualProgressBar from '@/components/dashboard/VisualProgressBar';
 import ContinueCTA from '@/components/dashboard/ContinueCTA';
 import AddPlatformsModal from '@/components/dashboard/AddPlatformsModal';
 import SpreadsheetView from '@/components/dashboard/SpreadsheetView';
+import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
 import Footer from '@/components/Footer';
 import { Platform, PlatformProgress } from '@/lib/types';
-import { LayoutGrid, Table } from 'lucide-react';
+import { LayoutGrid, Table, Save, Info } from 'lucide-react';
 
 // Sort platforms within a group: completed, deleted, in-progress, then not started
 // Within each status group, maintain original priority order (don't re-sort)
@@ -84,7 +84,7 @@ const PRIORITY_ORDER: PriorityLevel[] = ['highest', 'high', 'medium', 'low'];
 export default function Dashboard() {
   const router = useRouter();
   const { session, isLoading, hasSession, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
-  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
   const [showAddPlatformsModal, setShowAddPlatformsModal] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
 
@@ -264,13 +264,14 @@ export default function Dashboard() {
                 </p>
               )}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSaveModal(true)}
+            <button
+              onClick={() => setShowStorageInfoModal(true)}
+              className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
             >
-              Save to Cloud
-            </Button>
+              <Save size={12} />
+              <span>Auto-saved locally</span>
+              <Info size={12} className="text-gray-300 dark:text-gray-600" />
+            </button>
           </div>
         </div>
       </header>
@@ -447,13 +448,9 @@ export default function Dashboard() {
       <Footer />
 
       {/* Modals */}
-      <SaveForLaterModal
-        session={session}
-        isOpen={showSaveModal}
-        onClose={() => setShowSaveModal(false)}
-        onSaved={(sessionId) => {
-          console.log('Session saved with ID:', sessionId);
-        }}
+      <LocalStorageInfoModal
+        isOpen={showStorageInfoModal}
+        onClose={() => setShowStorageInfoModal(false)}
       />
       <AddPlatformsModal
         isOpen={showAddPlatformsModal}

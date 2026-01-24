@@ -7,7 +7,8 @@ import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
 import Celebration from '@/components/Celebration';
-import { ChevronRight, LayoutDashboard, Save } from 'lucide-react';
+import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
+import { ChevronRight, LayoutDashboard, Save, Info } from 'lucide-react';
 
 interface CompletePageProps {
   params: { platformId: string };
@@ -18,6 +19,7 @@ export default function PlatformComplete({ params }: CompletePageProps) {
   const router = useRouter();
   const { session, isLoading, getPlatform: getPlatformProgress } = useSession();
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -114,10 +116,14 @@ export default function PlatformComplete({ params }: CompletePageProps) {
 
       {/* Header with auto-save and dashboard link */}
       <header className="p-4 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
+        <button
+          onClick={() => setShowStorageInfoModal(true)}
+          className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+        >
           <Save size={12} />
-          Progress auto-saved
-        </span>
+          <span>Auto-saved locally</span>
+          <Info size={12} className="text-gray-300 dark:text-gray-600" />
+        </button>
         <button
           onClick={() => router.push('/dashboard')}
           className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
@@ -195,6 +201,12 @@ export default function PlatformComplete({ params }: CompletePageProps) {
           </div>
         </div>
       </div>
+
+      {/* Local storage info modal */}
+      <LocalStorageInfoModal
+        isOpen={showStorageInfoModal}
+        onClose={() => setShowStorageInfoModal(false)}
+      />
     </main>
   );
 }

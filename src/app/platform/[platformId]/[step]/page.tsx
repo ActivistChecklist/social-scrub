@@ -16,7 +16,8 @@ import RandomUsernameGenerator from '@/components/step/RandomUsernameGenerator';
 import { EmailSuggestion } from '@/components/step/SuggestionBox';
 import BlockPartySuggestion from '@/components/step/BlockPartySuggestion';
 import LucideIcon, { Check, ChevronRight } from '@/components/ui/LucideIcon';
-import { Trash2, Lock, ChevronLeft, Save } from 'lucide-react';
+import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
+import { Trash2, Lock, ChevronLeft, Save, Info } from 'lucide-react';
 
 interface StepPageProps {
   params: { platformId: string; step: string };
@@ -39,6 +40,8 @@ export default function StepPage({ params }: StepPageProps) {
   const [showDeleteInstructions, setShowDeleteInstructions] = useState(false);
   // State to track navigation - prevents button flash
   const [isNavigating, setIsNavigating] = useState(false);
+  // State for storage info modal
+  const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -159,10 +162,14 @@ export default function StepPage({ params }: StepPageProps) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className="hidden sm:flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
+              <button
+                onClick={() => setShowStorageInfoModal(true)}
+                className="hidden sm:flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+              >
                 <Save size={12} />
-                Auto-saved
-              </span>
+                <span>Auto-saved locally</span>
+                <Info size={12} className="text-gray-300 dark:text-gray-600" />
+              </button>
               <button
                 onClick={() => router.push('/dashboard')}
                 className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
@@ -362,6 +369,12 @@ export default function StepPage({ params }: StepPageProps) {
           )}
         </div>
       </section>
+
+      {/* Local storage info modal */}
+      <LocalStorageInfoModal
+        isOpen={showStorageInfoModal}
+        onClose={() => setShowStorageInfoModal(false)}
+      />
     </main>
   );
 }
