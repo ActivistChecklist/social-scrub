@@ -557,38 +557,21 @@ export const PLATFORMS: Platform[] = [
     importanceReason: 'Saved addresses reveal where you live'
   },
   {
-    id: 'poshmark',
-    name: 'Poshmark',
-    icon: 'poshmark',
-    category: 'shopping',
-    priority: 'medium',
-    url: 'https://poshmark.com',
-    importanceReason: 'Can reveal your location and buying/selling activity'
-  },
-  {
-    id: 'depop',
-    name: 'Depop',
-    icon: 'depop',
-    category: 'shopping',
-    priority: 'medium',
-    url: 'https://depop.com',
-    importanceReason: 'Can reveal your location and buying/selling activity'
-  },
-  {
-    id: 'mercari',
-    name: 'Mercari',
-    category: 'shopping',
-    priority: 'medium',
-    url: 'https://mercari.com',
-    importanceReason: 'Can reveal your location through listings and meetup preferences'
-  },
-  {
     id: 'offerup',
     name: 'OfferUp',
     category: 'shopping',
     priority: 'medium',
     url: 'https://offerup.com',
     importanceReason: 'Can reveal your location through listings and meetup preferences'
+  },
+  {
+    id: 'cashapp',
+    name: 'Cash App',
+    icon: 'cashapp',
+    category: 'finance',
+    priority: 'medium',
+    url: 'https://cash.app',
+    importanceReason: 'Can reveal your profile picture'
   },
 
   // 🟡 LOW PRIORITY
@@ -608,15 +591,6 @@ export const PLATFORMS: Platform[] = [
     priority: 'low',
     url: 'https://mastodon.social',
     importanceReason: 'Can reveal your social network and interests'
-  },
-  {
-    id: 'cashapp',
-    name: 'Cash App',
-    icon: 'cashapp',
-    category: 'finance',
-    priority: 'low',
-    url: 'https://cash.app',
-    importanceReason: 'Can reveal your profile picture'
   },
   {
     id: 'duolingo',
