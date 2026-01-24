@@ -8,8 +8,26 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://socialscrub.app'),
   title: 'Social Scrub - Protect Your Privacy',
   description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/apple-icon.png',
+  },
+  openGraph: {
+    title: 'Social Scrub - Protect Your Privacy',
+    description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Social Scrub - Protect Your Privacy',
+    description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+  },
 };
 
 export default function RootLayout({
