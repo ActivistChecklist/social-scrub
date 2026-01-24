@@ -39,7 +39,7 @@ export default function Home() {
       {/* Hero section */}
       <section className="px-6 pt-8 pb-16 md:pt-16 md:pb-24">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6 leading-tight tracking-tight">
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-gray-100 mb-6 leading-tight tracking-tight">
             Lock down your
             <br />
             <span className="text-emerald-600 dark:text-emerald-400">social media privacy</span>
@@ -95,7 +95,7 @@ export default function Home() {
               <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
                 <Target className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              <h3 className="font-display text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                 1. Pick your platforms
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
@@ -107,7 +107,7 @@ export default function Home() {
               <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
                 <ListChecks className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              <h3 className="font-display text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                 2. Follow the checklist
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
@@ -119,7 +119,7 @@ export default function Home() {
               <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
                 <Clock className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              <h3 className="font-display text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                 3. Track your progress
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
@@ -139,7 +139,7 @@ export default function Home() {
                 <Shield className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="text-center md:text-left">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                <h2 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-100 mb-3">
                   Protect yourself from doxxing
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
@@ -163,7 +163,7 @@ export default function Home() {
       {/* Final CTA */}
       <section className="px-6 py-16 text-center bg-gray-50 dark:bg-gray-900/50">
         <div className="max-w-lg mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-4">
             Ready to lock down your accounts?
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-8">
