@@ -27,8 +27,71 @@ function SocialPost({
 
   if (variant === 'photo') {
     return (
-      <div className={`relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 ${isDeleted ? 'opacity-40' : ''}`}>
-        {/* Post header - looks like a real social post */}
+      <div className="relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+        {/* Post content with opacity when deleted */}
+        <div className={isDeleted ? 'opacity-40' : ''}>
+          {/* Post header - looks like a real social post */}
+          <div className="flex items-center gap-2 p-3 border-b border-gray-100 dark:border-gray-700">
+            <div className="w-8 h-8 rounded-full overflow-hidden">
+              <Image
+                src="/luke.jpg"
+                alt="Luke's profile"
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Luke Skywalker</p>
+              {/* Red outline on "wrong" things in before view */}
+              <p className={`text-xs text-gray-500 dark:text-gray-400 ${isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-1 inline-block' : ''}`}>
+                Tagged at Mos Eisley Cantina
+              </p>
+            </div>
+          </div>
+
+          {/* Photo with location tag */}
+          <div className="h-32 relative overflow-hidden">
+            <Image
+              src="/cantina.jpg"
+              alt="Mos Eisley Cantina"
+              fill
+              className="object-cover"
+            />
+            {/* Location tag overlay - red outline in before view */}
+            <div className={`absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium ${isBefore ? 'ring-2 ring-red-400 dark:ring-red-500' : ''}`}>
+              <MapPin size={12} />
+              Mos Eisley Cantina
+            </div>
+          </div>
+
+          {/* Post footer with engagement */}
+          <div className="p-3 flex items-center gap-4 text-gray-500 dark:text-gray-400">
+            <Heart size={18} />
+            <MessageCircle size={18} />
+            <Share2 size={18} />
+          </div>
+        </div>
+
+        {/* Deleted overlay - badge stays fully opaque on top */}
+        {isDeleted && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+            <div className="bg-emerald-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold text-sm shadow-lg pointer-events-auto">
+              <X size={16} />
+              Removed
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Text post variant
+  return (
+    <div className="relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+      {/* Post content with opacity when deleted */}
+      <div className={isDeleted ? 'opacity-40' : ''}>
+        {/* Post header */}
         <div className="flex items-center gap-2 p-3 border-b border-gray-100 dark:border-gray-700">
           <div className="w-8 h-8 rounded-full overflow-hidden">
             <Image
@@ -41,90 +104,33 @@ function SocialPost({
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Luke Skywalker</p>
-            {/* Red outline on "wrong" things in before view */}
-            <p className={`text-xs text-gray-500 dark:text-gray-400 ${isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-1 inline-block' : ''}`}>
-              Tagged at Mos Eisley Cantina
-            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
           </div>
         </div>
 
-        {/* Photo with location tag */}
-        <div className="h-32 relative overflow-hidden">
-          <Image
-            src="/cantina.jpg"
-            alt="Mos Eisley Cantina"
-            fill
-            className="object-cover"
-          />
-          {/* Location tag overlay - red outline in before view */}
-          <div className={`absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium ${isBefore ? 'ring-2 ring-red-400 dark:ring-red-500' : ''}`}>
-            <MapPin size={12} />
-            Mos Eisley Cantina
-          </div>
+        {/* Post content - red outline on "wrong" things in before view */}
+        <div className="p-3">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            Just started my new job at{' '}
+            <span className={isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-0.5' : ''}>Acme Corp</span>{' '}
+            downtown! The office on{' '}
+            <span className={isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-0.5' : ''}>5th & Main</span>{' '}
+            has the best coffee...
+          </p>
         </div>
 
-        {/* Post footer with engagement */}
-        <div className="p-3 flex items-center gap-4 text-gray-500 dark:text-gray-400">
+        {/* Post footer */}
+        <div className="px-3 pb-3 flex items-center gap-4 text-gray-500 dark:text-gray-400">
           <Heart size={18} />
           <MessageCircle size={18} />
           <Share2 size={18} />
         </div>
-
-        {/* Deleted overlay - full opacity for badge */}
-        {isDeleted && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-            <div className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold text-sm shadow-lg">
-              <X size={16} />
-              Removed
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Text post variant
-  return (
-    <div className={`relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 ${isDeleted ? 'opacity-40' : ''}`}>
-      {/* Post header */}
-      <div className="flex items-center gap-2 p-3 border-b border-gray-100 dark:border-gray-700">
-        <div className="w-8 h-8 rounded-full overflow-hidden">
-          <Image
-            src="/luke.jpg"
-            alt="Luke's profile"
-            width={32}
-            height={32}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="flex-1">
-          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Luke Skywalker</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
-        </div>
       </div>
 
-      {/* Post content - red outline on "wrong" things in before view */}
-      <div className="p-3">
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          Just started my new job at{' '}
-          <span className={isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-0.5' : ''}>Acme Corp</span>{' '}
-          downtown! The office on{' '}
-          <span className={isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-0.5' : ''}>5th & Main</span>{' '}
-          has the best coffee...
-        </p>
-      </div>
-
-      {/* Post footer */}
-      <div className="px-3 pb-3 flex items-center gap-4 text-gray-500 dark:text-gray-400">
-        <Heart size={18} />
-        <MessageCircle size={18} />
-        <Share2 size={18} />
-      </div>
-
-      {/* Deleted overlay - full opacity for badge */}
+      {/* Deleted overlay - badge stays fully opaque on top */}
       {isDeleted && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-          <div className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold text-sm shadow-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+          <div className="bg-emerald-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold text-sm shadow-lg pointer-events-auto">
             <X size={16} />
             Removed
           </div>

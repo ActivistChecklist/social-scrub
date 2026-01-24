@@ -9,7 +9,7 @@ export const PLATFORMS: Platform[] = [
     category: 'social',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal your social network, location, and photos'
   },
   {
     id: 'linkedin',
@@ -18,7 +18,7 @@ export const PLATFORMS: Platform[] = [
     category: 'professional',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal your current employer, location, and social network'
   },
   {
     id: 'instagram',
@@ -26,7 +26,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'instagram',
     category: 'social',
     priority: 'medium',
-    hasBlockParty: true
+    hasBlockParty: true,
+    importanceReason: 'Can reveal your social network and location'
   },
   {
     id: 'twitter',
@@ -35,7 +36,7 @@ export const PLATFORMS: Platform[] = [
     category: 'social',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal your social network and location'
   },
   {
     id: 'venmo',
@@ -44,7 +45,7 @@ export const PLATFORMS: Platform[] = [
     category: 'finance',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party. Public transactions show where you spend time.'
+    importanceReason: 'Can reveal where you most frequently spend time and your activities'
   },
   {
     id: 'google',
@@ -52,7 +53,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'google',
     category: 'other',
     priority: 'medium',
-    hasBlockParty: true
+    hasBlockParty: true,
+    importanceReason: 'Can reveal your profile picture and make it easier to identify you on other platformss'
   },
   {
     id: 'googlemaps',
@@ -61,7 +63,7 @@ export const PLATFORMS: Platform[] = [
     category: 'other',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party. Can reveal your location and frequent locations'
+    importanceReason: 'Reviews can reveal where you live and visit'
   },
   {
     id: 'reddit',
@@ -70,7 +72,7 @@ export const PLATFORMS: Platform[] = [
     category: 'forum',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal your interests and community memberships'
   },
   {
     id: 'youtube',
@@ -79,7 +81,7 @@ export const PLATFORMS: Platform[] = [
     category: 'photo_video',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal your interests and possibly your location'
   },
   {
     id: 'tiktok',
@@ -88,7 +90,7 @@ export const PLATFORMS: Platform[] = [
     category: 'social',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal location and social network'
   },
   {
     id: 'snapchat',
@@ -97,7 +99,7 @@ export const PLATFORMS: Platform[] = [
     category: 'messaging',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal location and social network'
   },
   {
     id: 'bluesky',
@@ -106,7 +108,7 @@ export const PLATFORMS: Platform[] = [
     category: 'social',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party'
+    importanceReason: 'Can reveal location and social network'
   },
   {
     id: 'strava',
@@ -115,7 +117,7 @@ export const PLATFORMS: Platform[] = [
     category: 'social',
     priority: 'highest',
     hasBlockParty: true,
-    importanceReason: 'Use Block Party. Can reveal your home'
+    importanceReason: 'Can reveal your home address through activity patterns'
   },
 
   // 🔴 HIGH PRIORITY
@@ -124,15 +126,7 @@ export const PLATFORMS: Platform[] = [
     name: 'Partiful',
     category: 'other',
     priority: 'high',
-    importanceReason: 'Past events can reveal your address and friends. (also: partiful founders worked at Palantir)'
-  },
-  {
-    id: 'gmail',
-    name: 'Gmail',
-    icon: 'google',
-    category: 'other',
-    priority: 'high',
-    importanceReason: 'Your profile picture could be used to do a reverse image search. Also remove phone and location from signature.'
+    importanceReason: 'Past events can reveal your address and friends'
   },
   {
     id: 'yelp',
@@ -147,14 +141,14 @@ export const PLATFORMS: Platform[] = [
     name: 'GoFundMe',
     category: 'other',
     priority: 'high',
-    importanceReason: 'Can reveals people you\'re close to and where you live'
+    importanceReason: 'Can reveal people you\'re close to and where you live'
   },
   {
     id: 'chuffed',
     name: 'Chuffed',
     category: 'other',
     priority: 'high',
-    importanceReason: 'A similar crowdfunding platform'
+    importanceReason: 'Can reveal your location and social network'
   },
   {
     id: 'flickr',
@@ -177,14 +171,14 @@ export const PLATFORMS: Platform[] = [
     icon: 'nextdoor',
     category: 'social',
     priority: 'high',
-    importanceReason: 'Reveals where you live and who you interact with'
+    importanceReason: 'Can reveal where you live and who you interact with'
   },
   {
     id: 'alltrails',
     name: 'AllTrails',
     category: 'other',
     priority: 'high',
-    importanceReason: 'Can reveal the region you live in'
+    importanceReason: 'Can reveal the region you live in and your activity patterns'
   },
   {
     id: 'medium',
@@ -192,7 +186,7 @@ export const PLATFORMS: Platform[] = [
     icon: 'medium',
     category: 'social',
     priority: 'high',
-    importanceReason: 'Reveals who you follow (likely your social network). Profile might have location.'
+    importanceReason: 'Can reveal who you follow (likely your social network). Profile might have location.'
   },
   {
     id: 'mapmyrun',
@@ -200,6 +194,20 @@ export const PLATFORMS: Platform[] = [
     category: 'other',
     priority: 'high',
     importanceReason: 'Can reveal where you spend time or where you live'
+  },
+  {
+    id: 'ancestry',
+    name: 'Ancestry.com',
+    category: 'other',
+    priority: 'high',
+    importanceReason: 'Can reveal your family connections, which puts them at risk'
+  },
+  {
+    id: 'haveibeenpwned',
+    name: 'haveibeenpwned',
+    category: 'other',
+    priority: 'medium',
+    importanceReason: 'Your data is almost certiantly on there. Opting out can help hide what services you use that have had a password breach in the past.'
   },
 
   // 🟠 MEDIUM PRIORITY
@@ -209,14 +217,14 @@ export const PLATFORMS: Platform[] = [
     icon: 'spotify',
     category: 'other',
     priority: 'medium',
-    importanceReason: 'Shows interests, can display when you\'re online'
+    importanceReason: 'Can reveal your interests, can display when you\'re online'
   },
   {
     id: 'substack',
     name: 'Substack',
     category: 'social',
     priority: 'medium',
-    importanceReason: 'Reveals who you follow. Profile might have location.'
+    importanceReason: 'Can reveal who you follow. Profile might have location.'
   },
   {
     id: 'paypal',
@@ -232,7 +240,7 @@ export const PLATFORMS: Platform[] = [
     icon: 'airbnb',
     category: 'other',
     priority: 'medium',
-    importanceReason: 'Reveals where you visit and when'
+    importanceReason: 'Can reveal where you visit and when'
   },
   {
     id: 'amazon',
@@ -248,7 +256,7 @@ export const PLATFORMS: Platform[] = [
     icon: 'goodreads',
     category: 'social',
     priority: 'medium',
-    importanceReason: 'Reviews and ratings tell a lot about your interests'
+    importanceReason: 'Reviews and ratings tell a lot about your interests and opinions'
   },
   {
     id: 'etsy',
@@ -256,14 +264,14 @@ export const PLATFORMS: Platform[] = [
     icon: 'etsy',
     category: 'shopping',
     priority: 'medium',
-    importanceReason: 'Has a "findable by email address" privacy setting'
+    importanceReason: 'Has a "findable by email address" privacy setting that you want to disable'
   },
   {
     id: 'gravatar',
     name: 'Gravatar',
     category: 'other',
     priority: 'medium',
-    importanceReason: 'Shows your real photo'
+    importanceReason: 'Can reveal your real photo'
   },
   {
     id: 'pinterest',
@@ -271,14 +279,14 @@ export const PLATFORMS: Platform[] = [
     icon: 'pinterest',
     category: 'social',
     priority: 'medium',
-    importanceReason: 'Reveals your interests. You can hide your profile entirely in settings.'
+    importanceReason: 'Can reveal your interests. You can hide your public profile entirely in settings.'
   },
   {
     id: 'eventbrite',
     name: 'Eventbrite',
     category: 'other',
     priority: 'medium',
-    importanceReason: 'Some events shows a "who\'s going" list that could have your full name and profile picture. Might want to keep your real first name and last initial.'
+    importanceReason: 'Some events show a "who\'s going" list that could have your full name and profile picture. Might want to keep your real first name and last initial.'
   },
   {
     id: 'signal',
@@ -293,13 +301,15 @@ export const PLATFORMS: Platform[] = [
     name: 'Discord',
     icon: 'discord',
     category: 'messaging',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your online status, server memberships, profile info, location'
   },
   {
     id: 'threads',
     name: 'Threads',
     category: 'social',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your social network and location'
   },
   {
     id: 'github',
@@ -307,61 +317,54 @@ export const PLATFORMS: Platform[] = [
     icon: 'github',
     category: 'professional',
     priority: 'medium',
-    importanceReason: 'Has work info and shows times you\'re online'
+    importanceReason: 'Can reveal your employer info and shows times you\'re online'
   },
   {
     id: 'telegram',
     name: 'Telegram',
     icon: 'telegram',
     category: 'messaging',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your phone number, profile photo, online status'
   },
   {
     id: 'tumblr',
     name: 'Tumblr',
     icon: 'tumblr',
     category: 'social',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your social network and location'
   },
   {
     id: 'patreon',
     name: 'Patreon',
     category: 'other',
-    priority: 'medium'
-  },
-  {
-    id: 'ancestry',
-    name: 'Ancestry.com',
-    category: 'other',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your support history and interests'
   },
   {
     id: 'tripadvisor',
     name: 'TripAdvisor',
     icon: 'tripadvisor',
     category: 'social',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your travel patterns and interests'
   },
   {
     id: 'vimeo',
     name: 'Vimeo',
     icon: 'vimeo',
     category: 'photo_video',
-    priority: 'medium'
-  },
-  {
-    id: 'haveibeenpwned',
-    name: 'haveibeenpwned',
-    category: 'other',
     priority: 'medium',
-    importanceReason: 'Your data is almost certiantly on there. Opting out can help hide what services you use'
+    importanceReason: 'Can reveal your interests'
   },
   {
     id: 'ebay',
     name: 'eBay',
     icon: 'ebay',
     category: 'shopping',
-    priority: 'medium'
+    priority: 'medium',
+    importanceReason: 'Can reveal your purchase history and location'
   },
   {
     id: 'dropbox',
@@ -384,7 +387,7 @@ export const PLATFORMS: Platform[] = [
     icon: 'canva',
     category: 'professional',
     priority: 'medium',
-    importanceReason: 'The metadata on files you save can reveal your name or username'
+    importanceReason: 'The metadata on files you save can reveal your name or username. Change this setting.'
   },
   {
     id: 'disqus',

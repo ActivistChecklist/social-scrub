@@ -164,11 +164,11 @@ export default function StepPage({ params }: StepPageProps) {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setShowStorageInfoModal(true)}
-                className="hidden sm:flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors font-medium"
               >
-                <Save size={12} />
+                <Save size={16} />
                 <span>Auto-saved locally</span>
-                <Info size={12} className="text-gray-300 dark:text-gray-600" />
+                <Info size={14} className="text-gray-500 dark:text-gray-400" />
               </button>
               <button
                 onClick={() => router.push('/dashboard')}
@@ -361,15 +361,15 @@ export default function StepPage({ params }: StepPageProps) {
             </div>
           </div>
 
+          {/* Block Party suggestion - full width, breaks container */}
+          {!isDeleteStep && stepNumber === 9 && platform.hasBlockParty && (
+            <BlockPartySuggestion />
+          )}
+
           {/* SECONDARY SECTION: Before/after, generators, how-to */}
           {!isDeleteStep && (
             <div className="max-w-4xl mx-auto px-6 py-8">
               <div className="space-y-6">
-                {/* Block Party suggestion for privacy settings step on supported platforms */}
-                {stepNumber === 9 && platform.hasBlockParty && (
-                  <BlockPartySuggestion />
-                )}
-
                 {/* Before/After comparison */}
                 {step.beforeAfter && (
                   <BeforeAfterComparison
