@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Github, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
@@ -20,15 +21,24 @@ export default function Footer() {
             </a>
           </p>
 
-          <a
-            href="https://github.com/ActivistChecklist/social-scrub"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-          >
-            <Github size={16} />
-            View on GitHub
-          </a>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/privacy"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            >
+              Privacy
+            </Link>
+
+            <a
+              href="https://github.com/ActivistChecklist/social-scrub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            >
+              <Github size={16} />
+              GitHub
+            </a>
+          </div>
         </div>
       </div>
     </footer>
