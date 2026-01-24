@@ -251,7 +251,7 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm group">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -266,7 +266,7 @@ export default function Dashboard() {
             </div>
             <button
               onClick={() => setShowStorageInfoModal(true)}
-              className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors font-medium"
+              className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-all duration-200 opacity-0 group-hover:opacity-100 font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <Save size={16} />
               <span>Auto-saved locally</span>

@@ -115,21 +115,22 @@ export default function PlatformComplete({ params }: CompletePageProps) {
       <Celebration show={showCelebration} onComplete={() => setShowCelebration(false)} />
 
       {/* Header with auto-save and dashboard link */}
-      <header className="p-4 flex items-center justify-between">
+      <header className="p-4 flex items-center justify-between group">
         <button
           onClick={() => setShowStorageInfoModal(true)}
-          className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors font-medium"
+          className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-all duration-200 opacity-0 group-hover:opacity-100 font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <Save size={16} />
           <span>Auto-saved locally</span>
           <Info size={14} className="text-gray-500 dark:text-gray-400" />
         </button>
-        <button
+        <Button
           onClick={() => router.push('/dashboard')}
-          className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
+          variant="outline"
+          size="sm"
         >
           Dashboard
-        </button>
+        </Button>
       </header>
 
       {/* Desktop: side-by-side layout */}
