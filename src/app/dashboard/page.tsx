@@ -83,7 +83,7 @@ const PRIORITY_ORDER: PriorityLevel[] = ['highest', 'high', 'medium', 'low'];
 
 export default function Dashboard() {
   const router = useRouter();
-  const { session, isLoading, hasSession, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
+  const { session, isLoading, hasSession, getPlatform: getPlatformProgress, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
   const [showAddPlatformsModal, setShowAddPlatformsModal] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
@@ -400,23 +400,14 @@ export default function Dashboard() {
                         priority: customSite.priority === 'high' ? 'high' : customSite.priority === 'medium' ? 'medium' : 'low',
                       };
 
-                      // Create a progress-like object with proper method field
-                      const isDeleted = customSite.status === 'secured' && customSite.completedSteps.includes(1);
-                      const customProgress = {
-                        platformId: customSite.id,
-                        status: customSite.status,
-                        hasAccount: 'yes' as const,
-                        currentStep: 1,
-                        completedSteps: customSite.completedSteps,
-                        skippedSteps: customSite.skippedSteps,
-                        method: isDeleted ? 'deleted' as const : undefined,
-                      };
+                      // Use session hook to get progress (same as built-in platforms)
+                      const progress = getPlatformProgress(customSite.id);
 
                       return (
                         <PlatformCard
                           key={customSite.id}
                           platform={customPlatform}
-                          progress={customProgress}
+                          progress={progress}
                           showStatus
                           onClick={() => router.push(`/platform/${customSite.id}`)}
                         />
