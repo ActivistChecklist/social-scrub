@@ -276,12 +276,24 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Progress bar */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-6">
-          <VisualProgressBar session={session} />
-        </div>
-      </div>
+      {/* Progress bar - only show if user has made some progress */}
+      {(() => {
+        const stats = session.platforms.reduce((acc, p) => {
+          if (p.status === 'secured') acc.secured++;
+          else if (p.status === 'in_progress') acc.inProgress++;
+          else if (p.status === 'skipped') acc.skipped++;
+          return acc;
+        }, { secured: 0, inProgress: 0, skipped: 0 });
+        const hasProgress = stats.secured > 0 || stats.inProgress > 0 || stats.skipped > 0;
+
+        return hasProgress ? (
+          <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+            <div className="max-w-6xl mx-auto px-6 py-6">
+              <VisualProgressBar session={session} />
+            </div>
+          </div>
+        ) : null;
+      })()}
 
       {/* Continue CTA */}
       {nextPlatform && (
