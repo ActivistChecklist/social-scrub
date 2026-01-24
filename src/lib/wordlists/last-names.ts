@@ -25,7 +25,7 @@ export const LAST_NAMES = [
   'Silva', 'Santos', 'Oliveira', 'Costa', 'Ferreira',
 
   // Common European surnames
-  'Murphy', 'Kelly', 'Sullivan', 'Walsh', 'OBrien',
+  'Murphy', 'Kelly', 'Sullivan', 'Walsh', 'O\'Brien',
   'Brown', 'Wilson', 'Stewart', 'Campbell', 'Murray',
   'Anderson', 'Larson', 'Erikson', 'Nielsen', 'Hansen',
   'Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi',
