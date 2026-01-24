@@ -330,7 +330,7 @@ export default function StepPage({ params }: StepPageProps) {
               <div className="space-y-6">
                 {/* Block Party suggestion for privacy settings step on supported platforms */}
                 {stepNumber === 9 && platform.hasBlockParty && (
-                  <BlockPartySuggestion platformName={platform.name} />
+                  <BlockPartySuggestion />
                 )}
 
                 {/* Before/After comparison */}

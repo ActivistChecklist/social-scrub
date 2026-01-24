@@ -4,56 +4,19 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
-import { TOTAL_STEPS } from '@/lib/steps';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
 import Celebration from '@/components/Celebration';
-import { ChevronRight, ArrowLeft, Check, LayoutDashboard, Save } from 'lucide-react';
+import { ChevronRight, LayoutDashboard, Save } from 'lucide-react';
 
 interface CompletePageProps {
   params: { platformId: string };
 }
 
-// Mini stacked bar chart for step completion
-function StepProgressBar({ completedCount, skippedCount }: { completedCount: number; skippedCount: number }) {
-  const totalSteps = TOTAL_STEPS - 1; // Exclude delete step
-  const completedPercent = (completedCount / totalSteps) * 100;
-  const skippedPercent = (skippedCount / totalSteps) * 100;
-
-  return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-2 text-sm">
-        <span className="text-emerald-600 dark:text-emerald-400 font-medium">
-          {completedCount} completed
-        </span>
-        {skippedCount > 0 && (
-          <span className="text-amber-500 dark:text-amber-400">
-            {skippedCount} skipped
-          </span>
-        )}
-      </div>
-      <div className="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex">
-        {completedCount > 0 && (
-          <div
-            className="bg-emerald-500 h-full transition-all duration-500"
-            style={{ width: `${completedPercent}%` }}
-          />
-        )}
-        {skippedCount > 0 && (
-          <div
-            className="bg-amber-400 h-full transition-all duration-500"
-            style={{ width: `${skippedPercent}%` }}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function PlatformComplete({ params }: CompletePageProps) {
   const { platformId } = params;
   const router = useRouter();
-  const { session, isLoading, getPlatform: getPlatformProgress, completePlatform } = useSession();
+  const { session, isLoading, getPlatform: getPlatformProgress } = useSession();
   const [showCelebration, setShowCelebration] = useState(false);
 
   // Try to get built-in platform first, then check custom sites
@@ -124,6 +87,15 @@ export default function PlatformComplete({ params }: CompletePageProps) {
     }
   }, [isLoading, platform, router]);
 
+  // If there are skipped steps and not deleted, redirect to incomplete page
+  const wasDeleted = progress?.method === 'deleted';
+  const skippedCount = progress?.skippedSteps.filter(s => s > 1).length || 0;
+  useEffect(() => {
+    if (!isLoading && progress && !wasDeleted && skippedCount > 0) {
+      router.replace(`/platform/${platformId}/incomplete`);
+    }
+  }, [isLoading, progress, wasDeleted, skippedCount, platformId, router]);
+
   if (isLoading || !platform) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -131,24 +103,6 @@ export default function PlatformComplete({ params }: CompletePageProps) {
       </div>
     );
   }
-
-  const wasDeleted = progress?.method === 'deleted';
-  const completedCount = progress?.completedSteps.filter(s => s > 1).length || 0;
-  const skippedCount = progress?.skippedSteps.filter(s => s > 1).length || 0;
-  const remainingStepsCount = skippedCount; // Skipped steps are the "remaining" ones
-
-  const handleGoBack = () => {
-    // Find first skipped step and go there
-    const skippedSteps = progress?.skippedSteps || [];
-    if (skippedSteps.length > 0) {
-      const firstSkipped = Math.min(...skippedSteps.filter(s => s > 1));
-      if (firstSkipped) {
-        router.push(`/platform/${platformId}/${firstSkipped}`);
-      } else {
-        router.push(`/platform/${platformId}/2`);
-      }
-    }
-  };
 
   const allPlatformsSecured = session &&
     session.platforms.filter(p => p.status === 'secured').length === session.platforms.length &&
@@ -168,7 +122,6 @@ export default function PlatformComplete({ params }: CompletePageProps) {
           onClick={() => router.push('/dashboard')}
           className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
         >
-          {/* Never put a left arrow ← here */}
           Dashboard
         </button>
       </header>
@@ -197,120 +150,38 @@ export default function PlatformComplete({ params }: CompletePageProps) {
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto lg:mx-0">
                 {wasDeleted
                   ? `You've removed your ${platform.name} account. This is the most effective way to protect your privacy.`
-                  : `Great work! You've made ${platform.name} much more private.`}
+                  : `Great work! You've completed all privacy steps for ${platform.name}.`}
               </p>
-
-              {/* Progress bar for non-deleted platforms */}
-              {!wasDeleted && (
-                <div className="max-w-sm mx-auto lg:mx-0 mb-6">
-                  <StepProgressBar completedCount={completedCount} skippedCount={skippedCount} />
-                </div>
-              )}
             </div>
 
             {/* Right side: Actions */}
             <div className="lg:w-96 space-y-3">
-              {/* For platforms with skipped steps (not deleted) - show 3 options */}
-              {!wasDeleted && remainingStepsCount > 0 ? (
-                <>
-                  {/* Option 1 (Default): Continue to next platform, come back later */}
-                  {nextPlatform ? (
-                    <Button
-                      size="lg"
-                      onClick={() => router.push(`/platform/${nextPlatform.progress.platformId}`)}
-                      className="w-full flex flex-col items-center justify-center gap-0.5 py-4"
-                    >
-                      <span className="flex items-center gap-2">
-                        <PlatformIcon
-                          iconName={nextPlatform.info.icon}
-                          platformName={nextPlatform.info.name}
-                          size={18}
-                        />
-                        Take me to {nextPlatform.info.name}
-                        <ChevronRight size={18} />
-                      </span>
-                      <span className="text-xs opacity-80">
-                        I&apos;ll come back to these {remainingStepsCount} step{remainingStepsCount !== 1 ? 's' : ''} later
-                      </span>
-                    </Button>
-                  ) : (
-                    <Button
-                      size="lg"
-                      onClick={() => router.push('/dashboard')}
-                      className="w-full flex flex-col items-center justify-center gap-0.5 py-4"
-                    >
-                      <span className="flex items-center gap-2">
-                        <LayoutDashboard size={18} />
-                        Go to Dashboard
-                      </span>
-                      <span className="text-xs opacity-80">
-                        I&apos;ll come back to these {remainingStepsCount} step{remainingStepsCount !== 1 ? 's' : ''} later
-                      </span>
-                    </Button>
-                  )}
-
-                  {/* Option 2: Mark as finished anyway */}
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={() => {
-                      completePlatform(platformId);
-                      if (nextPlatform) {
-                        router.push(`/platform/${nextPlatform.progress.platformId}`);
-                      } else {
-                        router.push('/dashboard');
-                      }
-                    }}
-                    className="w-full flex items-center justify-center gap-2"
-                  >
-                    <Check size={18} />
-                    Mark {platform.name} as finished
-                    <span className="text-xs opacity-70 ml-1">
-                      ({remainingStepsCount} step{remainingStepsCount !== 1 ? 's' : ''} incomplete)
-                    </span>
-                  </Button>
-
-                  {/* Option 3: Go back to skipped steps */}
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    onClick={handleGoBack}
-                    className="w-full flex items-center justify-center gap-2"
-                  >
-                    <ArrowLeft size={18} />
-                    Go back to skipped steps
-                  </Button>
-                </>
-              ) : (
-                /* For fully completed platforms or deleted accounts */
-                <>
-                  {nextPlatform && (
-                    <Button
-                      size="lg"
-                      onClick={() => router.push(`/platform/${nextPlatform.progress.platformId}`)}
-                      className="w-full flex items-center justify-center gap-2"
-                    >
-                      <PlatformIcon
-                        iconName={nextPlatform.info.icon}
-                        platformName={nextPlatform.info.name}
-                        size={20}
-                      />
-                      Continue to {nextPlatform.info.name}
-                      <ChevronRight size={18} />
-                    </Button>
-                  )}
-
-                  <Button
-                    size="lg"
-                    variant={nextPlatform ? 'outline' : 'primary'}
-                    onClick={() => router.push('/dashboard')}
-                    className="w-full flex items-center justify-center gap-2"
-                  >
-                    <LayoutDashboard size={18} />
-                    Go to Dashboard
-                  </Button>
-                </>
+              {nextPlatform && (
+                <Button
+                  size="lg"
+                  onClick={() => router.push(`/platform/${nextPlatform.progress.platformId}`)}
+                  className="w-full flex items-center justify-center gap-2"
+                >
+                  <PlatformIcon
+                    iconName={nextPlatform.info.icon}
+                    platformName={nextPlatform.info.name}
+                    size={20}
+                    variant="light"
+                  />
+                  Continue to {nextPlatform.info.name}
+                  <ChevronRight size={18} />
+                </Button>
               )}
+
+              <Button
+                size="lg"
+                variant={nextPlatform ? 'outline' : 'primary'}
+                onClick={() => router.push('/dashboard')}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <LayoutDashboard size={18} />
+                Go to Dashboard
+              </Button>
 
               {/* Encouragement */}
               <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">

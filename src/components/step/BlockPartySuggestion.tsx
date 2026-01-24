@@ -3,11 +3,7 @@
 import { ExternalLink, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
-interface BlockPartySuggestionProps {
-  platformName: string;
-}
-
-export default function BlockPartySuggestion({ platformName }: BlockPartySuggestionProps) {
+export default function BlockPartySuggestion() {
   return (
     <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-5">
       <div className="flex items-start gap-3">
