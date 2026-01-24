@@ -27,7 +27,7 @@ function SocialPost({
 
   if (variant === 'photo') {
     return (
-      <div className={`relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 ${isDeleted ? 'opacity-50' : ''}`}>
+      <div className={`relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 ${isDeleted ? 'opacity-40' : ''}`}>
         {/* Post header - looks like a real social post */}
         <div className="flex items-center gap-2 p-3 border-b border-gray-100 dark:border-gray-700">
           <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -41,22 +41,23 @@ function SocialPost({
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Luke Skywalker</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Tagged at Mos Eisley Cantina</p>
+            {/* Red outline on "wrong" things in before view */}
+            <p className={`text-xs text-gray-500 dark:text-gray-400 ${isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-1 inline-block' : ''}`}>
+              Tagged at Mos Eisley Cantina
+            </p>
           </div>
         </div>
 
-        {/* Photo placeholder with location tag - looks like a real photo */}
+        {/* Photo with location tag */}
         <div className="h-32 relative overflow-hidden">
-          {/* Fake landscape photo background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-sky-300 via-sky-400 to-emerald-400 dark:from-sky-800 dark:via-sky-900 dark:to-emerald-900">
-            {/* Sun */}
-            <div className="absolute top-4 right-6 w-8 h-8 rounded-full bg-yellow-300 dark:bg-yellow-500 opacity-80" />
-            {/* Hills */}
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-emerald-500 dark:bg-emerald-800 rounded-t-full transform translate-y-4" />
-            <div className="absolute bottom-0 left-8 right-0 h-10 bg-emerald-600 dark:bg-emerald-900 rounded-t-full transform translate-y-2" />
-          </div>
-          {/* Location tag overlay */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium">
+          <Image
+            src="/cantina.jpg"
+            alt="Mos Eisley Cantina"
+            fill
+            className="object-cover"
+          />
+          {/* Location tag overlay - red outline in before view */}
+          <div className={`absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium ${isBefore ? 'ring-2 ring-red-400 dark:ring-red-500' : ''}`}>
             <MapPin size={12} />
             Mos Eisley Cantina
           </div>
@@ -69,10 +70,10 @@ function SocialPost({
           <Share2 size={18} />
         </div>
 
-        {/* Deleted overlay */}
+        {/* Deleted overlay - full opacity for badge */}
         {isDeleted && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium text-sm shadow-lg">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+            <div className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold text-sm shadow-lg">
               <X size={16} />
               Removed
             </div>
@@ -84,7 +85,7 @@ function SocialPost({
 
   // Text post variant
   return (
-    <div className={`relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 ${isDeleted ? 'opacity-50' : ''}`}>
+    <div className={`relative bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 ${isDeleted ? 'opacity-40' : ''}`}>
       {/* Post header */}
       <div className="flex items-center gap-2 p-3 border-b border-gray-100 dark:border-gray-700">
         <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -102,10 +103,14 @@ function SocialPost({
         </div>
       </div>
 
-      {/* Post content */}
+      {/* Post content - red outline on "wrong" things in before view */}
       <div className="p-3">
         <p className="text-sm text-gray-700 dark:text-gray-300">
-          Just started my new job at Acme Corp downtown! The office on 5th & Main has the best coffee...
+          Just started my new job at{' '}
+          <span className={isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-0.5' : ''}>Acme Corp</span>{' '}
+          downtown! The office on{' '}
+          <span className={isBefore ? 'ring-2 ring-red-400 dark:ring-red-500 rounded px-0.5' : ''}>5th & Main</span>{' '}
+          has the best coffee...
         </p>
       </div>
 
@@ -116,10 +121,10 @@ function SocialPost({
         <Share2 size={18} />
       </div>
 
-      {/* Deleted overlay - same style as photo */}
+      {/* Deleted overlay - full opacity for badge */}
       {isDeleted && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-          <div className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium text-sm shadow-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+          <div className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-semibold text-sm shadow-lg">
             <X size={16} />
             Removed
           </div>
@@ -265,12 +270,8 @@ function ProfileSnippet({
 
   return (
     <div>
-      {/* Cover image placeholder - blue for before, gray for after (matches overview) */}
-      <div className={`h-10 -mx-3 -mt-3 rounded-t-lg ${
-        isBefore
-          ? 'bg-gradient-to-r from-blue-400 to-blue-600'
-          : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700'
-      }`} />
+      {/* Cover image placeholder - blue for both before and after */}
+      <div className="h-10 -mx-3 -mt-3 rounded-t-lg bg-gradient-to-r from-blue-400 to-blue-600" />
 
       {/* Profile content with proper padding */}
       <div className="flex items-start gap-3 pt-3">
@@ -413,7 +414,7 @@ export function BeforeAfterComparison({
 }) {
   return (
     <div className="flex flex-col md:flex-row items-stretch gap-3">
-      <div className="flex-1 flex">
+      <div className="flex-1 min-w-0">
         <BeforeAfterBox
           type="before"
           title={before.title}
@@ -422,13 +423,13 @@ export function BeforeAfterComparison({
         />
       </div>
 
-      {/* Arrow */}
-      <div className="flex items-center justify-center py-1 md:py-0">
+      {/* Arrow - minimal padding */}
+      <div className="flex items-center justify-center py-1 md:py-0 md:px-1 flex-shrink-0">
         <ArrowDown className="md:hidden w-5 h-5 text-gray-400" />
         <ArrowRight className="hidden md:block w-5 h-5 text-gray-400" />
       </div>
 
-      <div className="flex-1 flex">
+      <div className="flex-1 min-w-0">
         <BeforeAfterBox
           type="after"
           title={after.title}

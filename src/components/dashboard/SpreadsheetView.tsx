@@ -5,7 +5,11 @@ import { Platform, PlatformProgress, CustomSite } from '@/lib/types';
 import { getNonDeleteSteps, TOTAL_STEPS } from '@/lib/steps';
 import PlatformIcon from '@/components/PlatformIcon';
 import LucideIcon from '@/components/ui/LucideIcon';
-import { Check, Minus, Trash2, RotateCcw, ChevronDown, PartyPopper } from 'lucide-react';
+import { Check, Minus, Trash2, RotateCcw, ChevronDown, PartyPopper, X } from 'lucide-react';
+import { BeforeAfterComparison } from '@/components/step/BeforeAfterBox';
+import CollapsibleHelp from '@/components/step/CollapsibleHelp';
+import WhyImportant from '@/components/step/WhyImportant';
+import { Step } from '@/lib/types';
 
 type PriorityLevel = 'highest' | 'high' | 'medium' | 'low';
 
@@ -38,6 +42,71 @@ interface SpreadsheetViewProps {
 }
 
 type CellState = 'empty' | 'completed' | 'skipped';
+
+// Step info modal - shows when clicking a header
+function StepInfoModal({
+  step,
+  onClose,
+}: {
+  step: Step;
+  onClose: () => void;
+}) {
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="sticky top-0 bg-white dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                <LucideIcon name={step.icon} size={24} className="text-gray-700 dark:text-gray-300" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                {step.title}
+              </h3>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <X size={20} className="text-gray-500 dark:text-gray-400" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-6">
+            {/* Description */}
+            <p className="text-gray-600 dark:text-gray-400">
+              {step.description}
+            </p>
+
+            {/* Before/After comparison */}
+            {step.beforeAfter && (
+              <BeforeAfterComparison
+                before={step.beforeAfter.before}
+                after={step.beforeAfter.after}
+              />
+            )}
+
+            {/* How to do it */}
+            {step.howTo && (
+              <CollapsibleHelp content={step.howTo} />
+            )}
+
+            {/* Why is this important */}
+            {step.educationalContext && (
+              <WhyImportant content={step.educationalContext} />
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
 
 // Confirmation modal for delete
 function DeleteConfirmModal({
@@ -192,13 +261,18 @@ function StepCell({
 // Delete action cell - button that triggers confirmation or restore
 function DeleteCell({
   isDeleted,
+  isCompleted,
   onDelete,
   onRestore,
 }: {
   isDeleted: boolean;
+  isCompleted: boolean;
   onDelete: () => void;
   onRestore?: () => void;
 }) {
+  const [isHovering, setIsHovering] = useState(false);
+
+  // Deleted - show restore button
   if (isDeleted && onRestore) {
     return (
       <button
@@ -219,6 +293,29 @@ function DeleteCell({
     );
   }
 
+  // Completed (not deleted) - hide trash, show reset on hover
+  if (isCompleted && onRestore) {
+    return (
+      <div
+        className="flex items-center justify-center p-2"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        {isHovering ? (
+          <button
+            onClick={onRestore}
+            className="text-[10px] font-medium text-gray-500 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+          >
+            Reset
+          </button>
+        ) : (
+          <span className="w-4 h-4" /> // Empty space to maintain layout
+        )}
+      </div>
+    );
+  }
+
+  // Not started or in progress - show delete button
   return (
     <button
       onClick={onDelete}
@@ -324,6 +421,8 @@ function PlatformRow({
   const skippedCount = progress.skippedSteps.filter(s => s > 1).length;
   const totalNonDeleteSteps = TOTAL_STEPS - 1;
   const progressPercent = Math.round(((completedCount + skippedCount) / totalNonDeleteSteps) * 100);
+  // User has implicitly chosen to keep the account if they've marked any step
+  const hasStartedSteps = completedCount > 0 || skippedCount > 0;
 
   const getCellState = (stepNumber: number): CellState => {
     if (progress.completedSteps.includes(stepNumber)) return 'completed';
@@ -342,7 +441,7 @@ function PlatformRow({
   // Row background color based on status
   const getRowClass = () => {
     if (isDeleted) {
-      return 'bg-red-50/50 dark:bg-red-900/10';
+      return 'bg-emerald-50/50 dark:bg-emerald-900/10';
     }
     if (isCompleted) {
       return 'bg-emerald-50/50 dark:bg-emerald-900/10';
@@ -358,7 +457,7 @@ function PlatformRow({
       {/* Platform name */}
       <td
         className={`px-3 py-2 sticky left-0 z-10 cursor-pointer border-r border-gray-100 dark:border-gray-700 ${
-          isDeleted ? 'bg-red-50/50 dark:bg-red-900/10' :
+          isDeleted ? 'bg-emerald-50/50 dark:bg-emerald-900/10' :
           isCompleted ? 'bg-emerald-50/50 dark:bg-emerald-900/10' :
           'bg-white dark:bg-gray-800'
         } hover:bg-gray-50 dark:hover:bg-gray-700/50`}
@@ -378,9 +477,17 @@ function PlatformRow({
         </div>
       </td>
 
-      {/* Delete action cell */}
+      {/* Delete action cell - hidden when user has started marking steps (implicitly keeping account) */}
       <td className="px-1 py-1 text-center bg-red-50/30 dark:bg-red-900/5 border-r border-gray-100 dark:border-gray-700">
-        <DeleteCell isDeleted={isDeleted} onDelete={onDelete} onRestore={onRestore} />
+        {!hasStartedSteps && !isDeleted && !isCompleted ? (
+          <DeleteCell isDeleted={isDeleted} isCompleted={isCompleted} onDelete={onDelete} onRestore={onRestore} />
+        ) : isDeleted ? (
+          <DeleteCell isDeleted={isDeleted} isCompleted={isCompleted} onDelete={onDelete} onRestore={onRestore} />
+        ) : (
+          <div className="p-2">
+            <span className="w-4 h-4 block" /> {/* Empty space to maintain layout */}
+          </div>
+        )}
       </td>
 
       {/* Step cells (2-9) */}
@@ -442,6 +549,7 @@ export default function SpreadsheetView({
   onAddPlatformsClick,
 }: SpreadsheetViewProps) {
   const [deleteConfirm, setDeleteConfirm] = useState<{ platformId: string; platformName: string } | null>(null);
+  const [selectedStep, setSelectedStep] = useState<Step | null>(null);
   const steps = getNonDeleteSteps();
   const totalColumns = 2 + steps.length + 1; // platform + delete + steps + progress
 
@@ -523,12 +631,13 @@ export default function SpreadsheetView({
                 {steps.map((step) => (
                   <th
                     key={step.id}
-                    className="text-center px-1 py-3 min-w-[60px]"
-                    title={step.title}
+                    className="text-center px-2 py-3 min-w-[70px] cursor-pointer group hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+                    title={`${step.title}: ${step.description}`}
+                    onClick={() => setSelectedStep(step)}
                   >
-                    <div className="flex flex-col items-center gap-1">
-                      <LucideIcon name={step.icon} size={16} className="text-gray-500 dark:text-gray-400" />
-                      <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 leading-tight max-w-[55px] truncate">
+                    <div className="flex flex-col items-center gap-1.5">
+                      <LucideIcon name={step.icon} size={18} className="text-gray-600 dark:text-gray-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors" />
+                      <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 leading-tight whitespace-normal group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                         {step.shortTitle || step.title.split(' ')[0]}
                       </span>
                     </div>
@@ -585,6 +694,14 @@ export default function SpreadsheetView({
           platformName={deleteConfirm.platformName}
           onConfirm={confirmDelete}
           onCancel={() => setDeleteConfirm(null)}
+        />
+      )}
+
+      {/* Step info modal */}
+      {selectedStep && (
+        <StepInfoModal
+          step={selectedStep}
+          onClose={() => setSelectedStep(null)}
         />
       )}
     </div>

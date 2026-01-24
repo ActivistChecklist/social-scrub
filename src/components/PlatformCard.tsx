@@ -3,12 +3,14 @@
 import { Platform, PlatformProgress } from '@/lib/types';
 import PlatformIcon from './PlatformIcon';
 import { calculatePlatformProgress } from '@/lib/storage';
+import { X } from 'lucide-react';
 
 interface PlatformCardProps {
   platform: Platform;
   selected?: boolean;
   progress?: PlatformProgress;
   onClick?: () => void;
+  onRemove?: () => void;
   showStatus?: boolean;
 }
 
@@ -17,6 +19,7 @@ export default function PlatformCard({
   selected = false,
   progress,
   onClick,
+  onRemove,
   showStatus = false,
 }: PlatformCardProps) {
   const isDeleted = progress?.method === 'deleted';
@@ -26,7 +29,7 @@ export default function PlatformCard({
     in_progress: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     secured: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
     skipped: 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-500',
-    deleted: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    deleted: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
   };
 
   const statusLabels = {
@@ -48,7 +51,7 @@ export default function PlatformCard({
   if (selected) {
     cardStyles = 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20';
   } else if (isDeleted) {
-    cardStyles = 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700 opacity-70 hover:opacity-90';
+    cardStyles = 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/20 hover:border-emerald-300 dark:hover:border-emerald-700';
   } else if (isSecured) {
     cardStyles = 'border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:border-emerald-400 dark:hover:border-emerald-600';
   } else if (isSkipped) {
@@ -110,6 +113,20 @@ export default function PlatformCard({
             />
           </svg>
         </div>
+      )}
+
+      {/* Remove button - shown when selected and onRemove provided */}
+      {selected && onRemove && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors shadow-sm z-10"
+          title="Remove"
+        >
+          <X size={10} className="text-white" strokeWidth={3} />
+        </button>
       )}
     </button>
   );

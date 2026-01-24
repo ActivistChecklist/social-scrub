@@ -14,8 +14,9 @@ import WhyImportant from '@/components/step/WhyImportant';
 import RandomNameGenerator from '@/components/step/RandomNameGenerator';
 import RandomUsernameGenerator from '@/components/step/RandomUsernameGenerator';
 import { EmailSuggestion } from '@/components/step/SuggestionBox';
+import BlockPartySuggestion from '@/components/step/BlockPartySuggestion';
 import LucideIcon, { Check, ChevronRight } from '@/components/ui/LucideIcon';
-import { Trash2, Lock, ChevronLeft } from 'lucide-react';
+import { Trash2, Lock, ChevronLeft, Save } from 'lucide-react';
 
 interface StepPageProps {
   params: { platformId: string; step: string };
@@ -36,6 +37,8 @@ export default function StepPage({ params }: StepPageProps) {
 
   // State for delete step flow
   const [showDeleteInstructions, setShowDeleteInstructions] = useState(false);
+  // State to track navigation - prevents button flash
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -79,6 +82,7 @@ export default function StepPage({ params }: StepPageProps) {
   const isStepHandled = isStepCompleted || isStepSkipped;
 
   const handleDone = () => {
+    setIsNavigating(true);
     completeStep(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
       router.push(`/platform/${platformId}/complete`);
@@ -88,6 +92,7 @@ export default function StepPage({ params }: StepPageProps) {
   };
 
   const handleSkip = () => {
+    setIsNavigating(true);
     skipStep(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
       router.push(`/platform/${platformId}/complete`);
@@ -153,12 +158,18 @@ export default function StepPage({ params }: StepPageProps) {
                 )}
               </div>
             </div>
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-            >
-              Dashboard
-            </button>
+            <div className="flex items-center gap-4">
+              <span className="hidden sm:flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
+                <Save size={12} />
+                Auto-saved
+              </span>
+              <button
+                onClick={() => router.push('/dashboard')}
+                className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
+              >
+                ← Dashboard
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -260,8 +271,9 @@ export default function StepPage({ params }: StepPageProps) {
                           size="lg"
                           onClick={handleDone}
                           className="flex-1 md:py-4 md:text-lg"
+                          disabled={isNavigating}
                         >
-                          {isStepCompleted ? (
+                          {isStepCompleted && !isNavigating ? (
                             <>
                               <Check size={20} className="mr-2" />
                               Marked as Done
@@ -275,13 +287,14 @@ export default function StepPage({ params }: StepPageProps) {
                           variant="outline"
                           onClick={handleSkip}
                           className="flex-1"
+                          disabled={isNavigating}
                         >
-                          {isStepSkipped ? 'Marked as Skipped' : 'Skip'}
+                          {isStepSkipped && !isNavigating ? 'Marked as Skipped' : 'Skip'}
                         </Button>
                       </div>
 
                       {/* Show "Proceed to Next Step" button when revisiting a completed/skipped step */}
-                      {isStepHandled && stepNumber < TOTAL_STEPS && (
+                      {isStepHandled && !isNavigating && stepNumber < TOTAL_STEPS && (
                         <Button
                           size="lg"
                           variant="outline"
@@ -314,6 +327,11 @@ export default function StepPage({ params }: StepPageProps) {
           {!isDeleteStep && (
             <div className="max-w-4xl mx-auto px-6 py-8">
               <div className="space-y-6">
+                {/* Block Party suggestion for privacy settings step on supported platforms */}
+                {stepNumber === 9 && platform.hasBlockParty && (
+                  <BlockPartySuggestion platformName={platform.name} />
+                )}
+
                 {/* Before/After comparison */}
                 {step.beforeAfter && (
                   <BeforeAfterComparison

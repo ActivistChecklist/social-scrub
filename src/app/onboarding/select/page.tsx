@@ -8,7 +8,7 @@ import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
 import PlatformCard from '@/components/PlatformCard';
 import Footer from '@/components/Footer';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Check } from 'lucide-react';
 
 type DepthLevel = 'essential' | 'recommended' | 'thorough' | 'complete';
 
@@ -189,6 +189,7 @@ export default function PlatformSelection() {
                       platform={platform}
                       selected={selectedPlatforms.has(platform.id)}
                       onClick={() => handleTogglePlatform(platform.id)}
+                      onRemove={selectedPlatforms.has(platform.id) ? () => handleTogglePlatform(platform.id) : undefined}
                     />
                   ))}
                 </div>
@@ -204,7 +205,7 @@ export default function PlatformSelection() {
                 className="inline-flex items-center justify-center gap-3 px-6 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors w-full max-w-md"
               >
                 <span className="text-base font-semibold text-gray-700 dark:text-gray-200">
-                  I want to review all the social sites
+                  Show me more sites to pick from
                 </span>
                 <span className="text-gray-400">→</span>
               </button>
@@ -241,22 +242,41 @@ export default function PlatformSelection() {
                   />
                 </div>
 
-                {/* List of custom platforms */}
+                {/* Custom platforms displayed as cards like AddPlatformsModal */}
                 {customPlatforms.length > 0 && (
-                  <div className="space-y-2 mb-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                     {customPlatforms.map((platform, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg px-3 py-2"
+                        className="relative flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                       >
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {/* Custom platform icon placeholder */}
+                        <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {platform[0]?.toUpperCase()}
+                          </span>
+                        </div>
+
+                        {/* Platform name */}
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
                           {platform}
                         </span>
+
+                        {/* Checkmark */}
+                        <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                          <Check size={12} className="text-white" strokeWidth={3} />
+                        </div>
+
+                        {/* Remove button - positioned in corner */}
                         <button
-                          onClick={() => handleRemoveCustom(index)}
-                          className="text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveCustom(index);
+                          }}
+                          className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors shadow-sm"
+                          title="Remove"
                         >
-                          <X size={16} />
+                          <X size={10} className="text-white" strokeWidth={3} />
                         </button>
                       </div>
                     ))}

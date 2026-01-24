@@ -10,14 +10,13 @@ import SaveForLaterModal from '@/components/SaveForLaterModal';
 import VisualProgressBar from '@/components/dashboard/VisualProgressBar';
 import ContinueCTA from '@/components/dashboard/ContinueCTA';
 import AddPlatformsModal from '@/components/dashboard/AddPlatformsModal';
-import CompactPlatformList from '@/components/dashboard/CompactPlatformList';
 import SpreadsheetView from '@/components/dashboard/SpreadsheetView';
 import Footer from '@/components/Footer';
 import { Platform, PlatformProgress } from '@/lib/types';
-import { calculatePlatformProgress } from '@/lib/storage';
-import { LayoutGrid, List, Table } from 'lucide-react';
+import { LayoutGrid, Table } from 'lucide-react';
 
-// Sort platforms within a group: completed, deleted, in-progress (by %), then not started
+// Sort platforms within a group: completed, deleted, in-progress, then not started
+// Within each status group, maintain original priority order (don't re-sort)
 function sortPlatformsWithinGroup(platforms: PlatformProgress[]): PlatformProgress[] {
   return [...platforms].sort((a, b) => {
     const aDeleted = a.method === 'deleted';
@@ -35,21 +34,16 @@ function sortPlatformsWithinGroup(platforms: PlatformProgress[]): PlatformProgre
     if (aDeleted && !bDeleted) return -1;
     if (!aDeleted && bDeleted) return 1;
 
-    // In-progress third (sorted by progress %)
-    if (aInProgress && bInProgress) {
-      const aProgress = calculatePlatformProgress(a);
-      const bProgress = calculatePlatformProgress(b);
-      return bProgress - aProgress; // Higher progress first
-    }
+    // In-progress third (maintain original order within group)
     if (aInProgress && !bInProgress) return -1;
     if (!aInProgress && bInProgress) return 1;
 
-    // Rest maintains original order
+    // Within the same status group, maintain original order (priority order)
     return 0;
   });
 }
 
-type ViewMode = 'cards' | 'compact' | 'spreadsheet';
+type ViewMode = 'cards' | 'spreadsheet';
 
 type PriorityLevel = 'highest' | 'high' | 'medium' | 'low';
 
@@ -147,7 +141,8 @@ export default function Dashboard() {
       groups[priority].push({ platform, progress });
     });
 
-    // Sort each group using the same logic
+    // Sort each group: completed, deleted, in-progress, then not started
+    // Within each status group, maintain original order (priority order)
     Object.keys(groups).forEach(priority => {
       groups[priority].sort((a, b) => {
         const aDeleted = a.progress.method === 'deleted';
@@ -161,11 +156,9 @@ export default function Dashboard() {
         if (!aCompleted && bCompleted) return 1;
         if (aDeleted && !bDeleted) return -1;
         if (!aDeleted && bDeleted) return 1;
-        if (aInProgress && bInProgress) {
-          return calculatePlatformProgress(b.progress) - calculatePlatformProgress(a.progress);
-        }
         if (aInProgress && !bInProgress) return -1;
         if (!aInProgress && bInProgress) return 1;
+        // Maintain original order within same status group
         return 0;
       });
     });
@@ -173,30 +166,6 @@ export default function Dashboard() {
     return groups;
   }, [session]);
 
-  // Get custom platforms with progress for compact view
-  const customPlatformsForList = useMemo(() => {
-    if (!session) return [];
-
-    return session.customSites.map((customSite) => {
-      const customPlatform: Platform = {
-        id: customSite.id,
-        name: customSite.name,
-        category: 'other',
-        priority: customSite.priority === 'high' ? 'high' : customSite.priority === 'medium' ? 'medium' : 'low',
-      };
-      const isDeleted = customSite.status === 'secured' && customSite.completedSteps.includes(1);
-      const customProgress = {
-        platformId: customSite.id,
-        status: customSite.status,
-        hasAccount: 'yes' as const,
-        currentStep: 1,
-        completedSteps: customSite.completedSteps,
-        skippedSteps: customSite.skippedSteps,
-        method: isDeleted ? 'deleted' as const : undefined,
-      };
-      return { platform: customPlatform, progress: customProgress };
-    });
-  }, [session]);
 
   const handleAddPlatforms = (platformIds: string[]) => {
     addPlatforms(platformIds);
@@ -286,17 +255,6 @@ export default function Dashboard() {
                     Cards
                   </button>
                   <button
-                    onClick={() => setViewMode('compact')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                      viewMode === 'compact'
-                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    <List size={16} />
-                    Compact
-                  </button>
-                  <button
                     onClick={() => setViewMode('spreadsheet')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                       viewMode === 'spreadsheet'
@@ -323,12 +281,6 @@ export default function Dashboard() {
                   onPlatformComplete={(platformId) => completePlatform(platformId)}
                   onPlatformReset={(platformId) => restorePlatform(platformId)}
                   onAddPlatformsClick={() => setShowAddPlatformsModal(true)}
-                />
-              ) : viewMode === 'compact' ? (
-                <CompactPlatformList
-                  groupedPlatforms={groupedPlatformsWithInfo}
-                  customPlatforms={customPlatformsForList}
-                  onPlatformClick={(platformId) => router.push(`/platform/${platformId}`)}
                 />
               ) : (
                 /* Card view */
@@ -421,18 +373,6 @@ export default function Dashboard() {
                 </>
               )}
 
-              {/* Add platforms button - shown in compact view only (spreadsheet has its own) */}
-              {viewMode === 'compact' && (
-                <div className="flex items-center justify-center pt-4">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => setShowAddPlatformsModal(true)}
-                  >
-                    + Add More Platforms
-                  </Button>
-                </div>
-              )}
             </>
           )}
         </div>

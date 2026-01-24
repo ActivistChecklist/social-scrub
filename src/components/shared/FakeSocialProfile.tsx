@@ -60,15 +60,9 @@ export default function FakeSocialProfile({
 
   return (
     <div className={`bg-white dark:bg-gray-900 rounded-lg overflow-hidden ${className}`}>
-      {/* Cover photo */}
+      {/* Cover photo - blue for both before and after */}
       {showCover && (
-        <div
-          className={`${coverHeight} ${
-            isBefore
-              ? 'bg-gradient-to-r from-blue-400 to-blue-600'
-              : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700'
-          }`}
-        />
+        <div className={`${coverHeight} bg-gradient-to-r from-blue-400 to-blue-600`} />
       )}
 
       {/* Profile content */}

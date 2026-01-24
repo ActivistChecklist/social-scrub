@@ -112,17 +112,22 @@ export function markStepComplete(
 ): Session {
   const progress = getPlatformProgress(session, platformId);
   const completedSteps = progress?.completedSteps || [];
+  const skippedSteps = progress?.skippedSteps || [];
 
-  if (completedSteps.includes(stepNumber)) {
-    return session;
-  }
+  // Remove from skipped if it was there (toggling state)
+  const newSkippedSteps = skippedSteps.filter(s => s !== stepNumber);
 
-  const newCompletedSteps = [...completedSteps, stepNumber];
+  // Add to completed if not already there
+  const newCompletedSteps = completedSteps.includes(stepNumber)
+    ? completedSteps
+    : [...completedSteps, stepNumber];
+
   const nextStep = stepNumber + 1;
-  const isComplete = newCompletedSteps.length + (progress?.skippedSteps?.length || 0) >= TOTAL_STEPS;
+  const isComplete = newCompletedSteps.length + newSkippedSteps.length >= TOTAL_STEPS;
 
   return updatePlatformProgress(session, platformId, {
     completedSteps: newCompletedSteps,
+    skippedSteps: newSkippedSteps,
     currentStep: nextStep > TOTAL_STEPS ? TOTAL_STEPS : nextStep,
     status: isComplete ? 'secured' : 'in_progress',
     completedAt: isComplete ? new Date().toISOString() : undefined,
@@ -135,17 +140,22 @@ export function markStepSkipped(
   stepNumber: number
 ): Session {
   const progress = getPlatformProgress(session, platformId);
+  const completedSteps = progress?.completedSteps || [];
   const skippedSteps = progress?.skippedSteps || [];
 
-  if (skippedSteps.includes(stepNumber)) {
-    return session;
-  }
+  // Remove from completed if it was there (toggling state)
+  const newCompletedSteps = completedSteps.filter(s => s !== stepNumber);
 
-  const newSkippedSteps = [...skippedSteps, stepNumber];
+  // Add to skipped if not already there
+  const newSkippedSteps = skippedSteps.includes(stepNumber)
+    ? skippedSteps
+    : [...skippedSteps, stepNumber];
+
   const nextStep = stepNumber + 1;
-  const isComplete = (progress?.completedSteps?.length || 0) + newSkippedSteps.length >= TOTAL_STEPS;
+  const isComplete = newCompletedSteps.length + newSkippedSteps.length >= TOTAL_STEPS;
 
   return updatePlatformProgress(session, platformId, {
+    completedSteps: newCompletedSteps,
     skippedSteps: newSkippedSteps,
     currentStep: nextStep > TOTAL_STEPS ? TOTAL_STEPS : nextStep,
     status: isComplete ? 'secured' : 'in_progress',
@@ -215,13 +225,20 @@ export function markPlatformComplete(session: Session, platformId: string): Sess
 // Session Statistics
 export function getSessionStats(session: Session) {
   const platforms = session.platforms;
+  const customSites = session.customSites || [];
+
+  // Count custom sites by status
+  const customNotStarted = customSites.filter(s => s.status === 'not_started').length;
+  const customInProgress = customSites.filter(s => s.status === 'in_progress').length;
+  const customSecured = customSites.filter(s => s.status === 'secured').length;
+  const customSkipped = customSites.filter(s => s.status === 'skipped').length;
 
   return {
-    total: platforms.length,
-    notStarted: platforms.filter(p => p.status === 'not_started').length,
-    inProgress: platforms.filter(p => p.status === 'in_progress').length,
-    secured: platforms.filter(p => p.status === 'secured').length,
-    skipped: platforms.filter(p => p.status === 'skipped').length,
+    total: platforms.length + customSites.length,
+    notStarted: platforms.filter(p => p.status === 'not_started').length + customNotStarted,
+    inProgress: platforms.filter(p => p.status === 'in_progress').length + customInProgress,
+    secured: platforms.filter(p => p.status === 'secured').length + customSecured,
+    skipped: platforms.filter(p => p.status === 'skipped').length + customSkipped,
   };
 }
 

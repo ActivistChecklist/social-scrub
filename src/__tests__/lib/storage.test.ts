@@ -76,6 +76,23 @@ describe('storage', () => {
       expect(progress.status).toBe('secured');
       expect(progress.completedAt).toBeDefined();
     });
+
+    it('should toggle from skipped to completed', () => {
+      let session = createEmptySession();
+      session.platforms = [createPlatformProgress('facebook')];
+
+      // First skip the step
+      session = markStepSkipped(session, 'facebook', 1);
+      expect(session.platforms[0].skippedSteps).toContain(1);
+      expect(session.platforms[0].completedSteps).not.toContain(1);
+
+      // Now mark as completed - should remove from skipped and add to completed
+      session = markStepComplete(session, 'facebook', 1);
+
+      const progress = session.platforms[0];
+      expect(progress.completedSteps).toContain(1);
+      expect(progress.skippedSteps).not.toContain(1);
+    });
   });
 
   describe('markStepSkipped', () => {
@@ -88,6 +105,23 @@ describe('storage', () => {
       const progress = session.platforms[0];
       expect(progress.skippedSteps).toContain(1);
       expect(progress.currentStep).toBe(2);
+    });
+
+    it('should toggle from completed to skipped', () => {
+      let session = createEmptySession();
+      session.platforms = [createPlatformProgress('facebook')];
+
+      // First complete the step
+      session = markStepComplete(session, 'facebook', 1);
+      expect(session.platforms[0].completedSteps).toContain(1);
+      expect(session.platforms[0].skippedSteps).not.toContain(1);
+
+      // Now mark as skipped - should remove from completed and add to skipped
+      session = markStepSkipped(session, 'facebook', 1);
+
+      const progress = session.platforms[0];
+      expect(progress.skippedSteps).toContain(1);
+      expect(progress.completedSteps).not.toContain(1);
     });
   });
 
@@ -123,6 +157,55 @@ describe('storage', () => {
       expect(stats.inProgress).toBe(1);
       expect(stats.notStarted).toBe(1);
       expect(stats.skipped).toBe(1);
+    });
+
+    it('should include custom sites in stats', () => {
+      const session = createEmptySession();
+      session.platforms = [
+        { ...createPlatformProgress('facebook'), status: 'secured' },
+        { ...createPlatformProgress('twitter'), status: 'in_progress' },
+      ];
+      session.customSites = [
+        {
+          id: 'custom-1',
+          name: 'Custom Site 1',
+          priority: 'medium',
+          status: 'secured',
+          completedSteps: [1, 2, 3],
+          skippedSteps: [],
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: 'custom-2',
+          name: 'Custom Site 2',
+          priority: 'medium',
+          status: 'not_started',
+          completedSteps: [],
+          skippedSteps: [],
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: 'custom-3',
+          name: 'Custom Site 3',
+          priority: 'high',
+          status: 'in_progress',
+          completedSteps: [1],
+          skippedSteps: [],
+          createdAt: new Date().toISOString(),
+        },
+      ];
+
+      const stats = getSessionStats(session);
+
+      // 2 built-in + 3 custom = 5 total
+      expect(stats.total).toBe(5);
+      // 1 built-in secured + 1 custom secured = 2
+      expect(stats.secured).toBe(2);
+      // 1 built-in in_progress + 1 custom in_progress = 2
+      expect(stats.inProgress).toBe(2);
+      // 0 built-in not_started + 1 custom not_started = 1
+      expect(stats.notStarted).toBe(1);
+      expect(stats.skipped).toBe(0);
     });
   });
 
