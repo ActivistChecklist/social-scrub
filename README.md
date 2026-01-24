@@ -1,10 +1,10 @@
-# Social Scrub
+# SocialScrub.app
 
 **Protect yourself from doxxing by locking down your social media accounts.**
 
 ## Use the App
 
-**[Launch Social Scrub](https://social-scrub-rho.vercel.app/dashboard)** - No signup required. Your progress is saved locally in your browser.
+**[Launch Social Scrub (https://socialscrub.app)](https://socialscrub.app)** - No signup required. Your progress is saved locally in your browser.
 
 ---
 
@@ -44,7 +44,7 @@ Doxxing (publishing someone's private information online) can lead to harassment
 ### Related Resources
 
 - **[Activist Checklist](https://activistchecklist.org)** - Comprehensive security guide for activists
-- **[Anti-Doxxing Guide](https://activistchecklist.org/doxxing)** - Deep dive into protecting yourself from doxxing
+- **[Doxxing Defense](https://activistchecklist.org/doxxing)** - Deep dive into protecting yourself from doxxing
 
 ---
 

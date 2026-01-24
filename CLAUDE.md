@@ -16,6 +16,7 @@ Social Scrub is a privacy-focused Next.js web app that guides non-technical user
 2. **When to commit:** If we are on a feature branch with uncommitted changes, commit them before starting this round of work (if its sizeable). Do not end a set of changes with anything stashed. Don't use stash at all if you can avoid it. Always just commit things.
 3. **Make atomic commits** as you work: Each commit should represent a single logical change with a clear commit message. Do not include a mention to claude in the commit message. IMPORTANT: If I send you a long list of changes in one prompt, commit after each thing that you designate as a separate "task".
 4. **Only work on feature branches**: Never make commits directly to `main`
+5. If you're using the GitHub CLI, the command is always `gh-ac` instead of the usual `gh`
 
 Example workflow:
 
