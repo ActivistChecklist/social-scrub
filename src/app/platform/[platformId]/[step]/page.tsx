@@ -224,27 +224,56 @@ export default function StepPage({ params }: StepPageProps) {
                     </p>
                   </div>
 
-                  {/* Delete step buttons - equal visual weight */}
+                  {/* Delete step - two option boxes */}
                   {isDeleteStep && !showDeleteInstructions ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto md:mx-0">
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={() => setShowDeleteInstructions(true)}
-                        className="w-full border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2"
-                      >
-                        <Trash2 size={18} className="text-gray-600 dark:text-gray-400" />
-                        Delete account
-                      </Button>
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={handleKeepAccount}
-                        className="w-full border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2"
-                      >
-                        <Lock size={18} className="text-gray-600 dark:text-gray-400" />
-                        Keep &amp; lock it down
-                      </Button>
+                    <div className="space-y-4 max-w-2xl">
+                      {/* Option 1: Delete account */}
+                      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Trash2 size={20} className="text-gray-600 dark:text-gray-400" />
+                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Option 1: Delete the account</h3>
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Permanently removes all your data from this platform.
+                            </p>
+                          </div>
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={() => setShowDeleteInstructions(true)}
+                            className="w-full md:w-auto flex items-center justify-center gap-2"
+                          >
+                            Delete account
+                            <ChevronRight size={18} />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Option 2: Keep & lock down */}
+                      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Lock size={20} className="text-gray-600 dark:text-gray-400" />
+                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Option 2: Keep &amp; lock it down</h3>
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Keep your account but make it private and harder to find.
+                            </p>
+                          </div>
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={handleKeepAccount}
+                            className="w-full md:w-auto flex items-center justify-center gap-2"
+                          >
+                            Lock it down
+                            <ChevronRight size={18} />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   ) : isDeleteStep && showDeleteInstructions ? (
                     <div className="space-y-4 max-w-lg mx-auto md:mx-0">
@@ -257,9 +286,10 @@ export default function StepPage({ params }: StepPageProps) {
                           size="lg"
                           variant="danger"
                           onClick={handleDeleteAccount}
-                          className="w-full"
+                          className="w-full flex items-center justify-center gap-2"
                         >
                           I deleted it
+                          <ChevronRight size={18} />
                         </Button>
                         <Button
                           size="lg"
