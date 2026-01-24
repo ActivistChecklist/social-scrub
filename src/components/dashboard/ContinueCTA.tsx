@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { PlatformProgress } from '@/lib/types';
 import { getPlatform } from '@/lib/platforms';
 import PlatformIcon from '@/components/PlatformIcon';
+import { ChevronRight } from 'lucide-react';
 
 interface ContinueCTAProps {
   nextPlatform: PlatformProgress;
@@ -22,35 +23,38 @@ export default function ContinueCTA({ nextPlatform }: ContinueCTAProps) {
       onClick={() => router.push(`/platform/${nextPlatform.platformId}`)}
       className="w-full group"
     >
-      <div className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 border-2 border-emerald-200 dark:border-emerald-800 rounded-2xl p-6 hover:shadow-lg transition-all group-hover:scale-[1.02]">
+      {/* Bright, attention-grabbing card */}
+      <div className="bg-emerald-600 dark:bg-emerald-700 rounded-2xl p-5 hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 dark:shadow-emerald-900/50">
         <div className="flex items-center gap-4">
-          {/* Platform icon */}
-          <div className="flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+          {/* Platform icon in white container */}
+          <div className="flex-shrink-0 bg-white rounded-xl p-3">
             <PlatformIcon
               iconName={platform.icon}
               platformName={platform.name}
-              size={48}
+              size={36}
             />
           </div>
 
-          {/* Content */}
-          <div className="flex-1 text-left">
-            <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400 mb-1">
-              {isInProgress ? 'Continue where you left off' : 'Ready to secure your next platform?'}
+          {/* Content - left aligned */}
+          <div className="flex-1 min-w-0 text-left">
+            <p className="text-emerald-100 text-sm mb-0.5">
+              {isInProgress ? 'Continue where you left off' : 'Up next'}
             </p>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-              {platform.name}
-            </h3>
-            {isInProgress && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Step {nextPlatform.currentStep} of 9
-              </p>
-            )}
+            <div className="flex items-center gap-2">
+              <h3 className="text-xl font-bold text-white truncate">
+                {platform.name}
+              </h3>
+              {isInProgress && (
+                <span className="text-emerald-200 text-sm whitespace-nowrap">
+                  · Step {nextPlatform.currentStep}/9
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Arrow */}
-          <div className="flex-shrink-0 text-3xl text-emerald-600 dark:text-emerald-400 transform group-hover:translate-x-1 transition-transform">
-            →
+          {/* Compact arrow button */}
+          <div className="flex-shrink-0 bg-white/20 rounded-full p-2 group-hover:bg-white/30 transition-colors">
+            <ChevronRight className="w-6 h-6 text-white" />
           </div>
         </div>
       </div>
