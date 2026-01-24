@@ -11,6 +11,8 @@ interface AnalyticsPayload {
   hostname: string;
   referrer: string;
   title: string;
+  language?: string;
+  screen?: string;
   name?: string;
   data?: Record<string, unknown>;
 }
@@ -43,6 +45,8 @@ function getBasePayload(): Omit<AnalyticsPayload, 'name' | 'data'> {
       hostname: '',
       referrer: '',
       title: '',
+      language: '',
+      screen: '',
     };
   }
 
@@ -51,6 +55,8 @@ function getBasePayload(): Omit<AnalyticsPayload, 'name' | 'data'> {
     hostname: window.location.hostname,
     referrer: document.referrer,
     title: document.title,
+    language: navigator.language,
+    screen: `${window.screen.width}x${window.screen.height}`,
   };
 }
 

@@ -20,6 +20,8 @@ export interface AnalyticsPayload {
   hostname: string;
   referrer: string;
   title: string;
+  language?: string;
+  screen?: string;
   name?: string;
   data?: Record<string, unknown>;
 }
@@ -72,7 +74,8 @@ export function createGeoPreservingAnonymousIP(originalIP: string | null): strin
 }
 
 /**
- * Send an event to the Umami analytics server
+ * Send an event to the self-hosted Umami analytics server
+ * Uses timestamp + hash authentication for self-hosted instances
  */
 export async function sendUmamiEvent(
   payload: AnalyticsPayload,
@@ -80,11 +83,17 @@ export async function sendUmamiEvent(
   clientIP: string | null
 ): Promise<{ success: boolean; error?: string }> {
   const websiteId = process.env.UMAMI_WEBSITE_ID;
-  const apiKey = process.env.UMAMI_API_KEY;
-  const umamiHost = process.env.UMAMI_HOST || 'https://cloud.umami.is';
+  const userId = process.env.UMAMI_API_CLIENT_USER_ID;
+  const appSecret = process.env.UMAMI_API_CLIENT_SECRET;
+  const umamiHost = process.env.UMAMI_HOST;
 
-  if (!websiteId || !apiKey) {
-    console.error('Missing Umami configuration: UMAMI_WEBSITE_ID and UMAMI_API_KEY required');
+  if (!websiteId || !userId || !appSecret || !umamiHost) {
+    console.error('Missing Umami configuration:', {
+      hasWebsiteId: !!websiteId,
+      hasUserId: !!userId,
+      hasAppSecret: !!appSecret,
+      hasUmamiHost: !!umamiHost,
+    });
     return { success: false, error: 'Missing analytics configuration' };
   }
 
@@ -93,11 +102,25 @@ export async function sendUmamiEvent(
   const data = {
     type: 'event',
     payload: {
-      ...payload,
+      url: payload.url,
+      hostname: payload.hostname,
+      referrer: payload.referrer,
+      title: payload.title,
+      language: payload.language || '',
+      screen: payload.screen || '',
+      name: payload.name || '',
+      data: payload.data,
       website: websiteId,
       ip: anonymizedIP,
     },
   };
+
+  // Self-hosted authentication: timestamp + hash
+  const timestamp = Date.now();
+  const hash = crypto
+    .createHash('sha256')
+    .update(`${timestamp}:${userId}:${appSecret}`)
+    .digest('hex');
 
   try {
     const response = await fetch(`${umamiHost}/api/send`, {
@@ -105,7 +128,9 @@ export async function sendUmamiEvent(
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': userAgent || 'SocialScrub/1.0',
-        'x-umami-api-key': apiKey,
+        'x-umami-timestamp': timestamp.toString(),
+        'x-umami-hash': hash,
+        'x-umami-id': userId,
       },
       body: JSON.stringify(data),
     });
