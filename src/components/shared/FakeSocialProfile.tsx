@@ -110,7 +110,7 @@ export default function FakeSocialProfile({
           </div>
 
           {/* Name and username - LEFT ALIGNED */}
-          <div className={`flex-1 min-w-0 ${showCover ? 'pt-4' : ''}`}>
+          <div className={`flex-1 min-w-0 ${showCover ? 'pt-6' : ''}`}>
             <h4 className={`font-bold text-gray-900 dark:text-gray-100 truncate text-left ${highlightField === 'name' ? getFieldClass('name') + ' px-1 inline-block' : getFieldClass('name')}`}>
               {data.name}
             </h4>
