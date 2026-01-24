@@ -40,8 +40,10 @@ export interface Platform {
   category: PlatformCategory;
   priority: 'highest' | 'high' | 'medium' | 'low';
   hasBlockParty?: boolean;
+  url?: string; // Main site URL
   privacyUrl?: string;
   deleteUrl?: string;
+  importanceReason?: string; // Why this platform is important for privacy
 }
 
 export type PlatformCategory =

@@ -16,7 +16,8 @@ import RandomUsernameGenerator from '@/components/step/RandomUsernameGenerator';
 import { EmailSuggestion } from '@/components/step/SuggestionBox';
 import BlockPartySuggestion from '@/components/step/BlockPartySuggestion';
 import LucideIcon, { Check, ChevronRight } from '@/components/ui/LucideIcon';
-import { Trash2, Lock, ChevronLeft, Save } from 'lucide-react';
+import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
+import { Trash2, Lock, ChevronLeft, Save, Info, ExternalLink } from 'lucide-react';
 
 interface StepPageProps {
   params: { platformId: string; step: string };
@@ -39,6 +40,8 @@ export default function StepPage({ params }: StepPageProps) {
   const [showDeleteInstructions, setShowDeleteInstructions] = useState(false);
   // State to track navigation - prevents button flash
   const [isNavigating, setIsNavigating] = useState(false);
+  // State for storage info modal
+  const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -85,7 +88,10 @@ export default function StepPage({ params }: StepPageProps) {
     setIsNavigating(true);
     completeStep(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
-      router.push(`/platform/${platformId}/complete`);
+      // Check if there are skipped steps (excluding delete step 1)
+      // After completing this step, the skipped steps remain the same
+      const hasSkippedSteps = skippedSteps.filter(s => s > 1).length > 0;
+      router.push(`/platform/${platformId}/${hasSkippedSteps ? 'incomplete' : 'complete'}`);
     } else {
       router.push(`/platform/${platformId}/${stepNumber + 1}`);
     }
@@ -95,7 +101,9 @@ export default function StepPage({ params }: StepPageProps) {
     setIsNavigating(true);
     skipStep(platformId, stepNumber);
     if (stepNumber === TOTAL_STEPS) {
-      router.push(`/platform/${platformId}/complete`);
+      // After skipping this step, we'll have at least this step as skipped
+      // So always go to incomplete
+      router.push(`/platform/${platformId}/incomplete`);
     } else {
       router.push(`/platform/${platformId}/${stepNumber + 1}`);
     }
@@ -158,17 +166,33 @@ export default function StepPage({ params }: StepPageProps) {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="hidden sm:flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
-                <Save size={12} />
-                Auto-saved
-              </span>
+            <div className="flex items-center gap-3">
+              {platform.url && (
+                <a
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                >
+                  Open Site
+                  <ExternalLink size={14} />
+                </a>
+              )}
               <button
-                onClick={() => router.push('/dashboard')}
-                className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
+                onClick={() => setShowStorageInfoModal(true)}
+                className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
-                ← Dashboard
+                <Save size={16} />
+                <span>Auto-saved locally</span>
+                <Info size={14} className="text-gray-500 dark:text-gray-400" />
               </button>
+              <Button
+                onClick={() => router.push('/dashboard')}
+                variant="outline"
+                size="sm"
+              >
+                Dashboard
+              </Button>
             </div>
           </div>
         </div>
@@ -216,27 +240,56 @@ export default function StepPage({ params }: StepPageProps) {
                     </p>
                   </div>
 
-                  {/* Delete step buttons - equal visual weight */}
+                  {/* Delete step - two option boxes */}
                   {isDeleteStep && !showDeleteInstructions ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto md:mx-0">
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={() => setShowDeleteInstructions(true)}
-                        className="w-full border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2"
-                      >
-                        <Trash2 size={18} className="text-gray-600 dark:text-gray-400" />
-                        Delete account
-                      </Button>
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={handleKeepAccount}
-                        className="w-full border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2"
-                      >
-                        <Lock size={18} className="text-gray-600 dark:text-gray-400" />
-                        Keep &amp; lock it down
-                      </Button>
+                    <div className="space-y-4 max-w-2xl">
+                      {/* Option 1: Delete account */}
+                      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Trash2 size={20} className="text-gray-600 dark:text-gray-400" />
+                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Option 1: Delete the account</h3>
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Permanently removes all your data from this platform.
+                            </p>
+                          </div>
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={() => setShowDeleteInstructions(true)}
+                            className="w-full md:w-auto flex items-center justify-center gap-2"
+                          >
+                            Delete account
+                            <ChevronRight size={18} />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Option 2: Keep & lock down */}
+                      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Lock size={20} className="text-gray-600 dark:text-gray-400" />
+                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Option 2: Keep &amp; lock it down</h3>
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Keep your account but make it private and harder to find.
+                            </p>
+                          </div>
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={handleKeepAccount}
+                            className="w-full md:w-auto flex items-center justify-center gap-2"
+                          >
+                            Lock it down
+                            <ChevronRight size={18} />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   ) : isDeleteStep && showDeleteInstructions ? (
                     <div className="space-y-4 max-w-lg mx-auto md:mx-0">
@@ -249,9 +302,10 @@ export default function StepPage({ params }: StepPageProps) {
                           size="lg"
                           variant="danger"
                           onClick={handleDeleteAccount}
-                          className="w-full"
+                          className="w-full flex items-center justify-center gap-2"
                         >
                           I deleted it
+                          <ChevronRight size={18} />
                         </Button>
                         <Button
                           size="lg"
@@ -323,15 +377,15 @@ export default function StepPage({ params }: StepPageProps) {
             </div>
           </div>
 
+          {/* Block Party suggestion - full width, breaks container */}
+          {!isDeleteStep && stepNumber === 9 && platform.hasBlockParty && (
+            <BlockPartySuggestion />
+          )}
+
           {/* SECONDARY SECTION: Before/after, generators, how-to */}
           {!isDeleteStep && (
             <div className="max-w-4xl mx-auto px-6 py-8">
               <div className="space-y-6">
-                {/* Block Party suggestion for privacy settings step on supported platforms */}
-                {stepNumber === 9 && platform.hasBlockParty && (
-                  <BlockPartySuggestion platformName={platform.name} />
-                )}
-
                 {/* Before/After comparison */}
                 {step.beforeAfter && (
                   <BeforeAfterComparison
@@ -361,6 +415,12 @@ export default function StepPage({ params }: StepPageProps) {
           )}
         </div>
       </section>
+
+      {/* Local storage info modal */}
+      <LocalStorageInfoModal
+        isOpen={showStorageInfoModal}
+        onClose={() => setShowStorageInfoModal(false)}
+      />
     </main>
   );
 }

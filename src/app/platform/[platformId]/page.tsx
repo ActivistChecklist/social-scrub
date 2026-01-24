@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
 import BeforeAfterPreview from '@/components/platform/BeforeAfterPreview';
-import { PartyPopper, RotateCcw } from 'lucide-react';
+import { PartyPopper, RotateCcw, ExternalLink } from 'lucide-react';
 
 interface PlatformPageProps {
   params: { platformId: string };
@@ -16,7 +16,7 @@ interface PlatformPageProps {
 export default function PlatformIntro({ params }: PlatformPageProps) {
   const { platformId } = params;
   const router = useRouter();
-  const { session, isLoading, getPlatform: getPlatformProgress, startPlatform, skipPlatform, restorePlatform } = useSession();
+  const { session, isLoading, getPlatform: getPlatformProgress, startPlatform, restorePlatform } = useSession();
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -38,6 +38,30 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   }
 
   const progress = getPlatformProgress(platformId);
+
+  // Find the next platform to work on (excluding current platform)
+  const nextPlatform = useMemo(() => {
+    if (!session) return null;
+
+    // First check built-in platforms that haven't been started
+    const notStartedBuiltIn = session.platforms.find(
+      p => p.status === 'not_started' && p.platformId !== platformId
+    );
+    if (notStartedBuiltIn) {
+      const platformInfo = getPlatform(notStartedBuiltIn.platformId);
+      return platformInfo ? { platformId: notStartedBuiltIn.platformId, name: platformInfo.name } : null;
+    }
+
+    // Then check custom platforms
+    const notStartedCustom = session.customSites.find(
+      s => s.status === 'not_started' && s.id !== platformId
+    );
+    if (notStartedCustom) {
+      return { platformId: notStartedCustom.id, name: notStartedCustom.name };
+    }
+
+    return null;
+  }, [session, platformId]);
 
   useEffect(() => {
     // Redirect if platform doesn't exist
@@ -75,8 +99,12 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   };
 
   const handleSkip = () => {
-    skipPlatform(platformId);
-    router.push('/dashboard');
+    // Just navigate to next platform or dashboard - don't mark as skipped
+    if (nextPlatform) {
+      router.push(`/platform/${nextPlatform.platformId}`);
+    } else {
+      router.push('/dashboard');
+    }
   };
 
   const handleRestore = () => {
@@ -182,10 +210,35 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
             <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
               Lock Down {platform.name}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-3">
               Lock down your privacy in just a few steps
             </p>
+            {platform.url && (
+              <a
+                href={platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+              >
+                Open {platform.name}
+                <ExternalLink size={14} />
+              </a>
+            )}
           </div>
+
+          {/* Why this platform is important */}
+          {platform.importanceReason && (
+            <div className="mb-8 max-w-xl mx-auto">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-left">
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2">
+                  Why this matters:
+                </p>
+                <p className="text-sm text-blue-800 dark:text-blue-300">
+                  {platform.importanceReason}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Before/After Preview */}
           <div className="mb-8">

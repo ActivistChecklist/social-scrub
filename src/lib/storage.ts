@@ -69,8 +69,69 @@ export function clearLocalSession(): void {
 }
 
 // Platform Progress Helpers
+
+// Check if platformId belongs to a custom site
+function isCustomSite(session: Session, platformId: string): boolean {
+  return session.customSites?.some(s => s.id === platformId) ?? false;
+}
+
+// Get custom site and convert to PlatformProgress-like object
+function getCustomSiteAsProgress(session: Session, platformId: string): PlatformProgress | undefined {
+  const customSite = session.customSites?.find(s => s.id === platformId);
+  if (!customSite) return undefined;
+
+  // Calculate current step based on progress
+  const maxCompletedStep = Math.max(0, ...customSite.completedSteps, ...customSite.skippedSteps);
+  const currentStep = maxCompletedStep >= TOTAL_STEPS ? TOTAL_STEPS : maxCompletedStep + 1;
+
+  // Check if deleted (step 1 completed)
+  const isDeleted = customSite.completedSteps.includes(1);
+
+  return {
+    platformId: customSite.id,
+    status: customSite.status,
+    hasAccount: 'yes',
+    currentStep,
+    completedSteps: customSite.completedSteps,
+    skippedSteps: customSite.skippedSteps,
+    method: isDeleted ? 'deleted' : undefined,
+    completedAt: customSite.completedAt,
+  };
+}
+
+// Update custom site with PlatformProgress-like updates
+function updateCustomSite(
+  session: Session,
+  platformId: string,
+  updates: Partial<PlatformProgress>
+): Session {
+  const customSiteIndex = session.customSites?.findIndex(s => s.id === platformId) ?? -1;
+  if (customSiteIndex === -1) return session;
+
+  const updatedCustomSites = [...(session.customSites || [])];
+  const existing = updatedCustomSites[customSiteIndex];
+
+  updatedCustomSites[customSiteIndex] = {
+    ...existing,
+    status: updates.status ?? existing.status,
+    completedSteps: updates.completedSteps ?? existing.completedSteps,
+    skippedSteps: updates.skippedSteps ?? existing.skippedSteps,
+    completedAt: updates.completedAt ?? existing.completedAt,
+  };
+
+  return {
+    ...session,
+    customSites: updatedCustomSites,
+  };
+}
+
 export function getPlatformProgress(session: Session, platformId: string): PlatformProgress | undefined {
-  return session.platforms.find(p => p.platformId === platformId);
+  // Check built-in platforms first
+  const builtInProgress = session.platforms.find(p => p.platformId === platformId);
+  if (builtInProgress) return builtInProgress;
+
+  // Check custom sites
+  return getCustomSiteAsProgress(session, platformId);
 }
 
 export function updatePlatformProgress(
@@ -78,6 +139,11 @@ export function updatePlatformProgress(
   platformId: string,
   updates: Partial<PlatformProgress>
 ): Session {
+  // Check if this is a custom site
+  if (isCustomSite(session, platformId)) {
+    return updateCustomSite(session, platformId, updates);
+  }
+
   const existingIndex = session.platforms.findIndex(p => p.platformId === platformId);
 
   if (existingIndex === -1) {
@@ -123,7 +189,12 @@ export function markStepComplete(
     : [...completedSteps, stepNumber];
 
   const nextStep = stepNumber + 1;
-  const isComplete = newCompletedSteps.length + newSkippedSteps.length >= TOTAL_STEPS;
+
+  // For completion, only count non-delete steps (2-9)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = newCompletedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = newSkippedSteps.filter(s => s > 1).length;
+  const isComplete = completedNonDeleteSteps + skippedNonDeleteSteps >= nonDeleteStepsCount;
 
   return updatePlatformProgress(session, platformId, {
     completedSteps: newCompletedSteps,
@@ -152,7 +223,12 @@ export function markStepSkipped(
     : [...skippedSteps, stepNumber];
 
   const nextStep = stepNumber + 1;
-  const isComplete = newCompletedSteps.length + newSkippedSteps.length >= TOTAL_STEPS;
+
+  // For completion, only count non-delete steps (2-9)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = newCompletedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = newSkippedSteps.filter(s => s > 1).length;
+  const isComplete = completedNonDeleteSteps + skippedNonDeleteSteps >= nonDeleteStepsCount;
 
   return updatePlatformProgress(session, platformId, {
     completedSteps: newCompletedSteps,
@@ -202,9 +278,12 @@ export function clearStep(
   const newCompletedSteps = progress.completedSteps.filter(s => s !== stepNumber);
   const newSkippedSteps = progress.skippedSteps.filter(s => s !== stepNumber);
 
-  // Recalculate status
-  const totalHandled = newCompletedSteps.length + newSkippedSteps.length;
-  const isComplete = totalHandled >= TOTAL_STEPS;
+  // Recalculate status (only count non-delete steps 2-9)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = newCompletedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = newSkippedSteps.filter(s => s > 1).length;
+  const totalHandled = completedNonDeleteSteps + skippedNonDeleteSteps;
+  const isComplete = totalHandled >= nonDeleteStepsCount;
   const isInProgress = totalHandled > 0 && !isComplete;
 
   return updatePlatformProgress(session, platformId, {
@@ -247,6 +326,16 @@ export function calculatePlatformProgress(progress: PlatformProgress): number {
     return 100;
   }
 
-  const totalHandled = progress.completedSteps.length + progress.skippedSteps.length;
-  return Math.round((totalHandled / TOTAL_STEPS) * 100);
+  // If account was deleted, it's 100% complete
+  if (progress.method === 'deleted') {
+    return 100;
+  }
+
+  // For non-deleted accounts, only count steps 2-9 (exclude delete step 1)
+  const nonDeleteStepsCount = TOTAL_STEPS - 1; // 8 steps
+  const completedNonDeleteSteps = progress.completedSteps.filter(s => s > 1).length;
+  const skippedNonDeleteSteps = progress.skippedSteps.filter(s => s > 1).length;
+  const totalHandled = completedNonDeleteSteps + skippedNonDeleteSteps;
+
+  return Math.round((totalHandled / nonDeleteStepsCount) * 100);
 }

@@ -7,8 +7,7 @@ import { getPlatformsByPriority, PRIORITY_LABELS } from '@/lib/platforms';
 import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
 import PlatformCard from '@/components/PlatformCard';
-import Footer from '@/components/Footer';
-import { Plus, X, Check } from 'lucide-react';
+import { Plus, X, Check, ArrowDown } from 'lucide-react';
 
 type DepthLevel = 'essential' | 'recommended' | 'thorough' | 'complete';
 
@@ -141,7 +140,7 @@ export default function PlatformSelection() {
               </p>
             </div>
             <button
-              onClick={() => router.push('/onboarding')}
+              onClick={() => router.push('/')}
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
               ← Back
@@ -189,7 +188,6 @@ export default function PlatformSelection() {
                       platform={platform}
                       selected={selectedPlatforms.has(platform.id)}
                       onClick={() => handleTogglePlatform(platform.id)}
-                      onRemove={selectedPlatforms.has(platform.id) ? () => handleTogglePlatform(platform.id) : undefined}
                     />
                   ))}
                 </div>
@@ -207,7 +205,7 @@ export default function PlatformSelection() {
                 <span className="text-base font-semibold text-gray-700 dark:text-gray-200">
                   Show me more sites to pick from
                 </span>
-                <span className="text-gray-400">→</span>
+                <ArrowDown size={18} />
               </button>
             </div>
           )}
@@ -286,10 +284,6 @@ export default function PlatformSelection() {
             )}
           </div>
 
-          {/* Footer - with extra bottom padding for sticky button */}
-          <div className="pt-8">
-            <Footer />
-          </div>
         </div>
       </section>
 

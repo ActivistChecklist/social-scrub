@@ -223,12 +223,12 @@ describe('storage', () => {
       const progress = {
         ...createPlatformProgress('facebook'),
         status: 'in_progress' as const,
-        completedSteps: [1, 2, 3],
-        skippedSteps: [4],
+        completedSteps: [2, 3, 4, 5], // Step 1 is delete step, doesn't count
+        skippedSteps: [],
       };
 
-      // 4 steps handled out of 9 = ~44%
-      expect(calculatePlatformProgress(progress)).toBe(44);
+      // 4 non-delete steps handled out of 8 (steps 2-9) = 50%
+      expect(calculatePlatformProgress(progress)).toBe(50);
     });
   });
 

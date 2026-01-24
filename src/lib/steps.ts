@@ -122,8 +122,8 @@ export const UNIVERSAL_STEPS: Step[] = [
     educationalContext: 'Bio information narrows down your identity significantly. Your city, employer, or school can uniquely identify you when combined with other data.',
     beforeAfter: {
       before: {
-        title: 'Jedi Knight, Tatooine',
-        description: 'Location + job makes you easy to identify in real life',
+        title: 'Tatooine native | Rebel Alliance',
+        description: 'Location + employer makes you easy to identify in real life',
         icon: 'map-pin',
       },
       after: {
