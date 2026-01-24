@@ -1,8 +1,8 @@
 'use client';
 
-import { ArrowRight, ArrowDown, X, Lock, MapPin, Users, Eye, EyeOff, Globe, UserX, Heart, MessageCircle, Share2 } from 'lucide-react';
+import { ArrowRight, ArrowDown, X, Lock, MapPin, Users, Eye, EyeOff, Globe, Heart, MessageCircle, Share2 } from 'lucide-react';
 import Image from 'next/image';
-import { BEFORE_PROFILE, AFTER_PROFILE } from '@/components/shared/FakeSocialProfile';
+import FakeSocialProfile, { ProfileField } from '@/components/shared/FakeSocialProfile';
 
 type StepFocus = 'photo' | 'name' | 'username' | 'email' | 'bio' | 'posts' | 'friends' | 'privacy' | 'delete';
 
@@ -250,80 +250,21 @@ function ProfileSnippet({
     );
   }
 
-  // Use shared profile data
-  const data = isBefore ? BEFORE_PROFILE : AFTER_PROFILE;
-
-  // Determine what's highlighted vs dimmed
-  const isHighlighted = (field: string) => {
-    if (focus === 'photo') return field === 'photo';
-    if (focus === 'name') return field === 'name';
-    if (focus === 'username') return field === 'username';
-    if (focus === 'email') return field === 'email';
-    if (focus === 'bio') return field === 'bio';
-    return true;
-  };
-
-  const dimmedClass = 'opacity-30';
-  const highlightClass = isBefore
-    ? 'ring-2 ring-red-400 dark:ring-red-500 rounded'
-    : 'ring-2 ring-emerald-400 dark:ring-emerald-500 rounded';
+  // For profile-related fields (photo, name, username, email, bio), use the shared component
+  // Map StepFocus to ProfileField (they're the same for these cases)
+  const highlightField = focus as ProfileField;
 
   return (
-    <div>
-      {/* Cover image placeholder - blue for both before and after */}
-      <div className="h-10 -mx-3 -mt-3 rounded-t-lg bg-gradient-to-r from-blue-400 to-blue-600" />
-
-      {/* Profile content with proper padding */}
-      <div className="flex items-start gap-3 pt-3">
-        {/* Profile picture */}
-        <div
-          className={`w-12 h-12 rounded-full overflow-hidden flex-shrink-0 -mt-6 border-2 border-white dark:border-gray-700 ${
-            isHighlighted('photo') ? highlightClass : dimmedClass
-          } ${!data.hasPhoto ? 'bg-gray-300 dark:bg-gray-600' : ''}`}
-        >
-          {data.hasPhoto ? (
-            <Image
-              src="/luke.jpg"
-              alt="Luke's profile"
-              width={48}
-              height={48}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-emerald-100 dark:bg-emerald-800">
-              <UserX className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
-            </div>
-          )}
-        </div>
-
-        {/* Profile details - LEFT ALIGNED */}
-        <div className="flex-1 min-w-0 pt-1">
-          <p className={`text-base font-semibold text-left ${
-            isHighlighted('name') ? highlightClass + ' px-1 inline-block' : dimmedClass
-          } text-gray-900 dark:text-gray-100`}>
-            {data.name}
-          </p>
-          <p className={`text-sm mt-0.5 text-left ${
-            isHighlighted('username') ? highlightClass + ' px-1 inline-block' : dimmedClass
-          } text-gray-500 dark:text-gray-400`}>
-            {data.username}
-          </p>
-          {focus === 'email' && (
-            <p className={`text-sm mt-0.5 text-left ${
-              highlightClass + ' px-1 inline-block'
-            } text-gray-500 dark:text-gray-400`}>
-              {data.email}
-            </p>
-          )}
-          {focus === 'bio' && (
-            <p className={`text-sm mt-0.5 text-left ${
-              highlightClass + ' px-1 inline-block'
-            } ${data.bio ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500 italic'}`}>
-              {data.bio || '[Bio Removed]'}
-            </p>
-          )}
-        </div>
-      </div>
+    <div className="-m-3">
+      <FakeSocialProfile
+        type={type}
+        size="compact"
+        showCover={true}
+        showBio={focus === 'bio'}
+        showEmail={false}
+        showStats={false}
+        highlightField={highlightField}
+      />
     </div>
   );
 }

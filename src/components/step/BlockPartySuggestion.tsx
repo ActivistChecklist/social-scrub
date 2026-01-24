@@ -58,8 +58,8 @@ export default function BlockPartySuggestion({ platformName }: BlockPartySuggest
             </div>
           </div>
 
-          <p className="text-xs text-purple-600 dark:text-purple-400 mt-3">
-            We don&apos;t get any commission - we just think Block Party is great!
+          <p className="text-s text-purple-600 dark:text-purple-400 mt-3">
+            Note: We are not affiliated with Block Party and we don&apos;t get any commission - we just know it saves folks a lot of time.
           </p>
         </div>
       </div>

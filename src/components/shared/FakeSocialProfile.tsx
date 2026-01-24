@@ -18,7 +18,7 @@ export const BEFORE_PROFILE: ProfileData = {
   hasPhoto: true,
   name: 'Luke Skywalker',
   username: '@lukeskywalker',
-  bio: 'Tatooine native | Rebel Alliance leader',
+  bio: 'Tatooine native | Rebel Alliance',
   email: 'luke@gmail.com',
   postsCount: '847',
   friendsCount: '1.2K',
@@ -34,13 +34,18 @@ export const AFTER_PROFILE: ProfileData = {
   friendsCount: 'hidden',
 };
 
+export type ProfileField = 'photo' | 'name' | 'username' | 'email' | 'bio';
+
 interface FakeSocialProfileProps {
   type: 'before' | 'after';
   showEmail?: boolean;
   showStats?: boolean;
   showCover?: boolean;
+  showBio?: boolean;
   size?: 'compact' | 'full';
   className?: string;
+  /** Field to highlight (dims other fields) */
+  highlightField?: ProfileField;
 }
 
 export default function FakeSocialProfile({
@@ -48,8 +53,10 @@ export default function FakeSocialProfile({
   showEmail = false,
   showStats = false,
   showCover = true,
+  showBio = true,
   size = 'full',
   className = '',
+  highlightField,
 }: FakeSocialProfileProps) {
   const isBefore = type === 'before';
   const data = isBefore ? BEFORE_PROFILE : AFTER_PROFILE;
@@ -58,11 +65,24 @@ export default function FakeSocialProfile({
   const coverHeight = size === 'compact' ? 'h-10' : 'h-16';
   const profileOffset = size === 'compact' ? '-mt-6' : '-mt-10';
 
+  // Helper for highlighting specific fields
+  const getFieldClass = (field: ProfileField) => {
+    if (!highlightField) return ''; // No highlighting mode
+    if (field === highlightField) {
+      // Highlighted field gets a ring
+      return isBefore
+        ? 'ring-2 ring-red-400 dark:ring-red-500 rounded'
+        : 'ring-2 ring-emerald-400 dark:ring-emerald-500 rounded';
+    }
+    // Non-highlighted fields are dimmed
+    return 'opacity-30';
+  };
+
   return (
     <div className={`bg-white dark:bg-gray-900 rounded-lg overflow-hidden ${className}`}>
-      {/* Cover photo - blue for both before and after */}
+      {/* Cover photo - subtle gradient, not too bright */}
       {showCover && (
-        <div className={`${coverHeight} bg-gradient-to-r from-blue-400 to-blue-600`} />
+        <div className={`${coverHeight} bg-gradient-to-r from-slate-300 to-blue-300 dark:from-slate-600 dark:to-blue-600`} />
       )}
 
       {/* Profile content */}
@@ -72,7 +92,7 @@ export default function FakeSocialProfile({
           <div
             className={`${profileSize} rounded-full overflow-hidden flex-shrink-0 ${
               showCover ? 'border-4 border-white dark:border-gray-900' : ''
-            } ${!data.hasPhoto ? 'bg-gray-300 dark:bg-gray-600' : ''}`}
+            } ${!data.hasPhoto ? 'bg-gray-300 dark:bg-gray-600' : ''} ${getFieldClass('photo')}`}
           >
             {data.hasPhoto ? (
               <Image
@@ -90,24 +110,32 @@ export default function FakeSocialProfile({
           </div>
 
           {/* Name and username - LEFT ALIGNED */}
-          <div className={`flex-1 min-w-0 ${showCover ? 'pt-6' : ''}`}>
-            <h4 className="font-bold text-gray-900 dark:text-gray-100 truncate text-left">
+          <div className={`flex-1 min-w-0 ${showCover ? 'pt-4' : ''}`}>
+            <h4 className={`font-bold text-gray-900 dark:text-gray-100 truncate text-left ${highlightField === 'name' ? getFieldClass('name') + ' px-1 inline-block' : getFieldClass('name')}`}>
               {data.name}
             </h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400 truncate text-left">
+            <p className={`text-sm text-gray-500 dark:text-gray-400 truncate text-left ${highlightField === 'username' ? getFieldClass('username') + ' px-1 inline-block' : getFieldClass('username')}`}>
               {data.username}
             </p>
+            {/* Email shown inline when highlighting email */}
+            {highlightField === 'email' && data.email && (
+              <p className={`text-sm text-gray-500 dark:text-gray-400 mt-0.5 text-left ${getFieldClass('email')} px-1 inline-block`}>
+                {data.email}
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Bio */}
-        <p className={`mt-3 text-sm text-left ${
-          data.bio
-            ? 'text-gray-700 dark:text-gray-300'
-            : 'text-gray-400 dark:text-gray-500 italic'
-        }`}>
-          {data.bio || '[Bio Removed]'}
-        </p>
+        {/* Bio - fixed height to prevent layout shift between before/after */}
+        {showBio && (
+          <p className={`mt-3 text-sm text-left min-h-[1.25rem] ${
+            data.bio
+              ? 'text-gray-700 dark:text-gray-300'
+              : 'text-gray-400 dark:text-gray-500 italic'
+          } ${highlightField === 'bio' ? getFieldClass('bio') + ' px-1 inline-block' : getFieldClass('bio')}`}>
+            {data.bio || '[Bio Removed]'}
+          </p>
+        )}
 
         {/* Stats row */}
         {showStats && (

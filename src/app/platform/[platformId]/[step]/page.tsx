@@ -167,7 +167,8 @@ export default function StepPage({ params }: StepPageProps) {
                 onClick={() => router.push('/dashboard')}
                 className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors font-medium"
               >
-                ← Dashboard
+                {/* Never put a left arrow ← here */}
+                Dashboard
               </button>
             </div>
           </div>
