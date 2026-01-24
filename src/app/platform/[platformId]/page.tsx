@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { getPlatform } from '@/lib/platforms';
@@ -16,7 +16,7 @@ interface PlatformPageProps {
 export default function PlatformIntro({ params }: PlatformPageProps) {
   const { platformId } = params;
   const router = useRouter();
-  const { session, isLoading, getPlatform: getPlatformProgress, startPlatform, skipPlatform, restorePlatform } = useSession();
+  const { session, isLoading, getPlatform: getPlatformProgress, startPlatform, restorePlatform } = useSession();
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -38,6 +38,30 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   }
 
   const progress = getPlatformProgress(platformId);
+
+  // Find the next platform to work on (excluding current platform)
+  const nextPlatform = useMemo(() => {
+    if (!session) return null;
+
+    // First check built-in platforms that haven't been started
+    const notStartedBuiltIn = session.platforms.find(
+      p => p.status === 'not_started' && p.platformId !== platformId
+    );
+    if (notStartedBuiltIn) {
+      const platformInfo = getPlatform(notStartedBuiltIn.platformId);
+      return platformInfo ? { platformId: notStartedBuiltIn.platformId, name: platformInfo.name } : null;
+    }
+
+    // Then check custom platforms
+    const notStartedCustom = session.customSites.find(
+      s => s.status === 'not_started' && s.id !== platformId
+    );
+    if (notStartedCustom) {
+      return { platformId: notStartedCustom.id, name: notStartedCustom.name };
+    }
+
+    return null;
+  }, [session, platformId]);
 
   useEffect(() => {
     // Redirect if platform doesn't exist
@@ -75,8 +99,12 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   };
 
   const handleSkip = () => {
-    skipPlatform(platformId);
-    router.push('/dashboard');
+    // Just navigate to next platform or dashboard - don't mark as skipped
+    if (nextPlatform) {
+      router.push(`/platform/${nextPlatform.platformId}`);
+    } else {
+      router.push('/dashboard');
+    }
   };
 
   const handleRestore = () => {
