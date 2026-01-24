@@ -3,14 +3,25 @@ import * as simpleIcons from 'simple-icons';
 // Simple Icons uses camelCase names prefixed with 'si'
 // e.g., 'facebook' -> 'siFacebook'
 
+// Custom icon type - can be either a simple path or a full SVG
+type CustomIcon = {
+  hex: string;
+  path?: string;
+  // Full SVG content (without the outer <svg> tag) for complex icons
+  svg?: string;
+};
+
 // Custom icon overrides for when simple-icons doesn't have the right version
-// These override the simple-icons version with a custom SVG path
-const CUSTOM_ICONS: Record<string, { hex: string; path: string }> = {
-  // Venmo V icon (simple-icons has the full wordmark, we want just the V)
-  // This is the Venmo V mark inside a rounded rectangle
+const CUSTOM_ICONS: Record<string, CustomIcon> = {
+  // Venmo logo - blue rounded rect with white V
   venmo: {
-    hex: '008CFF',
-    path: 'M2 2C.9 2 0 2.9 0 4v16c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H2zm15.5 4.5c.4.7.6 1.5.6 2.4 0 3-2.6 6.8-4.7 9.6h-4L7.2 6.8l3.5-.3.9 7.2c.8-1.4 1.9-3.5 1.9-5 0-.9-.2-1.5-.4-2l2.4-1.2z',
+    hex: '3396CD',
+    svg: `<rect width="24" height="24" rx="4" fill="#3396CD"/><path d="M17.9 5.5c.5.8.7 1.7.7 2.7 0 3.4-2.9 7.7-5.3 10.8h-4.5l-2.2-13 4-.5 1 8.1c.9-1.5 2.2-4 2.2-5.6 0-1-.2-1.7-.5-2.3l2.6-1.2z" fill="#fff"/>`,
+  },
+  // LinkedIn logo - blue rounded rect with white "in"
+  linkedin: {
+    hex: '007EBB',
+    svg: `<rect width="24" height="24" rx="3" fill="#007EBB"/><path d="M20.67 20.67h-3.56v-5.59c0-1.33-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95v5.69h-3.56V9.33h3.42v1.55h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.18zM5.34 7.78a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zm1.78 12.89H3.56V9.33h3.56v11.34z" fill="#fff"/>`,
   },
 };
 
@@ -43,6 +54,8 @@ interface SimpleIcon {
   source: string;
   svg: string;
   path: string;
+  // Custom full SVG content (for complex icons with backgrounds)
+  customSvg?: string;
 }
 
 export function getIcon(iconName: string): SimpleIcon | null {
@@ -55,7 +68,8 @@ export function getIcon(iconName: string): SimpleIcon | null {
       hex: customIcon.hex,
       source: '',
       svg: '',
-      path: customIcon.path,
+      path: customIcon.path || '',
+      customSvg: customIcon.svg,
     };
   }
 

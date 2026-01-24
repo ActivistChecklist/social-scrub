@@ -59,6 +59,19 @@ export default function PlatformIcon({
     );
   }
 
+  // For custom SVG icons (like Venmo and LinkedIn with backgrounds), render directly
+  if (iconData.customSvg) {
+    return (
+      <div
+        className={`${className} rounded-md overflow-hidden`}
+        style={{ width: size, height: size }}
+        dangerouslySetInnerHTML={{
+          __html: `<svg role="img" viewBox="0 0 24 24" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">${iconData.customSvg}</svg>`,
+        }}
+      />
+    );
+  }
+
   // Determine the fill color based on variant
   let fillColor: string;
   let additionalClass = '';
