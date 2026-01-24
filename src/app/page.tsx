@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import Button from '@/components/ui/Button';
 import Logo from '@/components/ui/Logo';
 import Footer from '@/components/Footer';
@@ -10,6 +12,11 @@ import { Shield, ListChecks, Target, Clock, ExternalLink } from 'lucide-react';
 export default function Home() {
   const router = useRouter();
   const { hasSession } = useSession();
+  const { trackPageView } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   return (
     <main className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">

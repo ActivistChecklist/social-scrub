@@ -1,12 +1,19 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Footer from '@/components/Footer';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { Shield } from 'lucide-react';
 
 export default function OnboardingWelcome() {
   const router = useRouter();
+  const { trackPageView } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   return (
     <main className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">

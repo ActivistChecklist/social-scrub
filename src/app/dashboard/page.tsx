@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import Logo from '@/components/ui/Logo';
@@ -85,6 +86,7 @@ const PRIORITY_ORDER: PriorityLevel[] = ['highest', 'high', 'medium', 'low'];
 export default function Dashboard() {
   const router = useRouter();
   const { session, isLoading, hasSession, getPlatform: getPlatformProgress, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
+  const { trackPageView } = useAnalytics();
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
   const [showAddPlatformsModal, setShowAddPlatformsModal] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
@@ -92,6 +94,10 @@ export default function Dashboard() {
   // Stable sort order - captured on initial load and only updated when switching to spreadsheet view
   const stableSortOrderRef = useRef<Record<string, string[]> | null>(null);
   const [sortKey, setSortKey] = useState(0); // Used to trigger re-sort
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   useEffect(() => {
     // Redirect to home if no session

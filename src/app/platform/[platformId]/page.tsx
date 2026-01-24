@@ -18,7 +18,11 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   const { platformId } = params;
   const router = useRouter();
   const { session, isLoading, getPlatform: getPlatformProgress, startPlatform, restorePlatform } = useSession();
-  const { trackPlatformStart } = useAnalytics();
+  const { trackPageView, trackPlatformStart } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);

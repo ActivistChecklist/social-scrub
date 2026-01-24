@@ -36,10 +36,14 @@ export default function StepPage({ params }: StepPageProps) {
     skipStep,
     deletePlatform,
   } = useSession();
-  const { trackStepComplete, trackStepSkip, trackPlatformDelete } = useAnalytics();
+  const { trackPageView, trackStepComplete, trackStepSkip, trackPlatformDelete } = useAnalytics();
 
   // State for delete step flow
   const [showDeleteInstructions, setShowDeleteInstructions] = useState(false);
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
   // State to track navigation - prevents button flash
   const [isNavigating, setIsNavigating] = useState(false);
   // State for storage info modal

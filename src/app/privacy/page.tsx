@@ -1,10 +1,18 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import Footer from '@/components/Footer';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export default function PrivacyPage() {
+  const { trackPageView } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 max-w-2xl mx-auto px-6 py-12">

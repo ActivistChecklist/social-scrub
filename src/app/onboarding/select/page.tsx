@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef, KeyboardEvent } from 'react';
+import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -13,8 +13,12 @@ import { Plus, X, Check, ArrowDown } from 'lucide-react';
 export default function PlatformSelection() {
   const router = useRouter();
   const { completeOnboarding, addCustomPlatforms } = useSession();
-  const { trackOnboardingComplete } = useAnalytics();
+  const { trackPageView, trackOnboardingComplete } = useAnalytics();
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
   const [expanded, setExpanded] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);

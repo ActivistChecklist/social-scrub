@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatform } from '@/lib/platforms';
 import { TOTAL_STEPS } from '@/lib/steps';
 import Button from '@/components/ui/Button';
@@ -52,7 +53,12 @@ export default function PlatformIncomplete({ params }: IncompletePageProps) {
   const { platformId } = params;
   const router = useRouter();
   const { session, isLoading, getPlatform: getPlatformProgress, completePlatform } = useSession();
+  const { trackPageView } = useAnalytics();
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);

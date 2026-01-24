@@ -19,7 +19,7 @@ export default function PlatformComplete({ params }: CompletePageProps) {
   const { platformId } = params;
   const router = useRouter();
   const { session, isLoading, getPlatform: getPlatformProgress } = useSession();
-  const { trackPlatformComplete } = useAnalytics();
+  const { trackPageView, trackPlatformComplete } = useAnalytics();
   const [showCelebration, setShowCelebration] = useState(false);
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
   const hasTrackedCompletion = useRef(false);
@@ -80,7 +80,12 @@ export default function PlatformComplete({ params }: CompletePageProps) {
     return null;
   }, [session, platformId]);
 
-  // Trigger celebration and track completion on mount
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
+
+  // Trigger celebration on mount
   useEffect(() => {
     const timer = setTimeout(() => setShowCelebration(true), 300);
     return () => clearTimeout(timer);
