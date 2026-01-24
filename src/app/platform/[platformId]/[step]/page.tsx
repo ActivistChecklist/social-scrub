@@ -17,7 +17,7 @@ import { EmailSuggestion } from '@/components/step/SuggestionBox';
 import BlockPartySuggestion from '@/components/step/BlockPartySuggestion';
 import LucideIcon, { Check, ChevronRight } from '@/components/ui/LucideIcon';
 import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
-import { Trash2, Lock, ChevronLeft, Save, Info } from 'lucide-react';
+import { Trash2, Lock, ChevronLeft, Save, Info, ExternalLink } from 'lucide-react';
 
 interface StepPageProps {
   params: { platformId: string; step: string };
@@ -167,6 +167,17 @@ export default function StepPage({ params }: StepPageProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {platform.url && (
+                <a
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                >
+                  Open Site
+                  <ExternalLink size={14} />
+                </a>
+              )}
               <button
                 onClick={() => setShowStorageInfoModal(true)}
                 className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"

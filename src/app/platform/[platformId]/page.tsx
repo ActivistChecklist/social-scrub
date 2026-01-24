@@ -7,7 +7,7 @@ import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
 import BeforeAfterPreview from '@/components/platform/BeforeAfterPreview';
-import { PartyPopper, RotateCcw } from 'lucide-react';
+import { PartyPopper, RotateCcw, ExternalLink } from 'lucide-react';
 
 interface PlatformPageProps {
   params: { platformId: string };
@@ -210,9 +210,20 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
             <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
               Lock Down {platform.name}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-3">
               Lock down your privacy in just a few steps
             </p>
+            {platform.url && (
+              <a
+                href={platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+              >
+                Open {platform.name}
+                <ExternalLink size={14} />
+              </a>
+            )}
           </div>
 
           {/* Why this platform is important */}

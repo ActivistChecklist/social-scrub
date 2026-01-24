@@ -182,7 +182,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'whatsapp',
     category: 'messaging',
     priority: 'high',
-    url: 'https://whatsapp.com'
+    url: 'https://whatsapp.com',
+    importanceReason: 'Can reveal your phone number and profile photo to contacts'
   },
   {
     id: 'nextdoor',
@@ -453,7 +454,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'twitch',
     category: 'gaming',
     priority: 'medium',
-    url: 'https://twitch.tv'
+    url: 'https://twitch.tv',
+    importanceReason: 'Can reveal your online activity, interests, and social connections'
   },
   {
     id: 'soundcloud',
@@ -461,7 +463,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'soundcloud',
     category: 'other',
     priority: 'medium',
-    url: 'https://soundcloud.com'
+    url: 'https://soundcloud.com',
+    importanceReason: 'Can reveal your music interests and listening activity'
   },
   {
     id: 'quora',
@@ -469,7 +472,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'quora',
     category: 'forum',
     priority: 'medium',
-    url: 'https://quora.com'
+    url: 'https://quora.com',
+    importanceReason: 'Your questions and answers can reveal personal details and opinions'
   },
   {
     id: 'gitlab',
@@ -477,7 +481,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'gitlab',
     category: 'professional',
     priority: 'medium',
-    url: 'https://gitlab.com'
+    url: 'https://gitlab.com',
+    importanceReason: 'Can reveal your work history and when you are active'
   },
   {
     id: 'stackoverflow',
@@ -485,7 +490,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'stackoverflow',
     category: 'professional',
     priority: 'medium',
-    url: 'https://stackoverflow.com'
+    url: 'https://stackoverflow.com',
+    importanceReason: 'Can reveal your technical skills and work details'
   },
   {
     id: 'behance',
@@ -493,7 +499,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'behance',
     category: 'professional',
     priority: 'medium',
-    url: 'https://behance.net'
+    url: 'https://behance.net',
+    importanceReason: 'Can reveal your work and professional identity'
   },
   {
     id: 'dribbble',
@@ -501,7 +508,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'dribbble',
     category: 'professional',
     priority: 'medium',
-    url: 'https://dribbble.com'
+    url: 'https://dribbble.com',
+    importanceReason: 'Can reveal your work and professional identity'
   },
   {
     id: 'deviantart',
@@ -509,7 +517,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'deviantart',
     category: 'social',
     priority: 'medium',
-    url: 'https://deviantart.com'
+    url: 'https://deviantart.com',
+    importanceReason: 'Can reveal your creative work and interests'
   },
   {
     id: 'uber',
@@ -517,7 +526,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'uber',
     category: 'other',
     priority: 'medium',
-    url: 'https://uber.com'
+    url: 'https://uber.com',
+    importanceReason: 'Profile and saved addresses can reveal where you live and frequent'
   },
   {
     id: 'lyft',
@@ -525,7 +535,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'lyft',
     category: 'other',
     priority: 'medium',
-    url: 'https://lyft.com'
+    url: 'https://lyft.com',
+    importanceReason: 'Profile and saved addresses can reveal where you live and frequent'
   },
   {
     id: 'doordash',
@@ -533,7 +544,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'doordash',
     category: 'other',
     priority: 'medium',
-    url: 'https://doordash.com'
+    url: 'https://doordash.com',
+    importanceReason: 'Saved addresses reveal where you live'
   },
   {
     id: 'grubhub',
@@ -541,7 +553,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'grubhub',
     category: 'other',
     priority: 'medium',
-    url: 'https://grubhub.com'
+    url: 'https://grubhub.com',
+    importanceReason: 'Saved addresses reveal where you live'
   },
   {
     id: 'poshmark',
@@ -549,7 +562,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'poshmark',
     category: 'shopping',
     priority: 'medium',
-    url: 'https://poshmark.com'
+    url: 'https://poshmark.com',
+    importanceReason: 'Can reveal your location and buying/selling activity'
   },
   {
     id: 'depop',
@@ -557,21 +571,24 @@ export const PLATFORMS: Platform[] = [
     icon: 'depop',
     category: 'shopping',
     priority: 'medium',
-    url: 'https://depop.com'
+    url: 'https://depop.com',
+    importanceReason: 'Can reveal your location and buying/selling activity'
   },
   {
     id: 'mercari',
     name: 'Mercari',
     category: 'shopping',
     priority: 'medium',
-    url: 'https://mercari.com'
+    url: 'https://mercari.com',
+    importanceReason: 'Can reveal your location through listings and meetup preferences'
   },
   {
     id: 'offerup',
     name: 'OfferUp',
     category: 'shopping',
     priority: 'medium',
-    url: 'https://offerup.com'
+    url: 'https://offerup.com',
+    importanceReason: 'Can reveal your location through listings and meetup preferences'
   },
 
   // 🟡 LOW PRIORITY
@@ -589,7 +606,8 @@ export const PLATFORMS: Platform[] = [
     name: 'Mastodon',
     category: 'social',
     priority: 'low',
-    url: 'https://mastodon.social'
+    url: 'https://mastodon.social',
+    importanceReason: 'Can reveal your social network and interests'
   },
   {
     id: 'cashapp',
@@ -623,14 +641,16 @@ export const PLATFORMS: Platform[] = [
     name: 'Fiverr',
     category: 'other',
     priority: 'low',
-    url: 'https://fiverr.com'
+    url: 'https://fiverr.com',
+    importanceReason: 'Can reveal your skills and services you offer'
   },
   {
     id: 'geocaching',
     name: 'Geocaching',
     category: 'other',
     priority: 'low',
-    url: 'https://geocaching.com'
+    url: 'https://geocaching.com',
+    importanceReason: 'Activity logs can reveal where you spend time'
   },
   {
     id: 'indiegogo',
@@ -645,14 +665,16 @@ export const PLATFORMS: Platform[] = [
     name: 'Kickstarter',
     category: 'other',
     priority: 'low',
-    url: 'https://kickstarter.com'
+    url: 'https://kickstarter.com',
+    importanceReason: 'Backing history can reveal your interests and connections'
   },
   {
     id: 'stackexchange',
     name: 'Stack Exchange',
     category: 'forum',
     priority: 'low',
-    url: 'https://stackexchange.com'
+    url: 'https://stackexchange.com',
+    importanceReason: 'Questions and answers can reveal personal details'
   },
   {
     id: 'wechat',
@@ -660,14 +682,16 @@ export const PLATFORMS: Platform[] = [
     icon: 'wechat',
     category: 'messaging',
     priority: 'low',
-    url: 'https://wechat.com'
+    url: 'https://wechat.com',
+    importanceReason: 'Can reveal your phone number and contacts'
   },
   {
     id: 'bandcamp',
     name: 'Bandcamp',
     category: 'other',
     priority: 'low',
-    url: 'https://bandcamp.com'
+    url: 'https://bandcamp.com',
+    importanceReason: 'Purchase history and follows can reveal your interests'
   },
   {
     id: 'hackernews',
@@ -675,21 +699,24 @@ export const PLATFORMS: Platform[] = [
     icon: 'ycombinator',
     category: 'forum',
     priority: 'low',
-    url: 'https://news.ycombinator.com'
+    url: 'https://news.ycombinator.com',
+    importanceReason: 'Comments can reveal your opinions and technical interests'
   },
   {
     id: 'glassdoor',
     name: 'Glassdoor',
     category: 'professional',
     priority: 'low',
-    url: 'https://glassdoor.com'
+    url: 'https://glassdoor.com',
+    importanceReason: 'Reviews can reveal your past employers'
   },
   {
     id: 'opentable',
     name: 'OpenTable',
     category: 'other',
     priority: 'low',
-    url: 'https://opentable.com'
+    url: 'https://opentable.com',
+    importanceReason: 'Reservations can reveal where you dine'
   },
   {
     id: 'costar',
@@ -704,14 +731,16 @@ export const PLATFORMS: Platform[] = [
     name: 'UltimateGuitar',
     category: 'other',
     priority: 'low',
-    url: 'https://ultimate-guitar.com'
+    url: 'https://ultimate-guitar.com',
+    importanceReason: 'Can reveal your musical interests'
   },
   {
     id: 'somethingawesome',
     name: 'SomethingAwesome',
     category: 'other',
     priority: 'low',
-    url: 'https://somethingawful.com'
+    url: 'https://somethingawful.com',
+    importanceReason: 'Forum posts can reveal personal details and opinions'
   },
   {
     id: 'mountainproject',
@@ -729,7 +758,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'tinder',
     category: 'dating',
     priority: 'low',
-    url: 'https://tinder.com'
+    url: 'https://tinder.com',
+    importanceReason: 'Can reveal your location, photos, and personal details'
   },
   {
     id: 'bumble',
@@ -737,7 +767,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'bumble',
     category: 'dating',
     priority: 'low',
-    url: 'https://bumble.com'
+    url: 'https://bumble.com',
+    importanceReason: 'Can reveal your location, photos, and personal details'
   },
   {
     id: 'hinge',
@@ -745,7 +776,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'hinge',
     category: 'dating',
     priority: 'low',
-    url: 'https://hinge.co'
+    url: 'https://hinge.co',
+    importanceReason: 'Can reveal your location, photos, and personal details'
   },
   {
     id: 'okcupid',
@@ -753,21 +785,24 @@ export const PLATFORMS: Platform[] = [
     icon: 'okcupid',
     category: 'dating',
     priority: 'low',
-    url: 'https://okcupid.com'
+    url: 'https://okcupid.com',
+    importanceReason: 'Can reveal your location, photos, and personal details'
   },
   {
     id: 'match',
     name: 'Match.com',
     category: 'dating',
     priority: 'low',
-    url: 'https://match.com'
+    url: 'https://match.com',
+    importanceReason: 'Can reveal your location, photos, and personal details'
   },
   {
     id: 'plentyoffish',
     name: 'Plenty of Fish',
     category: 'dating',
     priority: 'low',
-    url: 'https://pof.com'
+    url: 'https://pof.com',
+    importanceReason: 'Can reveal your location, photos, and personal details'
   },
   {
     id: 'grindr',
@@ -775,28 +810,32 @@ export const PLATFORMS: Platform[] = [
     icon: 'grindr',
     category: 'dating',
     priority: 'low',
-    url: 'https://grindr.com'
+    url: 'https://grindr.com',
+    importanceReason: 'Can reveal your precise location and personal details'
   },
   {
     id: 'scruff',
     name: 'Scruff',
     category: 'dating',
     priority: 'low',
-    url: 'https://scruff.com'
+    url: 'https://scruff.com',
+    importanceReason: 'Can reveal your location and personal details'
   },
   {
     id: 'her',
     name: 'HER',
     category: 'dating',
     priority: 'low',
-    url: 'https://weareher.com'
+    url: 'https://weareher.com',
+    importanceReason: 'Can reveal your location and personal details'
   },
   {
     id: 'coffee',
     name: 'Coffee Meets Bagel',
     category: 'dating',
     priority: 'low',
-    url: 'https://coffeemeetsbagel.com'
+    url: 'https://coffeemeetsbagel.com',
+    importanceReason: 'Can reveal your location and personal details'
   },
 
   // LOW PRIORITY - Gaming
@@ -806,7 +845,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'steam',
     category: 'gaming',
     priority: 'low',
-    url: 'https://store.steampowered.com'
+    url: 'https://store.steampowered.com',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'xbox',
@@ -814,7 +854,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'xbox',
     category: 'gaming',
     priority: 'low',
-    url: 'https://xbox.com'
+    url: 'https://xbox.com',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'playstation',
@@ -822,7 +863,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'playstation',
     category: 'gaming',
     priority: 'low',
-    url: 'https://playstation.com'
+    url: 'https://playstation.com',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'nintendo',
@@ -830,7 +872,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'nintendo',
     category: 'gaming',
     priority: 'low',
-    url: 'https://nintendo.com'
+    url: 'https://nintendo.com',
+    importanceReason: 'Can reveal your gaming activity and friends list'
   },
   {
     id: 'epicgames',
@@ -838,7 +881,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'epicgames',
     category: 'gaming',
     priority: 'low',
-    url: 'https://epicgames.com'
+    url: 'https://epicgames.com',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'battlenet',
@@ -846,7 +890,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'battlenet',
     category: 'gaming',
     priority: 'low',
-    url: 'https://battle.net'
+    url: 'https://battle.net',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'origin',
@@ -854,7 +899,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'ea',
     category: 'gaming',
     priority: 'low',
-    url: 'https://ea.com'
+    url: 'https://ea.com',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'ubisoft',
@@ -862,7 +908,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'ubisoft',
     category: 'gaming',
     priority: 'low',
-    url: 'https://ubisoft.com'
+    url: 'https://ubisoft.com',
+    importanceReason: 'Can reveal your gaming activity and online status'
   },
   {
     id: 'roblox',
@@ -870,7 +917,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'roblox',
     category: 'gaming',
     priority: 'low',
-    url: 'https://roblox.com'
+    url: 'https://roblox.com',
+    importanceReason: 'Can reveal your gaming activity and friends list'
   },
   {
     id: 'minecraft',
@@ -878,7 +926,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'minecraft',
     category: 'gaming',
     priority: 'low',
-    url: 'https://minecraft.net'
+    url: 'https://minecraft.net',
+    importanceReason: 'Can reveal your gaming activity'
   },
 
   // LOW PRIORITY - Professional/Work
@@ -888,7 +937,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'slack',
     category: 'professional',
     priority: 'low',
-    url: 'https://slack.com'
+    url: 'https://slack.com',
+    importanceReason: 'Profile can reveal your employer and display name'
   },
   {
     id: 'zoom',
@@ -896,7 +946,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'zoom',
     category: 'professional',
     priority: 'low',
-    url: 'https://zoom.us'
+    url: 'https://zoom.us',
+    importanceReason: 'Profile can reveal your name and photo'
   },
   {
     id: 'notion',
@@ -904,7 +955,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'notion',
     category: 'professional',
     priority: 'low',
-    url: 'https://notion.so'
+    url: 'https://notion.so',
+    importanceReason: 'Public pages can reveal your projects and notes'
   },
   {
     id: 'figma',
@@ -912,7 +964,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'figma',
     category: 'professional',
     priority: 'low',
-    url: 'https://figma.com'
+    url: 'https://figma.com',
+    importanceReason: 'Profile can reveal your work and employer'
   },
   {
     id: 'trello',
@@ -920,7 +973,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'trello',
     category: 'professional',
     priority: 'low',
-    url: 'https://trello.com'
+    url: 'https://trello.com',
+    importanceReason: 'Public boards can reveal your projects'
   },
   {
     id: 'asana',
@@ -928,7 +982,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'asana',
     category: 'professional',
     priority: 'low',
-    url: 'https://asana.com'
+    url: 'https://asana.com',
+    importanceReason: 'Profile can reveal your employer and name'
   },
   {
     id: 'evernote',
@@ -936,7 +991,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'evernote',
     category: 'professional',
     priority: 'low',
-    url: 'https://evernote.com'
+    url: 'https://evernote.com',
+    importanceReason: 'Public notes can reveal your projects and interests'
   },
   {
     id: 'todoist',
@@ -944,7 +1000,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'todoist',
     category: 'professional',
     priority: 'low',
-    url: 'https://todoist.com'
+    url: 'https://todoist.com',
+    importanceReason: 'Profile can reveal your name'
   },
 
   // LOW PRIORITY - Forums/Communities
@@ -954,21 +1011,24 @@ export const PLATFORMS: Platform[] = [
     icon: 'producthunt',
     category: 'forum',
     priority: 'low',
-    url: 'https://producthunt.com'
+    url: 'https://producthunt.com',
+    importanceReason: 'Can reveal your interests and upvote history'
   },
   {
     id: 'slashdot',
     name: 'Slashdot',
     category: 'forum',
     priority: 'low',
-    url: 'https://slashdot.org'
+    url: 'https://slashdot.org',
+    importanceReason: 'Comments can reveal your opinions and interests'
   },
   {
     id: 'voat',
     name: 'Voat',
     category: 'forum',
     priority: 'low',
-    url: 'https://voat.co'
+    url: 'https://voat.co',
+    importanceReason: 'Posts and comments can reveal your opinions'
   },
   {
     id: '4chan',
@@ -976,14 +1036,16 @@ export const PLATFORMS: Platform[] = [
     icon: '4chan',
     category: 'forum',
     priority: 'low',
-    url: 'https://4chan.org'
+    url: 'https://4chan.org',
+    importanceReason: 'Posts can be archived and linked to you'
   },
   {
     id: 'kiwifarms',
     name: 'Kiwi Farms',
     category: 'forum',
     priority: 'low',
-    url: 'https://kiwifarms.net'
+    url: 'https://kiwifarms.net',
+    importanceReason: 'Account can reveal your interests and activity'
   },
 
   // LOW PRIORITY - Messaging
@@ -993,7 +1055,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'line',
     category: 'messaging',
     priority: 'low',
-    url: 'https://line.me'
+    url: 'https://line.me',
+    importanceReason: 'Can reveal your phone number and profile photo'
   },
   {
     id: 'viber',
@@ -1001,7 +1064,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'viber',
     category: 'messaging',
     priority: 'low',
-    url: 'https://viber.com'
+    url: 'https://viber.com',
+    importanceReason: 'Can reveal your phone number and profile photo'
   },
   {
     id: 'kik',
@@ -1009,7 +1073,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'kik',
     category: 'messaging',
     priority: 'low',
-    url: 'https://kik.com'
+    url: 'https://kik.com',
+    importanceReason: 'Can reveal your username and profile info'
   },
 
   // LOW PRIORITY - Photo/Video
@@ -1019,7 +1084,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'vsco',
     category: 'photo_video',
     priority: 'low',
-    url: 'https://vsco.co'
+    url: 'https://vsco.co',
+    importanceReason: 'Photos can reveal your location and activities'
   },
   {
     id: '500px',
@@ -1027,7 +1093,8 @@ export const PLATFORMS: Platform[] = [
     icon: '500px',
     category: 'photo_video',
     priority: 'low',
-    url: 'https://500px.com'
+    url: 'https://500px.com',
+    importanceReason: 'Photos and profile can reveal your identity'
   },
   {
     id: 'unsplash',
@@ -1035,7 +1102,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'unsplash',
     category: 'photo_video',
     priority: 'low',
-    url: 'https://unsplash.com'
+    url: 'https://unsplash.com',
+    importanceReason: 'Photos can reveal your location and interests'
   },
   {
     id: 'pexels',
@@ -1043,7 +1111,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'pexels',
     category: 'photo_video',
     priority: 'low',
-    url: 'https://pexels.com'
+    url: 'https://pexels.com',
+    importanceReason: 'Photos can reveal your location and interests'
   },
   {
     id: 'imgur',
@@ -1051,7 +1120,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'imgur',
     category: 'photo_video',
     priority: 'low',
-    url: 'https://imgur.com'
+    url: 'https://imgur.com',
+    importanceReason: 'Images and comments can reveal personal details'
   },
 
   // LOW PRIORITY - Finance
@@ -1061,7 +1131,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'robinhood',
     category: 'finance',
     priority: 'low',
-    url: 'https://robinhood.com'
+    url: 'https://robinhood.com',
+    importanceReason: 'Profile can reveal your name'
   },
   {
     id: 'coinbase',
@@ -1069,7 +1140,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'coinbase',
     category: 'finance',
     priority: 'low',
-    url: 'https://coinbase.com'
+    url: 'https://coinbase.com',
+    importanceReason: 'Profile can reveal your name and photo'
   },
   {
     id: 'kraken',
@@ -1077,7 +1149,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'kraken',
     category: 'finance',
     priority: 'low',
-    url: 'https://kraken.com'
+    url: 'https://kraken.com',
+    importanceReason: 'Profile can reveal your identity'
   },
   {
     id: 'binance',
@@ -1085,14 +1158,16 @@ export const PLATFORMS: Platform[] = [
     icon: 'binance',
     category: 'finance',
     priority: 'low',
-    url: 'https://binance.com'
+    url: 'https://binance.com',
+    importanceReason: 'Profile can reveal your identity'
   },
   {
     id: 'zelle',
     name: 'Zelle',
     category: 'finance',
     priority: 'low',
-    url: 'https://zellepay.com'
+    url: 'https://zellepay.com',
+    importanceReason: 'Connected to your bank and phone number'
   },
 
   // LOW PRIORITY - Other
@@ -1102,7 +1177,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'apple',
     category: 'other',
     priority: 'low',
-    url: 'https://music.apple.com'
+    url: 'https://music.apple.com',
+    importanceReason: 'Profile and playlists can reveal your interests'
   },
   {
     id: 'letterboxd',
@@ -1110,7 +1186,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'letterboxd',
     category: 'other',
     priority: 'low',
-    url: 'https://letterboxd.com'
+    url: 'https://letterboxd.com',
+    importanceReason: 'Reviews and watchlist reveal your interests'
   },
   {
     id: 'myfitnesspal',
@@ -1118,7 +1195,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'myfitnesspal',
     category: 'other',
     priority: 'low',
-    url: 'https://myfitnesspal.com'
+    url: 'https://myfitnesspal.com',
+    importanceReason: 'Profile can reveal personal health information'
   },
   {
     id: 'nike',
@@ -1126,7 +1204,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'nike',
     category: 'other',
     priority: 'low',
-    url: 'https://nike.com/nrc-app'
+    url: 'https://nike.com/nrc-app',
+    importanceReason: 'Activity can reveal where you run and live'
   },
   {
     id: 'peloton',
@@ -1134,7 +1213,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'peloton',
     category: 'other',
     priority: 'low',
-    url: 'https://onepeloton.com'
+    url: 'https://onepeloton.com',
+    importanceReason: 'Leaderboard shows your name and activity'
   },
   {
     id: 'fitbit',
@@ -1142,7 +1222,8 @@ export const PLATFORMS: Platform[] = [
     icon: 'fitbit',
     category: 'other',
     priority: 'low',
-    url: 'https://fitbit.com'
+    url: 'https://fitbit.com',
+    importanceReason: 'Profile and activity can reveal personal info'
   },
 ];
 
