@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
 import Button from '@/components/ui/Button';
+import Logo from '@/components/ui/Logo';
 import Footer from '@/components/Footer';
 import { Shield, Check, X, ExternalLink } from 'lucide-react';
 
@@ -31,9 +32,7 @@ export default function Home() {
       {/* Header */}
       <header className="p-6">
         <div className="max-w-5xl mx-auto">
-          <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Social Scrub
-          </span>
+          <Logo size="md" />
         </div>
       </header>
 
