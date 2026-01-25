@@ -177,7 +177,7 @@ export function FriendsVisual({ type, showHeader = true }: { type: 'before' | 'a
 
   // Height matches the before state (3 friend rows at ~44px + gaps)
   return (
-    <div className="h-full flex flex-col items-center justify-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+    <div className="h-full min-h-[172px] flex flex-col items-center justify-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
       <Lock size={32} className="text-emerald-500 mb-3" />
       <p className="text-sm text-gray-600 dark:text-gray-400 text-center font-medium">
         Friends list is private

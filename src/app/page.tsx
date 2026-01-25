@@ -164,7 +164,9 @@ export default function Home() {
                 />
                 <div className="border-t border-gray-200 dark:border-gray-800 p-3 bg-gray-50 dark:bg-gray-800/50">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3">Friends (244)</p>
-                  <FriendsVisual type="before" showHeader={false} />
+                  <div className="min-h-[190px]">
+                    <FriendsVisual type="before" showHeader={false} />
+                  </div>
                 </div>
                 <div className="border-t border-gray-200 dark:border-gray-800 p-3 bg-gray-50 dark:bg-gray-800/50">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3">Recent Posts</p>
@@ -188,7 +190,9 @@ export default function Home() {
                 />
                 <div className="border-t border-gray-200 dark:border-gray-800 p-3 bg-gray-50 dark:bg-gray-800/50">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3">Friends</p>
-                  <FriendsVisual type="after" showHeader={false} />
+                  <div className="min-h-[190px]">
+                    <FriendsVisual type="after" showHeader={false} />
+                  </div>
                 </div>
                 <div className="border-t border-gray-200 dark:border-gray-800 p-3 bg-gray-50 dark:bg-gray-800/50">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3">Recent Posts</p>
