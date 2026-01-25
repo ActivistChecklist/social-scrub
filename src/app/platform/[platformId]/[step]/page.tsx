@@ -176,17 +176,6 @@ export default function StepPage({ params }: StepPageProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {platform.url && (
-                <a
-                  href={platform.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
-                >
-                  Open Site
-                  <ExternalLink size={14} />
-                </a>
-              )}
               <button
                 onClick={() => setShowStorageInfoModal(true)}
                 className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -247,6 +236,17 @@ export default function StepPage({ params }: StepPageProps) {
                     <p className="text-gray-600 dark:text-gray-400 max-w-xl">
                       {step.description}
                     </p>
+                    {platform.url && !isDeleteStep && (
+                      <a
+                        href={platform.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors mt-2"
+                      >
+                        Open {platform.name}
+                        <ExternalLink size={14} />
+                      </a>
+                    )}
                   </div>
 
                   {/* Delete step - two option boxes */}
@@ -328,12 +328,12 @@ export default function StepPage({ params }: StepPageProps) {
                     </div>
                   ) : (
                     /* Regular step buttons */
-                    <div className="space-y-3 max-w-md mx-auto md:mx-0">
+                    <div className="space-y-3 max-w-lg mx-auto md:mx-0">
                       <div className="flex flex-col sm:flex-row gap-3">
                         <Button
                           size="lg"
                           onClick={handleDone}
-                          className="flex-1 md:py-4 md:text-lg"
+                          className={`flex-1 md:py-4 md:text-lg min-w-[160px] ${isStepSkipped && !isNavigating ? 'bg-transparent border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : ''}`}
                           disabled={isNavigating}
                         >
                           {isStepCompleted && !isNavigating ? (
@@ -347,9 +347,9 @@ export default function StepPage({ params }: StepPageProps) {
                         </Button>
                         <Button
                           size="lg"
-                          variant="outline"
+                          variant={isStepSkipped && !isNavigating ? 'primary' : 'outline'}
                           onClick={handleSkip}
-                          className="flex-1"
+                          className={`flex-1 min-w-[140px] ${isStepSkipped && !isNavigating ? 'bg-amber-500 hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 border-amber-500' : ''}`}
                           disabled={isNavigating}
                         >
                           {isStepSkipped && !isNavigating ? 'Marked as Skipped' : 'Skip'}
