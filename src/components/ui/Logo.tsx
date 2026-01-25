@@ -20,7 +20,7 @@ export default function Logo({ size = 'md', showText = true, className = '' }: L
     <div className={`flex items-center gap-2 ${className}`}>
       {/* Logo icon with gradient background */}
       <div
-        className={`${sizeConfig.container} rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-sm`}
+        className={`${sizeConfig.container} rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-sm`}
       >
         <Shield
           size={sizeConfig.icon}
@@ -30,7 +30,7 @@ export default function Logo({ size = 'md', showText = true, className = '' }: L
       </div>
 
       {showText && (
-        <span className={`font-semibold text-gray-900 dark:text-gray-100 ${sizeConfig.text}`}>
+        <span className={`font-heading font-bold text-gray-100 tracking-tight ${sizeConfig.text}`}>
           Social Scrub
         </span>
       )}
