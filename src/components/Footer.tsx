@@ -30,6 +30,15 @@ export default function Footer() {
             </Link>
 
             <a
+              href="https://activistchecklist.org/contact"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-gray-200 transition-colors"
+            >
+              Contact
+            </a>
+
+            <a
               href="https://github.com/ActivistChecklist/social-scrub"
               target="_blank"
               rel="noopener noreferrer"
