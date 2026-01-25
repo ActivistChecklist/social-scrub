@@ -45,6 +45,7 @@ export default function PlatformCard({
   // Determine card styling based on status
   const isSecured = progress?.status === 'secured' && !isDeleted;
   const isSkipped = progress?.status === 'skipped';
+  const isInProgress = progress?.status === 'in_progress' && !isDeleted;
 
   let cardStyles = 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800';
 
@@ -54,6 +55,8 @@ export default function PlatformCard({
     cardStyles = 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/20 hover:border-emerald-300 dark:hover:border-emerald-700';
   } else if (isSecured) {
     cardStyles = 'border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:border-emerald-400 dark:hover:border-emerald-600';
+  } else if (isInProgress) {
+    cardStyles = 'border-amber-400 dark:border-amber-600 bg-amber-50/50 dark:bg-amber-900/10 hover:border-amber-500 dark:hover:border-amber-500';
   } else if (isSkipped) {
     cardStyles = 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 opacity-60 hover:opacity-80';
   }

@@ -40,18 +40,18 @@ export default function ProgressIndicator({
             steps[index - 1].id < currentStep
           );
 
-          let statusColor = 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500';
-          let borderColor = 'border-gray-200 dark:border-gray-700';
+          let statusColor = 'bg-gray-700 text-gray-500';
+          let borderColor = 'border-gray-700';
 
           if (isCompleted) {
-            statusColor = 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400';
+            statusColor = 'bg-emerald-900 text-emerald-400';
             borderColor = 'border-emerald-500';
           } else if (isSkipped) {
-            statusColor = 'bg-amber-100 dark:bg-amber-900/30 text-amber-500 dark:text-amber-400';
-            borderColor = 'border-amber-400 dark:border-amber-600';
+            statusColor = 'bg-amber-900/30 text-amber-400';
+            borderColor = 'border-amber-600';
           } else if (isCurrent) {
-            statusColor = 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400';
-            borderColor = 'border-blue-500';
+            statusColor = 'bg-brand-900 text-brand';
+            borderColor = 'border-brand';
           }
 
           return (
@@ -64,8 +64,8 @@ export default function ProgressIndicator({
                 <div
                   className={`h-0.5 flex-1 mx-1 ${
                     isPreviousHandled
-                      ? 'bg-emerald-400 dark:bg-emerald-600'
-                      : 'bg-gray-300 dark:bg-gray-600'
+                      ? 'bg-emerald-600'
+                      : 'bg-gray-600'
                   }`}
                 />
               )}
@@ -93,7 +93,7 @@ export default function ProgressIndicator({
 
                 {/* Tooltip on hover */}
                 <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                  <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap">
+                  <div className="bg-gray-100 text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap">
                     {step.shortTitle}
                     {isSkipped && ' (skipped)'}
                     {isCompleted && ' (done)'}

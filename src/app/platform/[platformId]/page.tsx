@@ -124,13 +124,13 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   // Show special screen for deleted platforms
   if (isDeleted) {
     return (
-      <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+      <main className="min-h-screen flex flex-col bg-gray-950">
         {/* Header */}
-        <header className="p-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <header className="p-6 border-b border-gray-800 bg-gray-900">
           <div className="max-w-3xl mx-auto flex items-center justify-between">
             <button
               onClick={() => router.push('/dashboard')}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors flex items-center gap-2"
+              className="text-gray-400 hover:text-gray-100 transition-colors flex items-center gap-2"
             >
               ← Back to dashboard
             </button>
@@ -142,13 +142,13 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
           <div className="max-w-md mx-auto text-center animate-fade-in">
             {/* Success icon */}
             <div className="mb-8">
-              <div className="w-24 h-24 mx-auto mb-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                <PartyPopper size={48} className="text-emerald-600 dark:text-emerald-400" />
+              <div className="w-24 h-24 mx-auto mb-6 bg-emerald-900/30 rounded-full flex items-center justify-center">
+                <PartyPopper size={48} className="text-emerald-400" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              <h1 className="font-heading text-3xl font-extrabold text-gray-100 mb-3 tracking-tight">
                 {platform.name} Was Deleted
               </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
+              <p className="text-lg text-gray-400">
                 You marked this account as deleted. Nice work!
               </p>
             </div>
@@ -166,7 +166,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
 
               <button
                 onClick={handleRestore}
-                className="w-full flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 py-2 transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-sm text-gray-400 hover:text-gray-200 py-2 transition-colors"
               >
                 <RotateCcw size={16} />
                 Actually, I want to restore this
@@ -174,7 +174,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
             </div>
 
             {/* Note */}
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-8">
+            <p className="text-xs text-gray-400 mt-8">
               Changed your mind? You can restore this platform and start fresh.
             </p>
           </div>
@@ -184,13 +184,13 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   }
 
   return (
-    <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+    <main className="min-h-screen flex flex-col bg-gray-950">
       {/* Header */}
-      <header className="p-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+      <header className="p-6 border-b border-gray-800 bg-gray-900">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <button
             onClick={() => router.push('/dashboard')}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors flex items-center gap-2"
+            className="text-gray-400 hover:text-gray-100 transition-colors flex items-center gap-2"
           >
             ← Back to dashboard
           </button>
@@ -203,7 +203,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
           {/* Platform icon and name */}
           <div className="mb-8">
             {isCustomPlatform ? (
-              <div className="w-20 h-20 mx-auto mb-4 bg-gray-200 dark:bg-gray-700 rounded-2xl flex items-center justify-center text-4xl">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gray-700 rounded-2xl flex items-center justify-center text-4xl">
                 📱
               </div>
             ) : (
@@ -214,10 +214,10 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
                 className="mx-auto mb-4"
               />
             )}
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+            <h1 className="font-heading text-4xl font-extrabold text-gray-100 mb-3 tracking-tight">
               Lock Down {platform.name}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-3">
+            <p className="text-lg text-gray-400 mb-3">
               Lock down your privacy in just a few steps
             </p>
             {platform.url && (
@@ -225,7 +225,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
                 href={platform.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm text-brand hover:text-brand-light transition-colors"
               >
                 Open {platform.name}
                 <ExternalLink size={14} />
@@ -236,11 +236,11 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
           {/* Why this platform is important */}
           {platform.importanceReason && (
             <div className="mb-8 max-w-xl mx-auto">
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-left">
-                <p className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2">
+              <div className="bg-brand-900/20 border border-brand-800 rounded-lg p-4 text-left">
+                <p className="text-sm font-semibold text-brand-200 mb-2">
                   Why this matters:
                 </p>
-                <p className="text-sm text-blue-800 dark:text-blue-300">
+                <p className="text-sm text-brand-300">
                   {platform.importanceReason}
                 </p>
               </div>
@@ -276,7 +276,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
           </div>
 
           {/* Privacy note */}
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-400">
             Your progress is saved automatically. You can come back anytime.
           </p>
         </div>

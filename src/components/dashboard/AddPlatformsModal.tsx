@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef, KeyboardEvent } from 'react';
+import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
 import { getPlatformsByPriority, PRIORITY_LABELS } from '@/lib/platforms';
 import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
@@ -52,6 +52,23 @@ export default function AddPlatformsModal({
   const hasAvailablePlatforms = useMemo(() => {
     return PRIORITY_ORDER.some(priority => platformsByPriority[priority].length > 0);
   }, [platformsByPriority]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedPlatforms(new Set());
+        setCustomPlatforms([]);
+        setCurrentCustomInput('');
+        setShowCustomInput(false);
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

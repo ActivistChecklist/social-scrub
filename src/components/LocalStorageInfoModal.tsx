@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import { Bookmark, Shield } from 'lucide-react';
 
@@ -12,6 +13,19 @@ export default function LocalStorageInfoModal({
   isOpen,
   onClose,
 }: LocalStorageInfoModalProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (

@@ -256,9 +256,9 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+    <main className="min-h-screen flex flex-col bg-gray-950">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+      <header className="sticky top-0 z-10 bg-gray-900 border-b border-gray-800 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <button
@@ -267,21 +267,21 @@ export default function Dashboard() {
             >
               <Logo size="md" showText={false} />
               <div className="text-left">
-                <h1 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100">
+                <h1 className="font-heading text-xl font-bold text-gray-100 tracking-tight">
                   Social Scrub
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-400">
                   Dashboard
                 </p>
               </div>
             </button>
             <button
               onClick={() => setShowStorageInfoModal(true)}
-              className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-600 hover:bg-gray-800"
             >
               <Save size={16} />
               <span>Auto-saved locally</span>
-              <Info size={14} className="text-gray-500 dark:text-gray-400" />
+              <Info size={14} className="text-gray-400" />
             </button>
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function Dashboard() {
         const hasProgress = stats.secured > 0 || stats.inProgress > 0 || stats.skipped > 0;
 
         return hasProgress ? (
-          <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="bg-gray-900 border-b border-gray-800">
             <div className="max-w-6xl mx-auto px-6 py-6">
               <VisualProgressBar session={session} />
             </div>
@@ -308,7 +308,7 @@ export default function Dashboard() {
 
       {/* Continue CTA */}
       {nextPlatform && (
-        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="bg-gray-900 border-b border-gray-800">
           <div className="max-w-6xl mx-auto px-6 py-6">
             <ContinueCTA nextPlatform={nextPlatform} />
           </div>
@@ -320,7 +320,7 @@ export default function Dashboard() {
         <div className="max-w-6xl mx-auto space-y-8">
           {Object.keys(groupedPlatforms).length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400 mb-4">
+              <p className="text-gray-400 mb-4">
                 No platforms selected yet.
               </p>
               <Button onClick={() => router.push('/onboarding/select')}>
@@ -329,15 +329,21 @@ export default function Dashboard() {
             </div>
           ) : (
             <>
-              {/* View toggle */}
-              <div className="flex items-center justify-end">
-                <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+              {/* View toggle and add platforms */}
+              <div className="flex items-center justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAddPlatformsModal(true)}
+                >
+                  + Add More Platforms
+                </Button>
+                <div className="flex items-center bg-gray-800 rounded-lg p-1">
                   <button
                     onClick={() => handleViewModeChange('cards')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                       viewMode === 'cards'
-                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                        ? 'bg-gray-700 text-gray-100 shadow-sm'
+                        : 'text-gray-400 hover:text-gray-300'
                     }`}
                   >
                     <LayoutGrid size={16} />
@@ -347,8 +353,8 @@ export default function Dashboard() {
                     onClick={() => handleViewModeChange('spreadsheet')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                       viewMode === 'spreadsheet'
-                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                        ? 'bg-gray-700 text-gray-100 shadow-sm'
+                        : 'text-gray-400 hover:text-gray-300'
                     }`}
                   >
                     <Table size={16} />
@@ -381,7 +387,7 @@ export default function Dashboard() {
                 return (
                   <div key={priority}>
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                      <h2 className="font-heading text-lg font-bold text-gray-100 tracking-tight">
                         {PRIORITY_LABELS[priority]} ({platforms.length})
                       </h2>
                     </div>
@@ -409,7 +415,7 @@ export default function Dashboard() {
               {session.customSites.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    <h2 className="font-heading text-lg font-bold text-gray-100 tracking-tight">
                       My Custom Platforms ({session.customSites.length})
                     </h2>
                   </div>
@@ -440,16 +446,6 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Add platforms button - shown in card view */}
-              <div className="flex items-center justify-center pt-4">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => setShowAddPlatformsModal(true)}
-                >
-                  + Add More Platforms
-                </Button>
-              </div>
                 </>
               )}
 

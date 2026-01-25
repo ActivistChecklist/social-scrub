@@ -6,6 +6,9 @@ import type { AnalyticsEvent } from '@/lib/analytics';
 const isProd = process.env.NODE_ENV === 'production';
 const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_ANALYTICS === 'true';
 
+// Track the last page view URL to prevent duplicate calls
+let lastPageViewUrl: string | null = null;
+
 interface AnalyticsPayload {
   url: string;
   hostname: string;
@@ -72,7 +75,13 @@ export function useAnalytics() {
   }, []);
 
   const trackPageView = useCallback(() => {
-    sendAnalytics(getBasePayload());
+    const payload = getBasePayload();
+    // Prevent duplicate page view calls for the same URL
+    if (payload.url === lastPageViewUrl) {
+      return;
+    }
+    lastPageViewUrl = payload.url;
+    sendAnalytics(payload);
   }, []);
 
   // Convenience methods for specific events
