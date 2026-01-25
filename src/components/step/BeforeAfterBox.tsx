@@ -141,7 +141,7 @@ function SocialPost({
 }
 
 // Posts/Photos visual
-function PostsVisual({ type }: { type: 'before' | 'after' }) {
+export function PostsVisual({ type }: { type: 'before' | 'after' }) {
   return (
     <div className="space-y-3">
       <SocialPost type={type} variant="photo" />
@@ -150,29 +150,47 @@ function PostsVisual({ type }: { type: 'before' | 'after' }) {
   );
 }
 
+// Friends list data
+const friends = [
+  { name: 'Han Solo', image: '/han.jpg' },
+  { name: 'Leia Organa', image: '/leia.jpg' },
+  { name: 'Obi-Wan Kenobi', image: '/obiwan.jpeg' },
+];
+
 // Friends list visual
-function FriendsVisual({ type }: { type: 'before' | 'after' }) {
+export function FriendsVisual({ type, showHeader = true }: { type: 'before' | 'after'; showHeader?: boolean }) {
   const isBefore = type === 'before';
 
   if (isBefore) {
     return (
       <div className="space-y-2">
-        <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Friends (247)</div>
-        {['Han Solo', 'Leia Organa', 'Obi-Wan Kenobi'].map((name, i) => (
+        {showHeader && (
+          <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Friends (247)</div>
+        )}
+        {friends.map((friend, i) => (
           <div key={i} className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg p-2.5 border border-gray-200 dark:border-gray-700">
-            <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-              <span className="text-sm text-gray-500">{name[0]}</span>
+            <div className="w-8 h-8 rounded-full overflow-hidden">
+              <Image
+                src={friend.image}
+                alt={`${friend.name}'s profile`}
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{name}</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{friend.name}</span>
           </div>
         ))}
-        <div className="text-xs text-gray-400 text-center pt-1">+ 244 more</div>
+        {showHeader && (
+          <div className="text-xs text-gray-400 text-center pt-1">+ 244 more</div>
+        )}
       </div>
     );
   }
 
+  // Height matches the before state (3 friend rows at ~44px + gaps)
   return (
-    <div className="h-full flex flex-col items-center justify-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+    <div className="h-full min-h-[172px] flex flex-col items-center justify-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
       <Lock size={32} className="text-emerald-500 mb-3" />
       <p className="text-sm text-gray-600 dark:text-gray-400 text-center font-medium">
         Friends list is private

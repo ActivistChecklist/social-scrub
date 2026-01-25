@@ -37,6 +37,7 @@ export interface Platform {
   id: string;
   name: string;
   icon?: string;
+  logoUrl?: string; // Custom logo image URL (e.g., '/logos/platform.svg')
   category: PlatformCategory;
   priority: 'highest' | 'high' | 'medium' | 'low';
   hasBlockParty?: boolean;

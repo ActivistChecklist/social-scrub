@@ -209,6 +209,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
             ) : (
               <PlatformIcon
                 iconName={platform.icon}
+                logoUrl={platform.logoUrl}
                 platformName={platform.name}
                 size={80}
                 className="mx-auto mb-4"

@@ -85,7 +85,7 @@ const PRIORITY_ORDER: PriorityLevel[] = ['highest', 'high', 'medium', 'low'];
 
 export default function Dashboard() {
   const router = useRouter();
-  const { session, isLoading, hasSession, getPlatform: getPlatformProgress, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
+  const { session, isLoading, hasSession, clearSession, getPlatform: getPlatformProgress, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
   const { trackPageView } = useAnalytics();
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
   const [showAddPlatformsModal, setShowAddPlatformsModal] = useState(false);
@@ -247,6 +247,11 @@ export default function Dashboard() {
     addCustomPlatforms(platformNames);
   };
 
+  const handleReset = () => {
+    clearSession();
+    router.push('/');
+  };
+
   if (isLoading || !session) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -382,69 +387,74 @@ export default function Dashboard() {
                 <>
               {PRIORITY_ORDER.map((priority) => {
                 const platforms = groupedPlatforms[priority];
-                if (!platforms || platforms.length === 0) return null;
+                const hasPlatforms = platforms && platforms.length > 0;
 
                 return (
                   <div key={priority}>
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="font-heading text-lg font-bold text-gray-100 tracking-tight">
-                        {PRIORITY_LABELS[priority]} ({platforms.length})
-                      </h2>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                      {platforms.map((progress) => {
-                        const platform = getPlatform(progress.platformId);
-                        if (!platform) return null;
+                    {/* Render custom platforms after high priority (before medium) */}
+                    {priority === 'medium' && session.customSites.length > 0 && (
+                      <div className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                          <h2 className="font-heading text-lg font-bold text-gray-100 tracking-tight">
+                            My Custom Platforms ({session.customSites.length})
+                          </h2>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                          {session.customSites.map((customSite) => {
+                            // Create a platform-like object for custom sites
+                            const customPlatform: Platform = {
+                              id: customSite.id,
+                              name: customSite.name,
+                              category: 'other',
+                              priority: customSite.priority === 'high' ? 'high' : customSite.priority === 'medium' ? 'medium' : 'low',
+                            };
 
-                        return (
-                          <PlatformCard
-                            key={progress.platformId}
-                            platform={platform}
-                            progress={progress}
-                            showStatus
-                            onClick={() => router.push(`/platform/${progress.platformId}`)}
-                          />
-                        );
-                      })}
-                    </div>
+                            // Use session hook to get progress (same as built-in platforms)
+                            const progress = getPlatformProgress(customSite.id);
+
+                            return (
+                              <PlatformCard
+                                key={customSite.id}
+                                platform={customPlatform}
+                                progress={progress}
+                                showStatus
+                                onClick={() => router.push(`/platform/${customSite.id}`)}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Render priority group */}
+                    {hasPlatforms && (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <h2 className="font-heading text-lg font-bold text-gray-100 tracking-tight">
+                            {PRIORITY_LABELS[priority]} ({platforms.length})
+                          </h2>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-8">
+                          {platforms.map((progress) => {
+                            const platform = getPlatform(progress.platformId);
+                            if (!platform) return null;
+
+                            return (
+                              <PlatformCard
+                                key={progress.platformId}
+                                platform={platform}
+                                progress={progress}
+                                showStatus
+                                onClick={() => router.push(`/platform/${progress.platformId}`)}
+                              />
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                 );
               })}
-
-              {/* Custom platforms section */}
-              {session.customSites.length > 0 && (
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-heading text-lg font-bold text-gray-100 tracking-tight">
-                      My Custom Platforms ({session.customSites.length})
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    {session.customSites.map((customSite) => {
-                      // Create a platform-like object for custom sites
-                      const customPlatform: Platform = {
-                        id: customSite.id,
-                        name: customSite.name,
-                        category: 'other',
-                        priority: customSite.priority === 'high' ? 'high' : customSite.priority === 'medium' ? 'medium' : 'low',
-                      };
-
-                      // Use session hook to get progress (same as built-in platforms)
-                      const progress = getPlatformProgress(customSite.id);
-
-                      return (
-                        <PlatformCard
-                          key={customSite.id}
-                          platform={customPlatform}
-                          progress={progress}
-                          showStatus
-                          onClick={() => router.push(`/platform/${customSite.id}`)}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
 
                 </>
               )}
@@ -461,6 +471,7 @@ export default function Dashboard() {
       <LocalStorageInfoModal
         isOpen={showStorageInfoModal}
         onClose={() => setShowStorageInfoModal(false)}
+        onReset={handleReset}
       />
       <AddPlatformsModal
         isOpen={showAddPlatformsModal}

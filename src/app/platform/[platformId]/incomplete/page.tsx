@@ -159,6 +159,7 @@ export default function PlatformIncomplete({ params }: IncompletePageProps) {
               <div className="mb-6 flex justify-center lg:justify-start">
                 <PlatformIcon
                   iconName={platform.icon}
+                  logoUrl={platform.logoUrl}
                   platformName={platform.name}
                   size={48}
                 />

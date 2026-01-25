@@ -156,6 +156,7 @@ export default function PlatformComplete({ params }: CompletePageProps) {
               <div className="mb-6 flex justify-center lg:justify-start">
                 <PlatformIcon
                   iconName={platform.icon}
+                  logoUrl={platform.logoUrl}
                   platformName={platform.name}
                   size={48}
                 />
@@ -184,6 +185,7 @@ export default function PlatformComplete({ params }: CompletePageProps) {
                 >
                   <PlatformIcon
                     iconName={nextPlatform.info.icon}
+                    logoUrl={'logoUrl' in nextPlatform.info ? nextPlatform.info.logoUrl : undefined}
                     platformName={nextPlatform.info.name}
                     size={20}
                     variant="light"

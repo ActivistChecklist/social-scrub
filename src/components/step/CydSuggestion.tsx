@@ -2,7 +2,7 @@
 
 import { ExternalLink, Sparkles } from 'lucide-react';
 
-export default function BlockPartySuggestion() {
+export default function CydSuggestion() {
   return (
     <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-y border-purple-200 dark:border-purple-700 py-6">
       <div className="max-w-4xl mx-auto px-6">
@@ -13,22 +13,24 @@ export default function BlockPartySuggestion() {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-xl md:text-2xl font-bold text-purple-900 dark:text-purple-100 mb-1">
-                Want to automate this? Use Block Party!
+                Want to bulk-delete tweets? Try Cyd!
               </h3>
               <p className="text-sm text-purple-700 dark:text-purple-300">
-                Free version scans your privacy settings; paid version automatically applies them. <span className="text-purple-600 dark:text-purple-400 italic">(Not an ad—we just like it. Promo <span className="font-mono not-italic">JOINTHEPARTY</span> for 50% off)</span>
+                Backup and delete all your tweets, then migrate to Bluesky. <span className="text-purple-600 dark:text-purple-400 italic">(Not an ad—we just like it)</span>
               </p>
             </div>
           </div>
-          <a
-            href="https://www.blockpartyapp.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors text-sm flex-shrink-0"
-          >
-            Try Block Party
-            <ExternalLink size={16} />
-          </a>
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <a
+              href="https://cyd.social"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors text-sm"
+            >
+              Try Cyd
+              <ExternalLink size={16} />
+            </a>
+          </div>
         </div>
       </div>
     </div>

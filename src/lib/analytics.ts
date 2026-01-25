@@ -10,7 +10,8 @@ export type AnalyticsEvent =
   | { name: 'platform_skip'; data: { platformId: string } }
   | { name: 'platform_complete'; data: { platformId: string; method: 'secured' | 'skipped' | 'deleted' } }
   | { name: 'step_complete'; data: { platformId: string; step: number } }
-  | { name: 'step_skip'; data: { platformId: string; step: number } };
+  | { name: 'step_skip'; data: { platformId: string; step: number } }
+  | { name: 'platform_suggestion'; data: { platformName: string } };
 
 /**
  * Payload sent to the analytics API route

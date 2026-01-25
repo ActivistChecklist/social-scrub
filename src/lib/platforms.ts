@@ -55,7 +55,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'google',
     name: 'Google Account',
-    icon: 'google',
+    logoUrl: '/logos/google.svg',
     category: 'other',
     priority: 'medium',
     hasBlockParty: true,
@@ -65,7 +65,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'googlemaps',
     name: 'Google Maps Reviews',
-    icon: 'google',
+    logoUrl: '/logos/googlemaps.svg',
     category: 'other',
     priority: 'highest',
     hasBlockParty: true,
@@ -137,6 +137,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'partiful',
     name: 'Partiful',
+    logoUrl: '/logos/partiful.jpeg',
     category: 'other',
     priority: 'high',
     url: 'https://partiful.com',
@@ -163,6 +164,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'chuffed',
     name: 'Chuffed',
+    logoUrl: '/logos/chuffed.svg',
     category: 'other',
     priority: 'high',
     url: 'https://chuffed.org',
@@ -216,6 +218,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'mapmyrun',
     name: 'MapMyRun',
+    logoUrl: '/logos/mymyrun.png',
     category: 'other',
     priority: 'high',
     url: 'https://mapmyrun.com',
@@ -224,6 +227,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'ancestry',
     name: 'Ancestry.com',
+    logoUrl: '/logos/ancestry.svg',
     category: 'other',
     priority: 'high',
     url: 'https://ancestry.com',
@@ -234,9 +238,27 @@ export const PLATFORMS: Platform[] = [
     name: 'haveibeenpwned',
     icon: 'haveibeenpwned',
     category: 'other',
-    priority: 'medium',
+    priority: 'high',
     url: 'https://haveibeenpwned.com',
     importanceReason: 'Your data is almost certiantly on there. Opting out can help hide what services you use that have had a password breach in the past.'
+  },
+  {
+    id: 'cashapp',
+    name: 'Cash App',
+    icon: 'cashapp',
+    category: 'finance',
+    priority: 'high',
+    url: 'https://cash.app',
+    importanceReason: 'Can reveal your profile picture'
+  },
+  {
+    id: 'signal',
+    name: 'Signal',
+    icon: 'signal',
+    category: 'messaging',
+    priority: 'high',
+    url: 'https://signal.org',
+    importanceReason: 'Settings guide. You can set your phone number to not be discoverable if needed. This will make it harder for people to find you, but increase your privacy. Your choice.'
   },
 
   // 🟠 MEDIUM PRIORITY
@@ -280,6 +302,7 @@ export const PLATFORMS: Platform[] = [
     id: 'amazon',
     name: 'Amazon',
     icon: 'amazon',
+    logoUrl: '/logos/amazon.svg',
     category: 'shopping',
     priority: 'medium',
     url: 'https://amazon.com',
@@ -328,15 +351,6 @@ export const PLATFORMS: Platform[] = [
     priority: 'medium',
     url: 'https://eventbrite.com',
     importanceReason: 'Some events show a "who\'s going" list that could have your full name and profile picture. Might want to keep your real first name and last initial.'
-  },
-  {
-    id: 'signal',
-    name: 'Signal',
-    icon: 'signal',
-    category: 'messaging',
-    priority: 'medium',
-    url: 'https://signal.org',
-    importanceReason: 'Settings guide. You can set your phone number to not be discoverable if needed. This will make it harder for people to find you, but increase your privacy. Your choice.'
   },
   {
     id: 'discord',
@@ -441,6 +455,7 @@ export const PLATFORMS: Platform[] = [
     id: 'canva',
     name: 'Canva',
     icon: 'canva',
+    logoUrl: '/logos/canva.jpeg',
     category: 'professional',
     priority: 'medium',
     url: 'https://canva.com',
@@ -548,38 +563,13 @@ export const PLATFORMS: Platform[] = [
     importanceReason: 'Profile and saved addresses can reveal where you live and frequent'
   },
   {
-    id: 'doordash',
-    name: 'DoorDash',
-    icon: 'doordash',
-    category: 'other',
-    priority: 'medium',
-    url: 'https://doordash.com',
-    importanceReason: 'Saved addresses reveal where you live'
-  },
-  {
-    id: 'grubhub',
-    name: 'Grubhub',
-    category: 'other',
-    priority: 'medium',
-    url: 'https://grubhub.com',
-    importanceReason: 'Saved addresses reveal where you live'
-  },
-  {
     id: 'offerup',
     name: 'OfferUp',
+    logoUrl: '/logos/offerup.svg',
     category: 'shopping',
     priority: 'medium',
     url: 'https://offerup.com',
     importanceReason: 'Can reveal your location through listings and meetup preferences'
-  },
-  {
-    id: 'cashapp',
-    name: 'Cash App',
-    icon: 'cashapp',
-    category: 'finance',
-    priority: 'medium',
-    url: 'https://cash.app',
-    importanceReason: 'Can reveal your profile picture'
   },
 
   // 🟡 LOW PRIORITY
@@ -640,6 +630,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'indiegogo',
     name: 'Indiegogo',
+    logoUrl: '/logos/indiegogo.jpeg',
     category: 'other',
     priority: 'low',
     url: 'https://indiegogo.com',
@@ -762,6 +753,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'hinge',
     name: 'Hinge',
+    logoUrl: '/logos/hinge.jpeg',
     category: 'dating',
     priority: 'low',
     url: 'https://hinge.co',

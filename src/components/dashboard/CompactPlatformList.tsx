@@ -106,6 +106,7 @@ function PlatformRow({
         <div className={`flex items-center gap-3 ${isDeleted ? 'opacity-60' : ''}`}>
           <PlatformIcon
             iconName={platform.icon}
+            logoUrl={platform.logoUrl}
             platformName={platform.name}
             size={24}
           />
@@ -153,92 +154,116 @@ function PlatformRow({
   );
 }
 
+// Custom platforms section component
+function CustomPlatformsSection({
+  customPlatforms,
+  onPlatformClick,
+}: {
+  customPlatforms: Array<{ platform: Platform; progress: PlatformProgress }>;
+  onPlatformClick: (platformId: string) => void;
+}) {
+  if (customPlatforms.length === 0) return null;
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      {/* Custom header */}
+      <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          My Custom Platforms ({customPlatforms.length})
+        </h3>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-100 dark:border-gray-700">
+              <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                Platform
+              </th>
+              <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                Status
+              </th>
+              <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden sm:table-cell">
+                Progress
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            {customPlatforms.map(({ platform, progress }) => (
+              <PlatformRow
+                key={platform.id}
+                platform={platform}
+                progress={progress}
+                onPlatformClick={onPlatformClick}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default function CompactPlatformList({ groupedPlatforms, customPlatforms, onPlatformClick }: CompactPlatformListProps) {
   return (
     <div className="space-y-6">
       {PRIORITY_ORDER.map((priority) => {
         const platforms = groupedPlatforms[priority];
-        if (!platforms || platforms.length === 0) return null;
+        const hasPlatforms = platforms && platforms.length > 0;
 
         return (
-          <div key={priority} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            {/* Priority header */}
-            <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {PRIORITY_LABELS[priority]} ({platforms.length})
-              </h3>
-            </div>
+          <div key={priority}>
+            {/* Render custom platforms after high priority (before medium) */}
+            {priority === 'medium' && customPlatforms.length > 0 && (
+              <div className="mb-6">
+                <CustomPlatformsSection
+                  customPlatforms={customPlatforms}
+                  onPlatformClick={onPlatformClick}
+                />
+              </div>
+            )}
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-100 dark:border-gray-700">
-                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                      Platform
-                    </th>
-                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                      Status
-                    </th>
-                    <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden sm:table-cell">
-                      Progress
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                  {platforms.map(({ platform, progress }) => (
-                    <PlatformRow
-                      key={platform.id}
-                      platform={platform}
-                      progress={progress}
-                      onPlatformClick={onPlatformClick}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {hasPlatforms && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                {/* Priority header */}
+                <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    {PRIORITY_LABELS[priority]} ({platforms.length})
+                  </h3>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-100 dark:border-gray-700">
+                        <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                          Platform
+                        </th>
+                        <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                          Status
+                        </th>
+                        <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden sm:table-cell">
+                          Progress
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                      {platforms.map(({ platform, progress }) => (
+                        <PlatformRow
+                          key={platform.id}
+                          platform={platform}
+                          progress={progress}
+                          onPlatformClick={onPlatformClick}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         );
       })}
-
-      {/* Custom platforms section */}
-      {customPlatforms.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-          {/* Custom header */}
-          <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              My Custom Platforms ({customPlatforms.length})
-            </h3>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-700">
-                  <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                    Platform
-                  </th>
-                  <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                    Status
-                  </th>
-                  <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden sm:table-cell">
-                    Progress
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {customPlatforms.map(({ platform, progress }) => (
-                  <PlatformRow
-                    key={platform.id}
-                    platform={platform}
-                    progress={progress}
-                    onPlatformClick={onPlatformClick}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
