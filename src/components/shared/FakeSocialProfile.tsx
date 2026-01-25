@@ -30,7 +30,7 @@ export const AFTER_PROFILE: ProfileData = {
   username: '@happy-dolphin-742',
   bio: '', // Empty bio - will be shown as "[Bio Removed]"
   email: 'luke+instagram@gmail.com', // Platform-specific alias
-  postsCount: '12', // Fewer posts, not zero
+  postsCount: '12',
   friendsCount: 'hidden',
 };
 
@@ -83,9 +83,9 @@ export default function FakeSocialProfile({
 
   return (
     <div className={`bg-white dark:bg-gray-900 rounded-lg overflow-hidden ${className}`}>
-      {/* Cover photo - subtle gradient, not too bright */}
+      {/* Cover photo - subtle gray gradient */}
       {showCover && (
-        <div className={`${coverHeight} bg-gradient-to-r from-slate-300 to-blue-300 dark:from-slate-600 dark:to-blue-600`} />
+        <div className={`${coverHeight} bg-gradient-to-br from-gray-300 via-gray-200 to-gray-300 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700`} />
       )}
 
       {/* Profile content */}
