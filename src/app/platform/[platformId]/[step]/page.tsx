@@ -261,7 +261,7 @@ export default function StepPage({ params }: StepPageProps) {
                               <h3 className="font-heading font-semibold text-red-400 tracking-tight">Option 1: Delete the account</h3>
                             </div>
                             <p className="text-sm text-gray-400">
-                              Permanently removes all your data from this platform.
+                              Deleting your profile is the most private option if you can manage without it.
                             </p>
                           </div>
                           <Button
@@ -285,7 +285,7 @@ export default function StepPage({ params }: StepPageProps) {
                               <h3 className="font-heading font-semibold text-emerald-400 tracking-tight">Option 2: Keep &amp; lock it down</h3>
                             </div>
                             <p className="text-sm text-gray-400">
-                              Keep your account but make it private and harder to find.
+                              Keep your account but make it more private.
                             </p>
                           </div>
                           <Button

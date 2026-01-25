@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import Button from '@/components/ui/Button';
 
 interface AddCustomPlatformsModalProps {
@@ -17,6 +17,21 @@ export default function AddCustomPlatformsModal({
   const [currentInput, setCurrentInput] = useState('');
   const [platforms, setPlatforms] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setPlatforms([]);
+        setCurrentInput('');
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

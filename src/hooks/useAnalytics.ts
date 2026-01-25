@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import type { AnalyticsEvent } from '@/lib/analytics';
 
 const isProd = process.env.NODE_ENV === 'production';
