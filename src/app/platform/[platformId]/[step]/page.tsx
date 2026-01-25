@@ -16,6 +16,7 @@ import RandomNameGenerator from '@/components/step/RandomNameGenerator';
 import RandomUsernameGenerator from '@/components/step/RandomUsernameGenerator';
 import { EmailSuggestion } from '@/components/step/SuggestionBox';
 import BlockPartySuggestion from '@/components/step/BlockPartySuggestion';
+import CydSuggestion from '@/components/step/CydSuggestion';
 import LucideIcon, { Check, ChevronRight } from '@/components/ui/LucideIcon';
 import LocalStorageInfoModal from '@/components/LocalStorageInfoModal';
 import { Trash2, Lock, ChevronLeft, Save, Info, ExternalLink } from 'lucide-react';
@@ -380,6 +381,11 @@ export default function StepPage({ params }: StepPageProps) {
           {/* Block Party suggestion - full width, breaks container */}
           {!isDeleteStep && stepNumber === 9 && platform.hasBlockParty && (
             <BlockPartySuggestion />
+          )}
+
+          {/* Cyd suggestion for Twitter - step 7 (delete posts) */}
+          {!isDeleteStep && stepNumber === 7 && platformId === 'twitter' && (
+            <CydSuggestion />
           )}
 
           {/* SECONDARY SECTION: Before/after, generators, how-to */}
