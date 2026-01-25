@@ -20,12 +20,14 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://socialscrub.app'),
   title: 'Social Scrub - Protect Your Privacy',
   description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+  manifest: '/site.webmanifest',
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     title: 'Social Scrub - Protect Your Privacy',
