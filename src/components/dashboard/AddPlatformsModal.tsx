@@ -212,7 +212,7 @@ export default function AddPlatformsModal({
               onClick={handleConfirmWithTracking}
               className="w-full"
             >
-              Yes, share platform names
+              Yes, anonymously share platform names
             </Button>
             <Button
               variant="outline"
@@ -263,101 +263,112 @@ export default function AddPlatformsModal({
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto p-6">
-          {/* Add my own button at top */}
-          {!showCustomInput && (
-            <div className="mb-6">
-              <button
-                onClick={() => {
-                  setShowCustomInput(true);
-                  setTimeout(() => customInputRef.current?.focus(), 100);
-                }}
-                className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium"
-              >
-                <Plus size={18} />
-                Add a platform not in the list
-              </button>
-            </div>
-          )}
-
-          {/* Custom platforms input section - shown at top when expanded */}
-          {showCustomInput && (
-            <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                Add Custom Platforms
-              </h3>
-              <div className="mb-4">
-                <input
-                  ref={customInputRef}
-                  type="text"
-                  value={currentCustomInput}
-                  onChange={(e) => setCurrentCustomInput(e.target.value)}
-                  onKeyDown={handleCustomKeyDown}
-                  placeholder="Type a platform name and press Enter..."
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-
-              {/* Custom platforms displayed like selected platform cards */}
-              {customPlatforms.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {customPlatforms.map((platform, index) => (
-                    <div
-                      key={index}
-                      className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                    >
-                      {/* Custom platform icon placeholder */}
-                      <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {platform[0]?.toUpperCase()}
-                        </span>
-                      </div>
-
-                      {/* Platform name */}
-                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
-                        {platform}
-                      </span>
-
-                      {/* Checkmark */}
-                      <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
-                        <Check size={12} className="text-white" strokeWidth={3} />
-                      </div>
-
-                      {/* Remove button - positioned in corner */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveCustom(index);
-                        }}
-                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors shadow-sm"
-                        title="Remove"
-                      >
-                        <X size={10} className="text-white" strokeWidth={3} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <button
-                onClick={() => setShowCustomInput(false)}
-                className="mt-3 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                Done adding custom platforms
-              </button>
-            </div>
-          )}
-
           {hasAvailablePlatforms ? (
             <div className="space-y-8">
-              {PRIORITY_ORDER.map((priority) => {
+              {PRIORITY_ORDER.map((priority, priorityIndex) => {
                 const platforms = platformsByPriority[priority];
-                if (platforms.length === 0) return null;
-
                 const { emoji, label } = PRIORITY_LABELS[priority];
                 const allSelected = isSectionFullySelected(priority);
 
+                // Show custom platforms section after "highest" priority (index 0)
+                const showCustomSectionBefore = priorityIndex === 1;
+
+                // Custom section component
+                const customSection = (
+                  <div>
+                    {!showCustomInput ? (
+                      <button
+                        onClick={() => {
+                          setShowCustomInput(true);
+                          setTimeout(() => customInputRef.current?.focus(), 100);
+                        }}
+                        className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium"
+                      >
+                        <Plus size={18} />
+                        Add a platform not in the list
+                      </button>
+                    ) : (
+                      <div className="pb-6 border-b border-gray-200 dark:border-gray-700">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                          Add Custom Platforms
+                        </h3>
+                        <div className="mb-4">
+                          <input
+                            ref={customInputRef}
+                            type="text"
+                            value={currentCustomInput}
+                            onChange={(e) => setCurrentCustomInput(e.target.value)}
+                            onKeyDown={handleCustomKeyDown}
+                            placeholder="Type a platform name and press Enter..."
+                            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 text-gray-900 dark:text-gray-100"
+                          />
+                        </div>
+
+                        {/* Custom platforms displayed like selected platform cards */}
+                        {customPlatforms.length > 0 && (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {customPlatforms.map((platform, index) => (
+                              <div
+                                key={index}
+                                className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                              >
+                                {/* Custom platform icon placeholder */}
+                                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    {platform[0]?.toUpperCase()}
+                                  </span>
+                                </div>
+
+                                {/* Platform name */}
+                                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
+                                  {platform}
+                                </span>
+
+                                {/* Checkmark */}
+                                <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                                  <Check size={12} className="text-white" strokeWidth={3} />
+                                </div>
+
+                                {/* Remove button - positioned in corner */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveCustom(index);
+                                  }}
+                                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors shadow-sm"
+                                  title="Remove"
+                                >
+                                  <X size={10} className="text-white" strokeWidth={3} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => setShowCustomInput(false)}
+                          className="mt-3 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                          Done adding custom platforms
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+
+                // If no platforms in this priority, only render custom section if applicable
+                if (platforms.length === 0) {
+                  if (showCustomSectionBefore) {
+                    return <div key={`custom-${priority}`}>{customSection}</div>;
+                  }
+                  return null;
+                }
+
                 return (
                   <div key={priority}>
+                    {/* Custom section shown before this priority group */}
+                    {showCustomSectionBefore && customSection}
+
                     {/* Section header */}
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -400,21 +411,6 @@ export default function AddPlatformsModal({
             </div>
           )}
 
-          {/* Add my own button at bottom too (for convenience) */}
-          {!showCustomInput && (
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={() => {
-                  setShowCustomInput(true);
-                  setTimeout(() => customInputRef.current?.focus(), 100);
-                }}
-                className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium"
-              >
-                <Plus size={18} />
-                Add a platform not in the list
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Footer with action buttons */}
