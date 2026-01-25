@@ -127,76 +127,87 @@ export default function LocalStorageInfoModal({
 
       {/* Modal */}
       <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6 animate-fade-in">
-        {/* Primary CTA - Bookmark reminder */}
-        <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
-          <div className="flex items-start gap-3">
-            <Bookmark className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-amber-900 dark:text-amber-100">
-                Save this page to continue later
-              </p>
-              <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                Return on this same device and browser to continue.
-              </p>
-            </div>
+        {/* Header */}
+        <div className="text-center mb-5">
+          <div className="w-12 h-12 mx-auto mb-3 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
+            <Bookmark className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+          </div>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+            Save Your Progress
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Come back on this same device and browser to continue
+          </p>
+        </div>
+
+        {/* Grouped save options */}
+        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-5">
+          <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 text-center">
+            Choose how to save
+          </p>
+          
+          <div className="space-y-2">
+            {/* Option 1: Drag to bookmark */}
+            <a
+              href={currentUrl}
+              className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-amber-400 dark:hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-grab active:cursor-grabbing group"
+              onClick={(e) => {
+                e.preventDefault();
+                alert('Drag this link to your bookmarks bar to save it!');
+              }}
+            >
+              <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center flex-shrink-0">
+                <GripHorizontal className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+                  Drag to bookmarks bar
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  {pageTitle}
+                </p>
+              </div>
+            </a>
+
+            {/* Option 2: Email to self */}
+            <a
+              href={mailtoLink}
+              className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group"
+            >
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+                  Email link to myself
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Send a reminder with the link
+                </p>
+              </div>
+            </a>
           </div>
         </div>
 
-        {/* Drag to bookmark bar */}
-        <div className="mb-4">
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center">
-            Drag this to your bookmarks bar:
-          </p>
-          <a
-            href={currentUrl}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40 border-2 border-dashed border-amber-300 dark:border-amber-700 rounded-lg text-amber-800 dark:text-amber-200 font-medium text-sm hover:border-amber-400 dark:hover:border-amber-600 transition-colors cursor-grab active:cursor-grabbing"
-            onClick={(e) => {
-              e.preventDefault();
-              alert('Drag this link to your bookmarks bar to save it!');
-            }}
-          >
-            <GripHorizontal className="w-4 h-4 opacity-60" />
-            <Bookmark className="w-4 h-4" />
-            <span>{pageTitle}</span>
-          </a>
+        {/* Privacy note - subtle */}
+        <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500 mb-5">
+          <Shield className="w-3.5 h-3.5" />
+          <span>Your data stays 100% private on your device</span>
         </div>
 
-        {/* Email to self */}
-        <div className="mb-4">
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center">
-            Or email yourself a reminder:
-          </p>
-          <a
-            href={mailtoLink}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-700 dark:text-blue-300 font-medium text-sm hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-          >
-            <Mail className="w-4 h-4" />
-            <span>Email this link to myself</span>
-          </a>
-        </div>
-
-        {/* Privacy note */}
-        <div className="flex items-start gap-3 text-gray-600 dark:text-gray-400 mb-6">
-          <Shield className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-          <p className="text-sm">
-            Your data stays 100% private on your device. We never see your progress.
-          </p>
-        </div>
-
-        <Button onClick={handleClose} className="w-full mb-4">
+        {/* Primary dismiss - green success button */}
+        <Button variant="success" onClick={handleClose} className="w-full">
           Got it
         </Button>
 
-        {/* Reset data option */}
+        {/* Reset data option - very subtle */}
         {onReset && (
-          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-            <button
-              onClick={() => setShowResetConfirm(true)}
-              className="w-full text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
-            >
-              Reset all data and start over
-            </button>
-          </div>
+          <button
+            onClick={() => setShowResetConfirm(true)}
+            className="w-full mt-4 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors py-1"
+          >
+            Reset all data
+          </button>
         )}
       </div>
     </div>
