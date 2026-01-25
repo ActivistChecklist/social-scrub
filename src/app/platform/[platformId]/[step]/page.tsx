@@ -253,8 +253,11 @@ export default function StepPage({ params }: StepPageProps) {
                   {isDeleteStep && !showDeleteInstructions ? (
                     <div className="space-y-4 max-w-2xl">
                       {/* Option 1: Delete account */}
-                      <div className="bg-gray-800/50 border border-red-700 rounded-xl p-5 transition-colors hover:bg-red-950/30 group">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <button
+                        onClick={() => setShowDeleteInstructions(true)}
+                        className="w-full text-left bg-transparent border-2 border-red-700 rounded-xl p-5 transition-all hover:bg-red-950/40 group"
+                      >
+                        <div className="flex items-center justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               <Trash2 size={20} className="text-red-400" />
@@ -264,21 +267,16 @@ export default function StepPage({ params }: StepPageProps) {
                               Deleting your profile is the most private option if you can manage without it.
                             </p>
                           </div>
-                          <Button
-                            size="lg"
-                            variant="outline"
-                            onClick={() => setShowDeleteInstructions(true)}
-                            className="w-full md:w-auto flex items-center justify-center gap-2 border-red-700 text-red-400 hover:bg-red-900/50 hover:text-red-300 group-hover:bg-red-900/50 group-hover:text-red-300"
-                          >
-                            Delete account
-                            <ChevronRight size={18} />
-                          </Button>
+                          <ChevronRight size={24} className="text-red-400 transition-transform group-hover:translate-x-1 flex-shrink-0" />
                         </div>
-                      </div>
+                      </button>
 
                       {/* Option 2: Keep & lock down */}
-                      <div className="bg-gray-800/50 border border-emerald-700 rounded-xl p-5 transition-colors hover:bg-emerald-950/30 group">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <button
+                        onClick={handleKeepAccount}
+                        className="w-full text-left bg-transparent border-2 border-emerald-700 rounded-xl p-5 transition-all hover:bg-emerald-950/40 group"
+                      >
+                        <div className="flex items-center justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               <Lock size={20} className="text-emerald-400" />
@@ -288,17 +286,9 @@ export default function StepPage({ params }: StepPageProps) {
                               Keep your account but make it more private.
                             </p>
                           </div>
-                          <Button
-                            size="lg"
-                            variant="outline"
-                            onClick={handleKeepAccount}
-                            className="w-full md:w-auto flex items-center justify-center gap-2 border-emerald-700 text-emerald-400 hover:bg-emerald-900/50 hover:text-emerald-300 group-hover:bg-emerald-900/50 group-hover:text-emerald-300"
-                          >
-                            Lock it down
-                            <ChevronRight size={18} />
-                          </Button>
+                          <ChevronRight size={24} className="text-emerald-400 transition-transform group-hover:translate-x-1 flex-shrink-0" />
                         </div>
-                      </div>
+                      </button>
                     </div>
                   ) : isDeleteStep && showDeleteInstructions ? (
                     <div className="space-y-4 max-w-lg mx-auto md:mx-0">
