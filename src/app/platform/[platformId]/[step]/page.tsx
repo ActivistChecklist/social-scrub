@@ -159,6 +159,7 @@ export default function StepPage({ params }: StepPageProps) {
                 <div className="p-1.5 bg-brand-900/20 rounded-lg">
                   <PlatformIcon
                     iconName={platform.icon}
+                    logoUrl={platform.logoUrl}
                     platformName={platform.name}
                     size={28}
                   />

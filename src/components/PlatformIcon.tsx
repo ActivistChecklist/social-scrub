@@ -1,12 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
+import Image from 'next/image';
 import { getIcon } from '@/lib/icons';
 
 type IconVariant = 'color' | 'light' | 'muted';
 
 interface PlatformIconProps {
   iconName?: string;
+  logoUrl?: string;
   platformName: string;
   size?: number;
   className?: string;
@@ -31,6 +33,7 @@ function isColorTooDark(hex: string): boolean {
 
 export default function PlatformIcon({
   iconName,
+  logoUrl,
   platformName,
   size = 24,
   className = '',
@@ -40,6 +43,24 @@ export default function PlatformIcon({
     if (!iconName) return null;
     return getIcon(iconName);
   }, [iconName]);
+
+  // Priority 1: Custom logo URL (image file)
+  if (logoUrl) {
+    return (
+      <div
+        className={`${className} rounded-md overflow-hidden flex-shrink-0`}
+        style={{ width: size, height: size }}
+      >
+        <Image
+          src={logoUrl}
+          alt={`${platformName} logo`}
+          width={size}
+          height={size}
+          className="w-full h-full object-contain"
+        />
+      </div>
+    );
+  }
 
   // Fallback: show first letter of platform name
   if (!iconData) {

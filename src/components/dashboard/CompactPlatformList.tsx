@@ -106,6 +106,7 @@ function PlatformRow({
         <div className={`flex items-center gap-3 ${isDeleted ? 'opacity-60' : ''}`}>
           <PlatformIcon
             iconName={platform.icon}
+            logoUrl={platform.logoUrl}
             platformName={platform.name}
             size={24}
           />

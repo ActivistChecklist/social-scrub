@@ -73,6 +73,7 @@ export default function PlatformCard({
     >
       <PlatformIcon
         iconName={platform.icon}
+        logoUrl={platform.logoUrl}
         platformName={platform.name}
         size={32}
       />

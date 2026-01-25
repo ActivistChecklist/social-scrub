@@ -469,7 +469,7 @@ function PlatformRow({
               {platform.name[0]}
             </div>
           ) : (
-            <PlatformIcon iconName={platform.icon} platformName={platform.name} size={20} />
+            <PlatformIcon iconName={platform.icon} logoUrl={platform.logoUrl} platformName={platform.name} size={20} />
           )}
           <span className={`font-medium text-sm text-gray-900 dark:text-gray-100 truncate max-w-[100px] ${isDeleted ? 'line-through' : ''}`}>
             {platform.name}

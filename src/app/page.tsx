@@ -267,6 +267,7 @@ export default function Home() {
                 >
                   <PlatformIcon
                     iconName={platform.icon}
+                    logoUrl={platform.logoUrl}
                     platformName={platform.name}
                     size={32}
                     variant="color"

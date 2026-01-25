@@ -30,6 +30,7 @@ export default function ContinueCTA({ nextPlatform }: ContinueCTAProps) {
           <div className="flex-shrink-0 bg-white rounded-xl p-3">
             <PlatformIcon
               iconName={platform.icon}
+              logoUrl={platform.logoUrl}
               platformName={platform.name}
               size={36}
             />

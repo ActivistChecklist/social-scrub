@@ -1,0 +1,25 @@
+<svg width="39px" height="40px" viewBox="0 0 39 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+ <title>
+  OU icon
+ </title>
+ <desc>
+  Created with Sketch.
+ </desc>
+ <defs>
+  <linearGradient x1="100%" y1="100%" x2="50%" y2="50%" id="linearGradient-1">
+   <stop stop-color="#106D6D" offset="0%">
+   </stop>
+   <stop stop-color="#19AA81" offset="100%">
+   </stop>
+  </linearGradient>
+ </defs>
+ <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+  <g id="HOW-IT-WORKS-/-Desktop" transform="translate(-49.000000, -22.000000)" fill="url(#linearGradient-1)">
+   <g id="Nav-bar" transform="translate(0.000000, -4.000000)">
+    <path d="M83.9437578,43.1690377 L79.6591909,47.5580989 C78.9164398,53.1804471 74.2159463,57.5153136 68.5234938,57.5153136 C62.3152225,57.5153136 57.2826838,52.359682 57.2826838,46 C57.2826838,39.6406746 62.3152225,34.485043 68.5234938,34.485043 C74.3273242,34.485043 79.1023016,38.9903376 79.7006095,44.7727743 L83.9437578,40.4261418 L87.9926908,44.5738225 C87.2777842,34.1944593 78.8377792,26 68.5234938,26 C57.7410733,26 49,34.9542554 49,46 C49,57.0457446 57.7410733,66 68.5234938,66 C78.8715406,66 87.3338212,57.752059 88,47.3245623 L83.9437578,43.1690377 Z" id="OU-icon">
+    </path>
+   </g>
+  </g>
+ </g>
+</svg>
