@@ -565,6 +565,7 @@ export default function SpreadsheetView({
   };
 
   // Build unified list with section markers (sorting handled by parent)
+  // Custom platforms appear after high priority (before medium)
   const allPlatforms = useMemo(() => {
     const result: Array<{
       type: 'section' | 'platform';
@@ -574,8 +575,38 @@ export default function SpreadsheetView({
       isCustom?: boolean;
     }> = [];
 
+    // Helper to add custom platforms section
+    const addCustomPlatforms = () => {
+      if (customPlatforms.length > 0) {
+        result.push({ type: 'section', title: `My Custom Platforms (${customPlatforms.length})` });
+
+        customPlatforms.forEach(c => {
+          result.push({
+            type: 'platform',
+            platform: c.platform,
+            progress: {
+              platformId: c.site.id,
+              status: c.site.status,
+              hasAccount: 'yes' as const,
+              currentStep: 1,
+              completedSteps: c.site.completedSteps,
+              skippedSteps: c.site.skippedSteps,
+              method: c.site.status === 'secured' && c.site.completedSteps.includes(1) ? 'deleted' as const : undefined,
+            },
+            isCustom: true,
+          });
+        });
+      }
+    };
+
     // Add grouped platforms by priority (already sorted by parent)
+    // Insert custom platforms after 'high' (before 'medium')
     PRIORITY_ORDER.forEach((priority) => {
+      // Add custom platforms before medium priority
+      if (priority === 'medium') {
+        addCustomPlatforms();
+      }
+
       const platforms = groupedPlatforms[priority];
       if (!platforms || platforms.length === 0) return;
 
@@ -585,28 +616,6 @@ export default function SpreadsheetView({
         result.push({ type: 'platform', platform: p.platform, progress: p.progress, isCustom: false });
       });
     });
-
-    // Add custom platforms
-    if (customPlatforms.length > 0) {
-      result.push({ type: 'section', title: `My Custom Platforms (${customPlatforms.length})` });
-
-      customPlatforms.forEach(c => {
-        result.push({
-          type: 'platform',
-          platform: c.platform,
-          progress: {
-            platformId: c.site.id,
-            status: c.site.status,
-            hasAccount: 'yes' as const,
-            currentStep: 1,
-            completedSteps: c.site.completedSteps,
-            skippedSteps: c.site.skippedSteps,
-            method: c.site.status === 'secured' && c.site.completedSteps.includes(1) ? 'deleted' as const : undefined,
-          },
-          isCustom: true,
-        });
-      });
-    }
 
     return result;
   }, [groupedPlatforms, customPlatforms]);
