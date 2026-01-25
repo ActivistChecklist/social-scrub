@@ -7,19 +7,19 @@
    ======================================== */
 
 :root {
-  /* Brand purple (primary) - HSL: 247 100% 65.5% */
-  --brand: 247 100% 65.5%;
-  --brand-light: 247 100% 75%;
-  --brand-dark: 247 100% 55%;
+  /* Brand green (emerald) - HSL: 160 84% 39% */
+  --brand: 160 84% 39%;
+  --brand-light: 160 84% 49%;
+  --brand-dark: 160 84% 29%;
 
-  /* Brand gray scale (purple-tinted) */
-  --brand-gray-5: 247 9% 95%;
-  --brand-gray-10: 270 4% 91%;
-  --brand-gray-20: 240 3% 81%;
-  --brand-gray-50: 247 4% 53%;
-  --brand-gray-80: 248 12% 25%;
-  --brand-gray-90: 248 20% 16%;
-  --brand-gray-100: 247 53% 7%;
+  /* Neutral gray scale */
+  --brand-gray-5: 0 0% 95%;
+  --brand-gray-10: 0 0% 91%;
+  --brand-gray-20: 0 0% 81%;
+  --brand-gray-50: 0 0% 53%;
+  --brand-gray-80: 0 0% 25%;
+  --brand-gray-90: 0 0% 16%;
+  --brand-gray-100: 0 0% 7%;
 
   /* Semantic colors */
   --background: 0 0% 100%;
