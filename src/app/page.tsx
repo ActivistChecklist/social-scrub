@@ -262,18 +262,18 @@ export default function Home() {
               .map(platform => (
                 <div
                   key={platform.id}
-                  className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center"
+                  className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center"
                   title={platform.name}
                 >
                   <PlatformIcon
                     iconName={platform.icon}
                     platformName={platform.name}
-                    size={24}
+                    size={32}
                     variant="color"
                   />
                 </div>
               ))}
-            <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 text-sm font-medium">
+            <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 text-base font-medium">
               +{PLATFORMS.length - 20}
             </div>
           </div>
@@ -442,6 +442,23 @@ const faqItems: { question: string; answer: ReactNode }[] = [
   {
     question: 'What if I can\'t find a setting?',
     answer: 'Some platforms hide privacy settings or don\'t offer certain options. If you can\'t complete a step, just skip it and move on. Doing most of the steps still significantly improves your privacy.',
+  },
+  {
+    question: 'Will you walk me through the exact settings on each site?',
+    answer: (
+      <span>
+        Honestly, no. Social Scrub is more of a glorified spreadsheet—it helps you remember which platforms you have accounts on and track your progress through generic privacy steps. We don&apos;t provide step-by-step instructions for each site&apos;s specific settings menus. For detailed, platform-specific guidance on locking down the most popular social sites, we recommend{' '}
+        <a 
+          href="https://blockparty.app" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-purple-400 hover:text-purple-300 underline"
+        >
+          Block Party
+        </a>
+        —they specialize in exactly that.
+      </span>
+    ),
   },
   {
     question: 'Should I delete my accounts or lock them down?',
