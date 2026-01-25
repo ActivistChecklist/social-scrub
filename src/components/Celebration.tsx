@@ -20,16 +20,16 @@ export default function Celebration({ show, onComplete }: CelebrationProps) {
         id: i,
         // Concentrate particles more toward the center (20-80% range)
         x: 20 + Math.random() * 60,
-        delay: Math.random() * 0.8,
+        delay: Math.random() * 0.5,
         color: colors[Math.floor(Math.random() * colors.length)],
       }));
       setParticles(newParticles);
 
-      // Cleanup after animation - stay longer
+      // Cleanup after animation
       const timer = setTimeout(() => {
         setParticles([]);
         onComplete?.();
-      }, 4000);
+      }, 2800);
 
       return () => clearTimeout(timer);
     }
@@ -72,7 +72,7 @@ export default function Celebration({ show, onComplete }: CelebrationProps) {
           }
         }
         .animate-fall {
-          animation: fall 3.5s ease-in forwards;
+          animation: fall 2.2s ease-in forwards;
         }
       `}</style>
     </div>
