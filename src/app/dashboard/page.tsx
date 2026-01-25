@@ -85,7 +85,7 @@ const PRIORITY_ORDER: PriorityLevel[] = ['highest', 'high', 'medium', 'low'];
 
 export default function Dashboard() {
   const router = useRouter();
-  const { session, isLoading, hasSession, getPlatform: getPlatformProgress, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
+  const { session, isLoading, hasSession, clearSession, getPlatform: getPlatformProgress, addPlatforms, addCustomPlatforms, completeStep, skipStep, clearStepProgress, deletePlatform, completePlatform, restorePlatform } = useSession();
   const { trackPageView } = useAnalytics();
   const [showStorageInfoModal, setShowStorageInfoModal] = useState(false);
   const [showAddPlatformsModal, setShowAddPlatformsModal] = useState(false);
@@ -245,6 +245,11 @@ export default function Dashboard() {
 
   const handleAddCustomPlatforms = (platformNames: string[]) => {
     addCustomPlatforms(platformNames);
+  };
+
+  const handleReset = () => {
+    clearSession();
+    router.push('/');
   };
 
   if (isLoading || !session) {
@@ -466,6 +471,7 @@ export default function Dashboard() {
       <LocalStorageInfoModal
         isOpen={showStorageInfoModal}
         onClose={() => setShowStorageInfoModal(false)}
+        onReset={handleReset}
       />
       <AddPlatformsModal
         isOpen={showAddPlatformsModal}

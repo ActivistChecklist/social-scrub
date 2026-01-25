@@ -7,14 +7,17 @@ import { Bookmark, Shield, Mail, GripHorizontal } from 'lucide-react';
 interface LocalStorageInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onReset?: () => void;
 }
 
 export default function LocalStorageInfoModal({
   isOpen,
   onClose,
+  onReset,
 }: LocalStorageInfoModalProps) {
   const [currentUrl, setCurrentUrl] = useState('');
   const [pageTitle, setPageTitle] = useState('Social Scrub');
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -28,6 +31,7 @@ export default function LocalStorageInfoModal({
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        setShowResetConfirm(false);
         onClose();
       }
     };
@@ -38,18 +42,87 @@ export default function LocalStorageInfoModal({
 
   if (!isOpen) return null;
 
+  const handleClose = () => {
+    setShowResetConfirm(false);
+    onClose();
+  };
+
+  const handleResetConfirm = () => {
+    if (onReset) {
+      onReset();
+    }
+    handleClose();
+  };
+
   const emailSubject = encodeURIComponent('My Social Scrub Progress Link');
   const emailBody = encodeURIComponent(
     `Here's my link to continue securing my social media accounts:\n\n${currentUrl}\n\nRemember: Open this on the same device and browser where you started!`
   );
   const mailtoLink = `mailto:?subject=${emailSubject}&body=${emailBody}`;
 
+  // Reset confirmation view
+  if (showResetConfirm) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/50"
+          onClick={() => setShowResetConfirm(false)}
+        />
+
+        {/* Modal */}
+        <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6 animate-fade-in">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+              <span className="text-3xl">⚠️</span>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Reset All Data?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              This will permanently delete all your progress, including:
+            </p>
+          </div>
+
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg mb-6 border border-red-200 dark:border-red-800">
+            <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
+              <li>• All selected platforms</li>
+              <li>• All custom platforms you added</li>
+              <li>• All step progress on every platform</li>
+              <li>• Your onboarding selections</li>
+            </ul>
+          </div>
+
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center">
+            This action cannot be undone. You&apos;ll need to start over from the beginning.
+          </p>
+
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowResetConfirm(false)}
+              className="w-full"
+            >
+              Cancel
+            </Button>
+            <button
+              onClick={handleResetConfirm}
+              className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Yes, Reset Everything
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Modal */}
@@ -110,9 +183,21 @@ export default function LocalStorageInfoModal({
           </p>
         </div>
 
-        <Button onClick={onClose} className="w-full">
+        <Button onClick={handleClose} className="w-full mb-4">
           Got it
         </Button>
+
+        {/* Reset data option */}
+        {onReset && (
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button
+              onClick={() => setShowResetConfirm(true)}
+              className="w-full text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+            >
+              Reset all data and start over
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
