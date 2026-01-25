@@ -16,24 +16,19 @@ export default function BlockPartySuggestion() {
                 Want to automate this? Use Block Party!
               </h3>
               <p className="text-sm text-purple-700 dark:text-purple-300">
-                Free version scans your privacy settings; paid version automatically applies them. <span className="text-purple-600 dark:text-purple-400 italic">(Not an ad—we just like it)</span>
+                Free version scans your privacy settings; paid version automatically applies them. <span className="text-purple-600 dark:text-purple-400 italic">(Not an ad—we just like it. Promo <span className="font-mono not-italic">JOINTHEPARTY</span> for 50% off)</span>
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <a
-              href="https://www.blockpartyapp.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors text-sm"
-            >
-              Try Block Party
-              <ExternalLink size={16} />
-            </a>
-            <p className="text-xs text-purple-500 dark:text-purple-500 hidden sm:block">
-              Promo: <span className="font-mono">JOINTHEPARTY</span>
-            </p>
-          </div>
+          <a
+            href="https://www.blockpartyapp.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors text-sm flex-shrink-0"
+          >
+            Try Block Party
+            <ExternalLink size={16} />
+          </a>
         </div>
       </div>
     </div>

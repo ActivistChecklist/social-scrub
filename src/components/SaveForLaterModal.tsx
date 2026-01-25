@@ -105,62 +105,67 @@ export default function SaveForLaterModal({
       {/* Modal */}
       <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6 animate-fade-in">
         {savedUrl ? (
-          // Success state
+          // Success state - Primary action is copying the link
           <>
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                <span className="text-3xl">✅</span>
+            <div className="text-center mb-5">
+              <div className="w-14 h-14 mx-auto mb-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                <span className="text-2xl">✅</span>
               </div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                 Session Saved!
               </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Use this link to access your session from any device:
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Bookmark this link to access your progress from any device
               </p>
             </div>
 
-            <div className="mb-6">
-              <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                <input
-                  type="text"
-                  readOnly
-                  value={savedUrl}
-                  className="flex-1 bg-transparent text-sm text-gray-900 dark:text-gray-100 outline-none"
-                />
-                <Button
-                  size="sm"
-                  variant={copied ? 'primary' : 'secondary'}
-                  onClick={handleCopy}
-                >
-                  {copied ? 'Copied!' : 'Copy'}
-                </Button>
-              </div>
-            </div>
-
-            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg mb-6">
-              <p className="text-sm text-amber-700 dark:text-amber-300">
-                <strong>Important:</strong> Save or bookmark this link. It&apos;s the only
-                way to access your session from another device. Your session will be
-                available for 90 days.
+            {/* URL display - clickable to copy */}
+            <div 
+              className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors group"
+              onClick={handleCopy}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && handleCopy()}
+            >
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Your unique link:</p>
+              <p className="text-sm text-gray-900 dark:text-gray-100 font-mono break-all">
+                {savedUrl}
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5 group-hover:text-gray-600 dark:group-hover:text-gray-300">
+                Click to copy
               </p>
             </div>
 
+            {/* Primary CTA - Copy Link */}
             <Button
+              onClick={handleCopy}
+              variant={copied ? 'success' : 'primary'}
+              className="w-full mb-3"
+            >
+              {copied ? '✓ Copied to Clipboard' : 'Copy Link'}
+            </Button>
+
+            {/* Warning note - subdued */}
+            <p className="text-xs text-center text-amber-600 dark:text-amber-400 mb-4">
+              Save this link — it&apos;s the only way to access your session from another device. Expires in 90 days.
+            </p>
+
+            {/* Secondary dismiss action */}
+            <button
               onClick={handleClose}
-              className="w-full"
+              className="w-full text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors py-2"
             >
               Done
-            </Button>
+            </button>
           </>
         ) : (
-          // Initial state
+          // Initial state - Primary action is saving
           <>
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Save for Later
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Your progress is currently saved in your browser. Save it to the cloud
-              to access from any device with a unique link.
+            <p className="text-gray-600 dark:text-gray-400 mb-5">
+              Get a unique link to continue your progress on any device.
             </p>
 
             {error && (
@@ -169,39 +174,37 @@ export default function SaveForLaterModal({
               </div>
             )}
 
-            <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg mb-6">
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                What gets saved:
-              </h3>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <li>• Your selected platforms</li>
-                <li>• Progress on each platform</li>
-                <li>• Steps completed and skipped</li>
-              </ul>
-              <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Your session is stored securely and anonymously. No personal
-                  information is required.
-                </p>
+            {/* What gets saved - more compact */}
+            <div className="mb-5 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mb-2">We&apos;ll save:</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">Selected platforms</span>
+                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">Your progress</span>
+                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">Completed steps</span>
               </div>
             </div>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={handleClose}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="flex-1"
-              >
-                {isSaving ? 'Saving...' : 'Save to Cloud'}
-              </Button>
-            </div>
+            {/* Primary CTA - Save */}
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="w-full mb-3"
+            >
+              {isSaving ? 'Saving...' : 'Save to Cloud'}
+            </Button>
+
+            {/* Privacy note */}
+            <p className="text-xs text-center text-gray-400 dark:text-gray-500 mb-3">
+              Stored securely and anonymously. No account required.
+            </p>
+
+            {/* Secondary dismiss action */}
+            <button
+              onClick={handleClose}
+              className="w-full text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors py-2"
+            >
+              Cancel
+            </button>
           </>
         )}
       </div>
