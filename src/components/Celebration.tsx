@@ -14,21 +14,22 @@ export default function Celebration({ show, onComplete }: CelebrationProps) {
 
   useEffect(() => {
     if (show) {
-      // Generate particles
+      // Generate more particles, concentrated in the center
       const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6'];
-      const newParticles = Array.from({ length: 20 }, (_, i) => ({
+      const newParticles = Array.from({ length: 50 }, (_, i) => ({
         id: i,
-        x: Math.random() * 100,
-        delay: Math.random() * 0.5,
+        // Concentrate particles more toward the center (20-80% range)
+        x: 20 + Math.random() * 60,
+        delay: Math.random() * 0.8,
         color: colors[Math.floor(Math.random() * colors.length)],
       }));
       setParticles(newParticles);
 
-      // Cleanup after animation
+      // Cleanup after animation - stay longer
       const timer = setTimeout(() => {
         setParticles([]);
         onComplete?.();
-      }, 2000);
+      }, 4000);
 
       return () => clearTimeout(timer);
     }
@@ -62,13 +63,16 @@ export default function Celebration({ show, onComplete }: CelebrationProps) {
             transform: translateY(0) rotate(0deg);
             opacity: 1;
           }
+          70% {
+            opacity: 1;
+          }
           100% {
             transform: translateY(100vh) rotate(720deg);
             opacity: 0;
           }
         }
         .animate-fall {
-          animation: fall 2s ease-in forwards;
+          animation: fall 3.5s ease-in forwards;
         }
       `}</style>
     </div>

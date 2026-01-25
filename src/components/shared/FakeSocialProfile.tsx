@@ -66,13 +66,16 @@ export default function FakeSocialProfile({
   const profileOffset = size === 'compact' ? '-mt-6' : '-mt-10';
 
   // Helper for highlighting specific fields
-  const getFieldClass = (field: ProfileField) => {
+  const getFieldClass = (field: ProfileField, includeTextColor = false) => {
     if (!highlightField) return ''; // No highlighting mode
     if (field === highlightField) {
-      // Highlighted field gets a ring
+      // Highlighted field gets a ring and colored text
+      const textColor = includeTextColor
+        ? (isBefore ? 'text-red-700 dark:text-red-300' : 'text-emerald-700 dark:text-emerald-300')
+        : '';
       return isBefore
-        ? 'ring-2 ring-red-400 dark:ring-red-500 rounded'
-        : 'ring-2 ring-emerald-400 dark:ring-emerald-500 rounded';
+        ? `ring-2 ring-red-400 dark:ring-red-500 rounded ${textColor}`
+        : `ring-2 ring-emerald-400 dark:ring-emerald-500 rounded ${textColor}`;
     }
     // Non-highlighted fields are dimmed
     return 'opacity-30';
@@ -111,15 +114,15 @@ export default function FakeSocialProfile({
 
           {/* Name and username - LEFT ALIGNED */}
           <div className={`flex-1 min-w-0 ${showCover ? 'pt-6' : ''}`}>
-            <h4 className={`font-bold text-gray-900 dark:text-gray-100 truncate text-left ${highlightField === 'name' ? getFieldClass('name') + ' px-1 inline-block' : getFieldClass('name')}`}>
+            <h4 className={`font-bold truncate text-left ${highlightField === 'name' ? getFieldClass('name', true) + ' px-1 inline-block' : (highlightField ? getFieldClass('name') : 'text-gray-900 dark:text-gray-100')}`}>
               {data.name}
             </h4>
-            <p className={`text-sm text-gray-500 dark:text-gray-400 truncate text-left ${highlightField === 'username' ? getFieldClass('username') + ' px-1 inline-block' : getFieldClass('username')}`}>
+            <p className={`text-sm truncate text-left ${highlightField === 'username' ? getFieldClass('username', true) + ' px-1 inline-block' : (highlightField ? getFieldClass('username') : 'text-gray-500 dark:text-gray-400')}`}>
               {data.username}
             </p>
             {/* Email shown inline when highlighting email */}
             {highlightField === 'email' && data.email && (
-              <p className={`text-sm text-gray-500 dark:text-gray-400 mt-0.5 text-left ${getFieldClass('email')} px-1 inline-block`}>
+              <p className={`text-sm mt-0.5 text-left ${getFieldClass('email', true)} px-1 inline-block`}>
                 {data.email}
               </p>
             )}
@@ -129,10 +132,12 @@ export default function FakeSocialProfile({
         {/* Bio - fixed height to prevent layout shift between before/after */}
         {showBio && (
           <p className={`mt-3 text-sm text-left min-h-[1.25rem] ${
-            data.bio
-              ? 'text-gray-700 dark:text-gray-300'
-              : 'text-gray-400 dark:text-gray-500 italic'
-          } ${highlightField === 'bio' ? getFieldClass('bio') + ' px-1 inline-block' : getFieldClass('bio')}`}>
+            highlightField === 'bio'
+              ? getFieldClass('bio', true) + ' px-1 inline-block'
+              : highlightField
+                ? getFieldClass('bio')
+                : (data.bio ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500 italic')
+          }`}>
             {data.bio || '[Bio Removed]'}
           </p>
         )}

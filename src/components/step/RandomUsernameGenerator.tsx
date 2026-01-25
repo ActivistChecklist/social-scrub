@@ -6,11 +6,11 @@ import Button from '@/components/ui/Button';
 import { Dices, RefreshCw, Copy, Check } from '@/components/ui/LucideIcon';
 
 export default function RandomUsernameGenerator() {
-  const [usernames, setUsernames] = useState<string[]>(() => generateUsernames(6));
+  const [usernames, setUsernames] = useState<string[]>(() => generateUsernames(18));
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleRefresh = () => {
-    setUsernames(generateUsernames(6));
+    setUsernames(generateUsernames(18));
     setCopiedIndex(null);
   };
 
@@ -49,14 +49,14 @@ export default function RandomUsernameGenerator() {
           Refresh
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {usernames.map((username, index) => (
           <button
             key={index}
             onClick={() => handleCopy(username, index)}
-            className="group flex items-center justify-between bg-white dark:bg-gray-800 rounded px-3 py-2 hover:bg-blue-50 dark:hover:bg-gray-750 transition-colors text-left cursor-pointer"
+            className="group flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg px-4 py-3 hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:ring-2 hover:ring-blue-300 dark:hover:ring-blue-600 transition-all text-left cursor-pointer"
           >
-            <span className="text-sm text-gray-900 dark:text-gray-100 font-mono">
+            <span className="text-base text-gray-900 dark:text-gray-100 font-mono">
               {username}
             </span>
             <span
@@ -67,9 +67,9 @@ export default function RandomUsernameGenerator() {
               }`}
             >
               {copiedIndex === index ? (
-                <Check size={16} className="text-emerald-500" />
+                <Check size={18} className="text-emerald-500" />
               ) : (
-                <Copy size={16} />
+                <Copy size={18} />
               )}
             </span>
           </button>

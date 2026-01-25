@@ -183,7 +183,7 @@ export const UNIVERSAL_STEPS: Step[] = [
     id: 9,
     title: 'Lock Down Privacy Settings',
     shortTitle: 'Privacy Settings',
-    icon: 'shield',
+    icon: 'settings',
     description: 'Review and tighten all privacy settings. Make your profile as private as possible.',
     educationalContext: 'Most platforms default to public settings. Check who can see your posts, who can find you by email/phone, who can message you, and what data is shared.',
     beforeAfter: {
