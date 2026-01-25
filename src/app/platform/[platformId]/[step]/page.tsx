@@ -145,18 +145,18 @@ export default function StepPage({ params }: StepPageProps) {
   const displayTotalSteps = TOTAL_STEPS - 1;
 
   return (
-    <main className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-950">
+    <main className="min-h-screen flex flex-col bg-gray-950">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+      <header className="sticky top-0 z-10 bg-gray-900 border-b border-gray-800 shadow-sm">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {isCustomPlatform ? (
-                <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-lg">
+                <div className="w-10 h-10 bg-brand-900/30 rounded-lg flex items-center justify-center text-lg">
                   📱
                 </div>
               ) : (
-                <div className="p-1.5 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                <div className="p-1.5 bg-brand-900/20 rounded-lg">
                   <PlatformIcon
                     iconName={platform.icon}
                     platformName={platform.name}
@@ -165,11 +165,11 @@ export default function StepPage({ params }: StepPageProps) {
                 </div>
               )}
               <div>
-                <h1 className="font-bold text-lg text-emerald-700 dark:text-emerald-400">
+                <h1 className="font-heading font-bold text-lg text-brand tracking-tight">
                   {platform.name}
                 </h1>
                 {!isDeleteStep && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-gray-400">
                     Step {displayStepNumber} of {displayTotalSteps}
                   </p>
                 )}
@@ -178,11 +178,11 @@ export default function StepPage({ params }: StepPageProps) {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowStorageInfoModal(true)}
-                className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="hidden sm:flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-600 hover:bg-gray-800"
               >
                 <Save size={16} />
                 <span>Auto-saved locally</span>
-                <Info size={14} className="text-gray-500 dark:text-gray-400" />
+                <Info size={14} className="text-gray-400" />
               </button>
               <Button
                 onClick={() => router.push('/dashboard')}
@@ -198,7 +198,7 @@ export default function StepPage({ params }: StepPageProps) {
 
       {/* Progress indicator - only show for non-delete steps */}
       {!isDeleteStep && (
-        <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="border-b border-gray-800 bg-gray-900">
           <div className="max-w-4xl mx-auto px-6 py-4">
             <ProgressIndicator
               currentStep={stepNumber}
@@ -215,25 +215,25 @@ export default function StepPage({ params }: StepPageProps) {
       <section className="flex-1">
         <div className="animate-slide-in-right" key={stepNumber}>
           {/* PRIMARY SECTION: Step info and action buttons */}
-          <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="bg-gray-900 border-b border-gray-800">
             <div className="max-w-4xl mx-auto px-6 py-8">
               <div className="flex flex-col md:flex-row md:items-start md:gap-8">
                 {/* Icon */}
                 <div className="flex-shrink-0 mb-4 md:mb-0">
-                  <div className="w-16 h-16 md:w-20 md:h-20 mx-auto md:mx-0 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300">
+                  <div className="w-16 h-16 md:w-20 md:h-20 mx-auto md:mx-0 rounded-2xl bg-gray-800 flex items-center justify-center text-gray-300">
                     <LucideIcon name={step.icon} size={40} />
                   </div>
                 </div>
 
                 {/* Title, description, and buttons */}
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                  <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-100 mb-2 tracking-tight">
                     {step.title}
-                    <span className="text-emerald-600 dark:text-emerald-400"> on {platform.name}</span>
+                    <span className="text-brand"> on {platform.name}</span>
                   </h2>
                   {/* Fixed height container for description to prevent button movement */}
                   <div className="min-h-[3rem] mb-6">
-                    <p className="text-gray-600 dark:text-gray-400 max-w-xl">
+                    <p className="text-gray-400 max-w-xl">
                       {step.description}
                     </p>
                     {platform.url && !isDeleteStep && (
@@ -241,7 +241,7 @@ export default function StepPage({ params }: StepPageProps) {
                         href={platform.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors mt-2"
+                        className="inline-flex items-center gap-1.5 text-sm text-brand hover:text-brand-light hover:underline transition-colors mt-2"
                       >
                         Open {platform.name}
                         <ExternalLink size={14} />
@@ -253,14 +253,14 @@ export default function StepPage({ params }: StepPageProps) {
                   {isDeleteStep && !showDeleteInstructions ? (
                     <div className="space-y-4 max-w-2xl">
                       {/* Option 1: Delete account */}
-                      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+                      <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-5">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <Trash2 size={20} className="text-gray-600 dark:text-gray-400" />
-                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Option 1: Delete the account</h3>
+                              <Trash2 size={20} className="text-gray-400" />
+                              <h3 className="font-heading font-semibold text-gray-100 tracking-tight">Option 1: Delete the account</h3>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-gray-400">
                               Permanently removes all your data from this platform.
                             </p>
                           </div>
@@ -277,14 +277,14 @@ export default function StepPage({ params }: StepPageProps) {
                       </div>
 
                       {/* Option 2: Keep & lock down */}
-                      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+                      <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-5">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <Lock size={20} className="text-gray-600 dark:text-gray-400" />
-                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Option 2: Keep &amp; lock it down</h3>
+                              <Lock size={20} className="text-gray-400" />
+                              <h3 className="font-heading font-semibold text-gray-100 tracking-tight">Option 2: Keep &amp; lock it down</h3>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-gray-400">
                               Keep your account but make it private and harder to find.
                             </p>
                           </div>
@@ -302,9 +302,9 @@ export default function StepPage({ params }: StepPageProps) {
                     </div>
                   ) : isDeleteStep && showDeleteInstructions ? (
                     <div className="space-y-4 max-w-lg mx-auto md:mx-0">
-                      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                        <h4 className="font-semibold text-red-900 dark:text-red-200 mb-2">How to delete your account:</h4>
-                        <p className="text-sm text-red-800 dark:text-red-300">{step.howTo}</p>
+                      <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
+                        <h4 className="font-heading font-semibold text-red-200 mb-2 tracking-tight">How to delete your account:</h4>
+                        <p className="text-sm text-red-300">{step.howTo}</p>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <Button
@@ -373,7 +373,7 @@ export default function StepPage({ params }: StepPageProps) {
                       {stepNumber > 2 && (
                         <button
                           onClick={() => router.push(`/platform/${platformId}/${stepNumber - 1}`)}
-                          className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1 mx-auto md:mx-0 mt-2"
+                          className="text-sm text-gray-400 hover:text-gray-200 flex items-center gap-1 mx-auto md:mx-0 mt-2"
                         >
                           <ChevronLeft size={16} />
                           Go back a step
