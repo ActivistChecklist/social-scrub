@@ -41,33 +41,13 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            {hasSession ? (
-              <>
-                <Button
-                  size="lg"
-                  onClick={() => router.push('/dashboard')}
-                  className="text-lg py-4 px-10"
-                >
-                  Continue to Dashboard
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => router.push('/onboarding/select')}
-                  className="text-lg py-4 px-10"
-                >
-                  Start Fresh
-                </Button>
-              </>
-            ) : (
-              <Button
-                size="lg"
-                onClick={() => router.push('/onboarding/select')}
-                className="text-lg py-4 px-10"
-              >
-                Start Securing Your Accounts
-              </Button>
-            )}
+            <Button
+              size="lg"
+              onClick={() => router.push(hasSession ? '/dashboard' : '/onboarding/select')}
+              className="text-lg py-4 px-10"
+            >
+              {hasSession ? 'Continue to Dashboard' : 'Start Securing Your Accounts'}
+            </Button>
           </div>
 
           {/* Trust badges */}
