@@ -190,25 +190,28 @@ export default function LocalStorageInfoModal({
         </div>
 
         {/* Privacy note - subtle */}
-        <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500 mb-5">
+        <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500 mb-4">
           <Shield className="w-3.5 h-3.5" />
           <span>Your data stays 100% private on your device</span>
         </div>
+
+        {/* Reset data option - subtle sentence */}
+        {onReset && (
+          <p className="text-xs text-center text-gray-400 dark:text-gray-500 mb-4">
+            Need a fresh start?{' '}
+            <button
+              onClick={() => setShowResetConfirm(true)}
+              className="underline hover:text-red-500 dark:hover:text-red-400 transition-colors"
+            >
+              Reset all data
+            </button>
+          </p>
+        )}
 
         {/* Primary dismiss - green success button */}
         <Button variant="success" onClick={handleClose} className="w-full">
           Got it
         </Button>
-
-        {/* Reset data option - very subtle */}
-        {onReset && (
-          <button
-            onClick={() => setShowResetConfirm(true)}
-            className="w-full mt-4 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors py-1"
-          >
-            Reset all data
-          </button>
-        )}
       </div>
     </div>
   );
