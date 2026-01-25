@@ -348,11 +348,19 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'eventbrite',
     name: 'Eventbrite',
-    logoUrl: '/logos/eventbrite.svg',
     category: 'other',
     priority: 'medium',
     url: 'https://eventbrite.com',
     importanceReason: 'Some events show a "who\'s going" list that could have your full name and profile picture. Might want to keep your real first name and last initial.'
+  },
+  {
+    id: 'signal',
+    name: 'Signal',
+    icon: 'signal',
+    category: 'messaging',
+    priority: 'medium',
+    url: 'https://signal.org',
+    importanceReason: 'Settings guide. You can set your phone number to not be discoverable if needed. This will make it harder for people to find you, but increase your privacy. Your choice.'
   },
   {
     id: 'discord',
@@ -379,7 +387,7 @@ export const PLATFORMS: Platform[] = [
     category: 'professional',
     priority: 'medium',
     url: 'https://github.com',
-    importanceReason: 'Can reveal your employer info and times you\'re online'
+    importanceReason: 'Can reveal your employer info and shows times you\'re online'
   },
   {
     id: 'telegram',
