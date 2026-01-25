@@ -10,6 +10,7 @@ import Logo from '@/components/ui/Logo';
 import Footer from '@/components/Footer';
 import FakeSocialProfile from '@/components/shared/FakeSocialProfile';
 import { PostsVisual, FriendsVisual } from '@/components/step/BeforeAfterBox';
+import PlatformIcon from '@/components/PlatformIcon';
 import {
   Shield,
   ListChecks,
@@ -244,6 +245,37 @@ export default function Home() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Platforms we support */}
+      <section className="px-6 py-12 bg-gray-900 border-t border-gray-800">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">
+            Platforms we support
+          </h2>
+          <div className="flex flex-wrap justify-center gap-4">
+            {PLATFORMS
+              .filter(p => (p.priority === 'highest' || p.priority === 'high') && p.icon)
+              .slice(0, 20)
+              .map(platform => (
+                <div
+                  key={platform.id}
+                  className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center"
+                  title={platform.name}
+                >
+                  <PlatformIcon
+                    iconName={platform.icon}
+                    platformName={platform.name}
+                    size={24}
+                    variant="color"
+                  />
+                </div>
+              ))}
+            <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 text-sm font-medium">
+              +{PLATFORMS.length - 20}
+            </div>
           </div>
         </div>
       </section>
