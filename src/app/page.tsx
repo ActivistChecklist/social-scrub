@@ -460,6 +460,7 @@ function FAQAccordion() {
           className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden"
         >
           <button
+            type="button"
             onClick={() => toggleIndex(index)}
             className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 hover:bg-gray-800/50 transition-colors"
           >
