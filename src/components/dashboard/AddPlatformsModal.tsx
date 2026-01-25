@@ -6,6 +6,7 @@ import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
 import PlatformCard from '@/components/PlatformCard';
 import { X, Plus, Check } from 'lucide-react';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface AddPlatformsModalProps {
   isOpen: boolean;
@@ -29,7 +30,9 @@ export default function AddPlatformsModal({
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);
   const [currentCustomInput, setCurrentCustomInput] = useState('');
+  const [showAnalyticsPrompt, setShowAnalyticsPrompt] = useState(false);
   const customInputRef = useRef<HTMLInputElement>(null);
+  const { trackPlatformSuggestion } = useAnalytics();
 
   // Get all platforms grouped by priority, filtered to exclude already selected
   const platformsByPriority = useMemo(() => {
@@ -117,6 +120,32 @@ export default function AddPlatformsModal({
   };
 
   const handleDone = () => {
+    // If there are custom platforms, show the analytics prompt first
+    if (customPlatforms.length > 0) {
+      setShowAnalyticsPrompt(true);
+      return;
+    }
+    
+    // No custom platforms, just add selected ones
+    if (selectedPlatforms.size > 0) {
+      onAddPlatforms(Array.from(selectedPlatforms));
+    }
+    handleClose();
+  };
+
+  const handleConfirmWithTracking = () => {
+    // Track each custom platform suggestion
+    customPlatforms.forEach((platformName) => {
+      trackPlatformSuggestion(platformName);
+    });
+    finishAdding();
+  };
+
+  const handleConfirmWithoutTracking = () => {
+    finishAdding();
+  };
+
+  const finishAdding = () => {
     if (selectedPlatforms.size > 0) {
       onAddPlatforms(Array.from(selectedPlatforms));
     }
@@ -131,10 +160,78 @@ export default function AddPlatformsModal({
     setCustomPlatforms([]);
     setCurrentCustomInput('');
     setShowCustomInput(false);
+    setShowAnalyticsPrompt(false);
     onClose();
   };
 
   const totalToAdd = selectedPlatforms.size + customPlatforms.length;
+
+  // Analytics consent prompt for custom platforms
+  if (showAnalyticsPrompt) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={() => setShowAnalyticsPrompt(false)}
+        />
+
+        {/* Modal */}
+        <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full p-6 animate-fade-in">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Help Us Improve
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Would it be okay if we recorded just the names of these platforms?
+            This helps us know which platforms to add support for next.
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mb-6">
+            Your suggestions remain completely anonymous — we only record the platform names, nothing else.
+          </p>
+
+          {/* Platform names being added */}
+          <div className="mb-6 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              Custom platforms you&apos;re adding:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {customPlatforms.map((platform, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-sm rounded"
+                >
+                  {platform}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={handleConfirmWithTracking}
+              className="w-full"
+            >
+              Yes, share platform names
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleConfirmWithoutTracking}
+              className="w-full"
+            >
+              No thanks, just add them
+            </Button>
+            <button
+              onClick={() => setShowAnalyticsPrompt(false)}
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mt-2"
+            >
+              ← Back to selection
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
