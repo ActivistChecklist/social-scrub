@@ -116,6 +116,10 @@ export function useAnalytics() {
     trackEvent({ name: 'step_skip', data: { platformId, step } });
   }, [trackEvent]);
 
+  const trackPlatformSuggestion = useCallback((platformName: string) => {
+    trackEvent({ name: 'platform_suggestion', data: { platformName } });
+  }, [trackEvent]);
+
   return {
     trackEvent,
     trackPageView,
@@ -126,5 +130,6 @@ export function useAnalytics() {
     trackPlatformComplete,
     trackStepComplete,
     trackStepSkip,
+    trackPlatformSuggestion,
   };
 }
