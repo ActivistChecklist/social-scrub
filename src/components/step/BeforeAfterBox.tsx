@@ -299,6 +299,7 @@ function getFocusFromIcon(icon: string): StepFocus {
     'shield': 'privacy',
     'shield-off': 'privacy',
     'shield-check': 'privacy',
+    'settings': 'privacy',
     'trash-2': 'delete',
   };
   return iconToFocus[icon] || 'name';
