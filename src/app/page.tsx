@@ -60,7 +60,7 @@ export default function Home() {
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            A simple checklist to secure all your accounts. Pick your platforms, follow the steps, track your progress.
+            It&apos;s hard to keep track of all the social platforms you need to lock down. So we made an app to help.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
