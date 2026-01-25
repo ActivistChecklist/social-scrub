@@ -55,7 +55,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'google',
     name: 'Google Account',
-    icon: 'google',
     logoUrl: '/logos/google.svg',
     category: 'other',
     priority: 'medium',
@@ -66,7 +65,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'googlemaps',
     name: 'Google Maps Reviews',
-    icon: 'google',
+    logoUrl: '/logos/googlemaps.svg',
     category: 'other',
     priority: 'highest',
     hasBlockParty: true,
