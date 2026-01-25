@@ -13,7 +13,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       // Primary CTA - Brand purple
-      primary: 'bg-brand text-white hover:bg-brand-dark focus:ring-brand',
+      primary: 'bg-brand text-white hover:bg-brand-600 focus:ring-brand',
       // Secondary
       secondary: 'bg-gray-700 text-gray-100 hover:bg-gray-600 focus:ring-gray-500',
       // Outline

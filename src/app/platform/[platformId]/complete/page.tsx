@@ -122,7 +122,7 @@ export default function PlatformComplete({ params }: CompletePageProps) {
     session.customSites.filter(s => s.status === 'secured').length === session.customSites.length;
 
   return (
-    <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+    <main className="min-h-screen flex flex-col bg-gray-950">
       <Celebration show={showCelebration} onComplete={() => setShowCelebration(false)} />
 
       {/* Header with auto-save and dashboard link */}
@@ -130,11 +130,11 @@ export default function PlatformComplete({ params }: CompletePageProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowStorageInfoModal(true)}
-            className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-600 hover:bg-gray-800"
           >
             <Save size={16} />
             <span>Auto-saved locally</span>
-            <Info size={14} className="text-gray-500 dark:text-gray-400" />
+            <Info size={14} className="text-gray-400" />
           </button>
           <Button
             onClick={() => router.push('/dashboard')}
@@ -161,13 +161,13 @@ export default function PlatformComplete({ params }: CompletePageProps) {
                 />
               </div>
 
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+              <h1 className="font-heading text-3xl lg:text-4xl font-extrabold text-gray-100 mb-4 tracking-tight">
                 {wasDeleted
                   ? `${platform.name} Deleted!`
                   : `${platform.name} Locked Down!`}
               </h1>
 
-              <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto lg:mx-0">
+              <p className="text-lg text-gray-400 mb-6 max-w-md mx-auto lg:mx-0">
                 {wasDeleted
                   ? `You've removed your ${platform.name} account. This is the most effective way to protect your privacy.`
                   : `Great work! You've completed all privacy steps for ${platform.name}.`}
@@ -204,8 +204,8 @@ export default function PlatformComplete({ params }: CompletePageProps) {
               </Button>
 
               {/* Encouragement */}
-              <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                <p className="text-sm text-emerald-700 dark:text-emerald-300 text-center lg:text-left">
+              <div className="mt-6 p-4 bg-emerald-900/20 rounded-lg">
+                <p className="text-sm text-emerald-300 text-center lg:text-left">
                   {allPlatformsSecured
                     ? "You've locked down all your platforms! Your digital footprint is now much harder to track."
                     : `Keep going! Every platform you lock down makes it harder for strangers to find your information.`}
