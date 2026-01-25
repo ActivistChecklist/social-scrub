@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Session } from '@/lib/types';
 import { saveLocalSession } from '@/lib/storage';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import Button from '@/components/ui/Button';
 
 interface SessionPageProps {
@@ -13,9 +14,14 @@ interface SessionPageProps {
 export default function SessionPage({ params }: SessionPageProps) {
   const { sessionId } = params;
   const router = useRouter();
+  const { trackPageView } = useAnalytics();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   useEffect(() => {
     const loadSession = async () => {

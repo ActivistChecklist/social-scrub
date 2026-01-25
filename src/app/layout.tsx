@@ -1,15 +1,41 @@
 import type { Metadata } from 'next';
-import { DM_Sans } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://socialscrub.app'),
   title: 'Social Scrub - Protect Your Privacy',
   description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/apple-icon.png',
+  },
+  openGraph: {
+    title: 'Social Scrub - Protect Your Privacy',
+    description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Social Scrub - Protect Your Privacy',
+    description: 'Lock down your social media privacy settings and protect yourself from doxxing.',
+  },
 };
 
 export default function RootLayout({
@@ -34,7 +60,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${dmSans.className} antialiased min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100`}>
+      <body className={`${inter.variable} ${plusJakarta.variable} font-sans antialiased min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100`}>
         {children}
       </body>
     </html>

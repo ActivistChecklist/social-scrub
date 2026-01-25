@@ -154,6 +154,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'gofundme',
     name: 'GoFundMe',
+    icon: 'gofundme',
     category: 'other',
     priority: 'high',
     url: 'https://gofundme.com',
@@ -197,6 +198,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'alltrails',
     name: 'AllTrails',
+    icon: 'alltrails',
     category: 'other',
     priority: 'high',
     url: 'https://alltrails.com',
@@ -230,6 +232,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'haveibeenpwned',
     name: 'haveibeenpwned',
+    icon: 'haveibeenpwned',
     category: 'other',
     priority: 'medium',
     url: 'https://haveibeenpwned.com',
@@ -249,6 +252,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'substack',
     name: 'Substack',
+    icon: 'substack',
     category: 'social',
     priority: 'medium',
     url: 'https://substack.com',
@@ -302,6 +306,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'gravatar',
     name: 'Gravatar',
+    icon: 'gravatar',
     category: 'other',
     priority: 'medium',
     url: 'https://gravatar.com',
@@ -345,6 +350,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'threads',
     name: 'Threads',
+    icon: 'threads',
     category: 'social',
     priority: 'medium',
     url: 'https://threads.net',
@@ -380,6 +386,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'patreon',
     name: 'Patreon',
+    icon: 'patreon',
     category: 'other',
     priority: 'medium',
     url: 'https://patreon.com',
@@ -424,6 +431,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'upwork',
     name: 'Upwork',
+    icon: 'upwork',
     category: 'professional',
     priority: 'medium',
     url: 'https://upwork.com',
@@ -441,6 +449,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'disqus',
     name: 'Disqus',
+    icon: 'disqus',
     category: 'other',
     priority: 'medium',
     url: 'https://disqus.com',
@@ -550,37 +559,10 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'grubhub',
     name: 'Grubhub',
-    icon: 'grubhub',
     category: 'other',
     priority: 'medium',
     url: 'https://grubhub.com',
     importanceReason: 'Saved addresses reveal where you live'
-  },
-  {
-    id: 'poshmark',
-    name: 'Poshmark',
-    icon: 'poshmark',
-    category: 'shopping',
-    priority: 'medium',
-    url: 'https://poshmark.com',
-    importanceReason: 'Can reveal your location and buying/selling activity'
-  },
-  {
-    id: 'depop',
-    name: 'Depop',
-    icon: 'depop',
-    category: 'shopping',
-    priority: 'medium',
-    url: 'https://depop.com',
-    importanceReason: 'Can reveal your location and buying/selling activity'
-  },
-  {
-    id: 'mercari',
-    name: 'Mercari',
-    category: 'shopping',
-    priority: 'medium',
-    url: 'https://mercari.com',
-    importanceReason: 'Can reveal your location through listings and meetup preferences'
   },
   {
     id: 'offerup',
@@ -589,6 +571,15 @@ export const PLATFORMS: Platform[] = [
     priority: 'medium',
     url: 'https://offerup.com',
     importanceReason: 'Can reveal your location through listings and meetup preferences'
+  },
+  {
+    id: 'cashapp',
+    name: 'Cash App',
+    icon: 'cashapp',
+    category: 'finance',
+    priority: 'medium',
+    url: 'https://cash.app',
+    importanceReason: 'Can reveal your profile picture'
   },
 
   // 🟡 LOW PRIORITY
@@ -604,19 +595,11 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'mastodon',
     name: 'Mastodon',
+    icon: 'mastodon',
     category: 'social',
     priority: 'low',
     url: 'https://mastodon.social',
     importanceReason: 'Can reveal your social network and interests'
-  },
-  {
-    id: 'cashapp',
-    name: 'Cash App',
-    icon: 'cashapp',
-    category: 'finance',
-    priority: 'low',
-    url: 'https://cash.app',
-    importanceReason: 'Can reveal your profile picture'
   },
   {
     id: 'duolingo',
@@ -639,6 +622,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'fiverr',
     name: 'Fiverr',
+    icon: 'fiverr',
     category: 'other',
     priority: 'low',
     url: 'https://fiverr.com',
@@ -647,6 +631,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'geocaching',
     name: 'Geocaching',
+    icon: 'geocaching',
     category: 'other',
     priority: 'low',
     url: 'https://geocaching.com',
@@ -663,6 +648,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'kickstarter',
     name: 'Kickstarter',
+    icon: 'kickstarter',
     category: 'other',
     priority: 'low',
     url: 'https://kickstarter.com',
@@ -671,6 +657,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'stackexchange',
     name: 'Stack Exchange',
+    icon: 'stackexchange',
     category: 'forum',
     priority: 'low',
     url: 'https://stackexchange.com',
@@ -688,6 +675,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'bandcamp',
     name: 'Bandcamp',
+    icon: 'bandcamp',
     category: 'other',
     priority: 'low',
     url: 'https://bandcamp.com',
@@ -705,6 +693,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'glassdoor',
     name: 'Glassdoor',
+    icon: 'glassdoor',
     category: 'professional',
     priority: 'low',
     url: 'https://glassdoor.com',
@@ -773,7 +762,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'hinge',
     name: 'Hinge',
-    icon: 'hinge',
     category: 'dating',
     priority: 'low',
     url: 'https://hinge.co',
@@ -807,7 +795,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'grindr',
     name: 'Grindr',
-    icon: 'grindr',
     category: 'dating',
     priority: 'low',
     url: 'https://grindr.com',
@@ -851,7 +838,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'xbox',
     name: 'Xbox Live',
-    icon: 'xbox',
     category: 'gaming',
     priority: 'low',
     url: 'https://xbox.com',
@@ -869,7 +855,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'nintendo',
     name: 'Nintendo Account',
-    icon: 'nintendo',
     category: 'gaming',
     priority: 'low',
     url: 'https://nintendo.com',
@@ -887,7 +872,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'battlenet',
     name: 'Battle.net',
-    icon: 'battlenet',
+    icon: 'battledotnet',
     category: 'gaming',
     priority: 'low',
     url: 'https://battle.net',
@@ -923,7 +908,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'minecraft',
     name: 'Minecraft',
-    icon: 'minecraft',
     category: 'gaming',
     priority: 'low',
     url: 'https://minecraft.net',
@@ -1017,6 +1001,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'slashdot',
     name: 'Slashdot',
+    icon: 'slashdot',
     category: 'forum',
     priority: 'low',
     url: 'https://slashdot.org',
@@ -1146,7 +1131,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'kraken',
     name: 'Kraken',
-    icon: 'kraken',
     category: 'finance',
     priority: 'low',
     url: 'https://kraken.com',
@@ -1164,6 +1148,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'zelle',
     name: 'Zelle',
+    icon: 'zelle',
     category: 'finance',
     priority: 'low',
     url: 'https://zellepay.com',
@@ -1192,7 +1177,6 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'myfitnesspal',
     name: 'MyFitnessPal',
-    icon: 'myfitnesspal',
     category: 'other',
     priority: 'low',
     url: 'https://myfitnesspal.com',

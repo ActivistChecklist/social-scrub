@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatform } from '@/lib/platforms';
 import Button from '@/components/ui/Button';
 import PlatformIcon from '@/components/PlatformIcon';
@@ -17,6 +18,11 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
   const { platformId } = params;
   const router = useRouter();
   const { session, isLoading, getPlatform: getPlatformProgress, startPlatform, restorePlatform } = useSession();
+  const { trackPageView, trackPlatformStart } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   // Try to get built-in platform first, then check custom sites
   let platform = getPlatform(platformId);
@@ -95,6 +101,7 @@ export default function PlatformIntro({ params }: PlatformPageProps) {
 
   const handleStart = () => {
     startPlatform(platformId);
+    trackPlatformStart(platformId);
     router.push(`/platform/${platformId}/1`);
   };
 

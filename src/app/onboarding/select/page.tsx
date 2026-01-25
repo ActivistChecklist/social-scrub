@@ -1,54 +1,29 @@
 'use client';
 
-import { useState, useMemo, useRef, KeyboardEvent } from 'react';
+import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { getPlatformsByPriority, PRIORITY_LABELS } from '@/lib/platforms';
 import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
 import PlatformCard from '@/components/PlatformCard';
 import { Plus, X, Check, ArrowDown } from 'lucide-react';
 
-type DepthLevel = 'essential' | 'recommended' | 'thorough' | 'complete';
-
-const DEPTH_CONFIG: Record<DepthLevel, {
-  priorities: Platform['priority'][];
-  label: string;
-  description: string;
-}> = {
-  essential: {
-    priorities: ['highest'],
-    label: 'Essential',
-    description: 'The most important platforms to secure',
-  },
-  recommended: {
-    priorities: ['highest', 'high'],
-    label: 'Recommended',
-    description: 'Covers the platforms most people use',
-  },
-  thorough: {
-    priorities: ['highest', 'high', 'medium'],
-    label: 'Thorough',
-    description: 'A comprehensive privacy cleanup',
-  },
-  complete: {
-    priorities: ['highest', 'high', 'medium', 'low'],
-    label: 'Complete',
-    description: 'Every platform we track',
-  },
-};
-
 export default function PlatformSelection() {
   const router = useRouter();
   const { completeOnboarding, addCustomPlatforms } = useSession();
+  const { trackPageView, trackOnboardingComplete } = useAnalytics();
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set());
-  const [depthLevel, setDepthLevel] = useState<DepthLevel>('essential');
+
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
+  const [expanded, setExpanded] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);
   const [currentCustomInput, setCurrentCustomInput] = useState('');
   const customInputRef = useRef<HTMLInputElement>(null);
-
-  const visiblePriorities = DEPTH_CONFIG[depthLevel].priorities;
 
   const platformsByPriority = useMemo(() => {
     const result: Record<Platform['priority'], Platform[]> = {
@@ -114,16 +89,17 @@ export default function PlatformSelection() {
     if (customPlatforms.length > 0) {
       addCustomPlatforms(customPlatforms);
     }
+    trackOnboardingComplete(totalSelected);
     router.push('/dashboard');
   };
 
   const totalSelected = selectedPlatforms.size + customPlatforms.length;
 
   const showAllPlatforms = () => {
-    setDepthLevel('complete');
+    setExpanded(true);
   };
 
-  const canExpand = depthLevel !== 'complete';
+  const canExpand = !expanded;
 
   return (
     <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
@@ -143,7 +119,7 @@ export default function PlatformSelection() {
               onClick={() => router.push('/')}
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
-              ← Back
+              Back
             </button>
           </div>
         </div>
@@ -152,14 +128,14 @@ export default function PlatformSelection() {
       {/* Platform sections */}
       <section className="flex-1 px-6 py-6 pb-32">
         <div className="max-w-3xl mx-auto space-y-8">
-          {visiblePriorities.map((priority) => {
-            const platforms = platformsByPriority[priority];
-            const { emoji, label } = PRIORITY_LABELS[priority];
-            const allSelected = isSectionFullySelected(priority);
+          {/* Always render highest priority first */}
+          {(() => {
+            const platforms = platformsByPriority['highest'];
+            const { emoji, label } = PRIORITY_LABELS['highest'];
+            const allSelected = isSectionFullySelected('highest');
 
             return (
-              <div key={priority} className="animate-fade-in">
-                {/* Section header with Select all */}
+              <div className="animate-fade-in">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                     <span>{emoji}</span>
@@ -169,7 +145,7 @@ export default function PlatformSelection() {
                     </span>
                   </h2>
                   <button
-                    onClick={() => handleSelectAllInSection(priority)}
+                    onClick={() => handleSelectAllInSection('highest')}
                     className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
                       allSelected
                         ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
@@ -179,8 +155,6 @@ export default function PlatformSelection() {
                     {allSelected ? '✓ Selected' : 'Select all'}
                   </button>
                 </div>
-
-                {/* Platform grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {platforms.map((platform) => (
                     <PlatformCard
@@ -193,11 +167,11 @@ export default function PlatformSelection() {
                 </div>
               </div>
             );
-          })}
+          })()}
 
-          {/* Show all platforms */}
+          {/* Show all platforms button */}
           {canExpand && (
-            <div className="text-center py-8">
+            <div className="text-center py-6">
               <button
                 onClick={showAllPlatforms}
                 className="inline-flex items-center justify-center gap-3 px-6 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors w-full max-w-md"
@@ -210,7 +184,7 @@ export default function PlatformSelection() {
             </div>
           )}
 
-          {/* Custom platforms section */}
+          {/* Custom platforms section - right after "show me more" button */}
           <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
             {!showCustomInput ? (
               <button
@@ -240,7 +214,6 @@ export default function PlatformSelection() {
                   />
                 </div>
 
-                {/* Custom platforms displayed as cards like AddPlatformsModal */}
                 {customPlatforms.length > 0 && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                     {customPlatforms.map((platform, index) => (
@@ -248,24 +221,17 @@ export default function PlatformSelection() {
                         key={index}
                         className="relative flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                       >
-                        {/* Custom platform icon placeholder */}
                         <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
                           <span className="text-sm text-gray-500 dark:text-gray-400">
                             {platform[0]?.toUpperCase()}
                           </span>
                         </div>
-
-                        {/* Platform name */}
                         <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
                           {platform}
                         </span>
-
-                        {/* Checkmark */}
                         <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
                           <Check size={12} className="text-white" strokeWidth={3} />
                         </div>
-
-                        {/* Remove button - positioned in corner */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -283,6 +249,47 @@ export default function PlatformSelection() {
               </div>
             )}
           </div>
+
+          {/* Additional priority sections (shown after "show me more" is clicked) */}
+          {!canExpand && (['high', 'medium', 'low'] as const).map((priority) => {
+            const platforms = platformsByPriority[priority];
+            const { emoji, label } = PRIORITY_LABELS[priority];
+            const allSelected = isSectionFullySelected(priority);
+
+            return (
+              <div key={priority} className="animate-fade-in">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                    <span>{emoji}</span>
+                    <span>{label}</span>
+                    <span className="text-sm font-normal text-gray-400">
+                      ({platforms.length})
+                    </span>
+                  </h2>
+                  <button
+                    onClick={() => handleSelectAllInSection(priority)}
+                    className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
+                      allSelected
+                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    {allSelected ? '✓ Selected' : 'Select all'}
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {platforms.map((platform) => (
+                    <PlatformCard
+                      key={platform.id}
+                      platform={platform}
+                      selected={selectedPlatforms.has(platform.id)}
+                      onClick={() => handleTogglePlatform(platform.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
 
         </div>
       </section>
