@@ -329,8 +329,14 @@ export default function Dashboard() {
             </div>
           ) : (
             <>
-              {/* View toggle */}
-              <div className="flex items-center justify-end">
+              {/* View toggle and add platforms */}
+              <div className="flex items-center justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAddPlatformsModal(true)}
+                >
+                  + Add More Platforms
+                </Button>
                 <div className="flex items-center bg-gray-800 rounded-lg p-1">
                   <button
                     onClick={() => handleViewModeChange('cards')}
@@ -440,16 +446,6 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Add platforms button - shown in card view */}
-              <div className="flex items-center justify-center pt-4">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => setShowAddPlatformsModal(true)}
-                >
-                  + Add More Platforms
-                </Button>
-              </div>
                 </>
               )}
 
