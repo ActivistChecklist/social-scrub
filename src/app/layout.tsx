@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { Libre_Franklin, Source_Sans_3 } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+const libreFranklin = Libre_Franklin({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-heading',
+  weight: ['500', '600', '700', '800'],
   display: 'swap',
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
+const sourceSans = Source_Sans_3({
   subsets: ['latin'],
-  variable: '--font-display',
-  weight: ['500', '600', '700', '800'],
+  variable: '--font-body',
+  weight: ['400', '500'],
   display: 'swap',
 });
 
@@ -60,7 +61,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${plusJakarta.variable} font-sans antialiased min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100`}>
+      <body className={`${libreFranklin.variable} ${sourceSans.variable} font-body antialiased min-h-screen`}>
         {children}
       </body>
     </html>

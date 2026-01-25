@@ -2,29 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   CSS VARIABLES - Brand Colors & Typography
+   ======================================== */
+
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
+  /* Brand purple (primary) - HSL: 247 100% 65.5% */
+  --brand: 247 100% 65.5%;
+  --brand-light: 247 100% 75%;
+  --brand-dark: 247 100% 55%;
+
+  /* Brand gray scale (purple-tinted) */
+  --brand-gray-5: 247 9% 95%;
+  --brand-gray-10: 270 4% 91%;
+  --brand-gray-20: 240 3% 81%;
+  --brand-gray-50: 247 4% 53%;
+  --brand-gray-80: 248 12% 25%;
+  --brand-gray-90: 248 20% 16%;
+  --brand-gray-100: 247 53% 7%;
+
+  /* Semantic colors */
+  --background: 0 0% 100%;
+  --foreground: 247 53% 7%;
+  --muted: 247 9% 95%;
+  --muted-foreground: 0 0% 45%;
+
+  /* Success (keep green) */
+  --success: 142 76% 36%;
+  --success-light: 142 76% 95%;
+
+  /* Error/Danger */
+  --error: 0 84% 60%;
+  --error-light: 0 84% 95%;
+
+  /* Warning */
+  --warning: 38 92% 50%;
+  --warning-light: 38 92% 95%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark mode overrides */
+.dark {
+  --background: 0 0% 4%;
+  --foreground: 0 0% 95%;
+  --muted: 248 20% 10%;
+  --muted-foreground: 0 0% 60%;
+
+  --success: 142 70% 45%;
+  --success-light: 142 50% 15%;
+
+  --error: 0 84% 65%;
+  --error-light: 0 50% 15%;
+
+  --warning: 38 92% 55%;
+  --warning-light: 38 50% 15%;
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+  font-size: 17px; /* Slightly larger base for Source Sans 3 */
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* ========================================
+   TYPOGRAPHY - Global Header Styles
+   ======================================== */
+
+@layer base {
+  /* All headings use heading font with tight tracking */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  /* Body text */
+  body, p, span, div {
+    font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  }
 }
 
-/* Custom scrollbar */
+/* ========================================
+   COMPONENT UTILITIES
+   ======================================== */
+
+@layer components {
+  /* Page title - H1 style */
+  .page-title {
+    @apply text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-100;
+    font-family: var(--font-heading), system-ui, sans-serif;
+  }
+
+  /* Section title - H2 style */
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold tracking-tight text-gray-100;
+    font-family: var(--font-heading), system-ui, sans-serif;
+  }
+
+  /* Card title - H3 style */
+  .card-title {
+    @apply text-xl font-bold tracking-tight text-gray-100;
+    font-family: var(--font-heading), system-ui, sans-serif;
+  }
+
+  /* Small title - H4 style */
+  .small-title {
+    @apply text-lg font-bold tracking-tight text-gray-100;
+    font-family: var(--font-heading), system-ui, sans-serif;
+  }
+
+  /* Body text */
+  .body-text {
+    @apply text-base text-gray-400;
+  }
+
+  /* Link style */
+  .link {
+    @apply font-medium text-brand underline underline-offset-4 decoration-1 hover:decoration-2 transition-all;
+  }
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -35,25 +142,18 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: hsl(var(--brand-gray-50));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: hsl(var(--brand));
 }
 
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-thumb {
-    background: #4b5563;
-  }
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-  }
-}
-
-/* Animation utilities */
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
