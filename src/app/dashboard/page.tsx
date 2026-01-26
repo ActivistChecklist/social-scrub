@@ -282,11 +282,12 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setShowStorageInfoModal(true)}
-              className="flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 font-medium px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-600 hover:bg-gray-800"
+              className="flex items-center gap-1.5 sm:gap-2 text-sm text-gray-300 transition-all duration-200 font-medium px-2 sm:px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-600 hover:bg-gray-800"
             >
-              <Save size={16} />
-              <span>Auto-saved locally</span>
-              <Info size={14} className="text-gray-400" />
+              <Save size={16} className="flex-shrink-0" />
+              <span className="hidden sm:inline">Auto-saved locally</span>
+              <span className="sm:hidden">Saved</span>
+              <Info size={14} className="text-gray-400 flex-shrink-0" />
             </button>
           </div>
         </div>
@@ -335,14 +336,15 @@ export default function Dashboard() {
           ) : (
             <>
               {/* View toggle and add platforms */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <Button
                   variant="outline"
                   onClick={() => setShowAddPlatformsModal(true)}
+                  className="whitespace-nowrap"
                 >
                   + Add More Platforms
                 </Button>
-                <div className="flex items-center bg-gray-800 rounded-lg p-1">
+                <div className="flex items-center bg-gray-800 rounded-lg p-1 self-end sm:self-auto">
                   <button
                     onClick={() => handleViewModeChange('cards')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
