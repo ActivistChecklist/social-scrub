@@ -27,7 +27,7 @@ export const PLATFORMS: Platform[] = [
     name: 'Instagram',
     icon: 'instagram',
     category: 'social',
-    priority: 'medium',
+    priority: 'highest',
     hasBlockParty: true,
     url: 'https://instagram.com',
     importanceReason: 'Can reveal your social network and location'
@@ -57,7 +57,7 @@ export const PLATFORMS: Platform[] = [
     name: 'Google Account',
     logoUrl: '/logos/google.svg',
     category: 'other',
-    priority: 'medium',
+    priority: 'highest',
     hasBlockParty: true,
     url: 'https://myaccount.google.com',
     importanceReason: 'Can reveal your profile picture and make it easier to identify you on other platforms'
