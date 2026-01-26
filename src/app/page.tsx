@@ -398,7 +398,7 @@ const faqItems: { question: string; answer: ReactNode }[] = [
     answer: 'No. Social Scrub works entirely in your browser with no sign-up required. Your progress is saved locally on your device, so you can close the tab and come back later.',
   },
   {
-    question: 'Is my data sent to a server?',
+    question: 'Do you collect my data?',
     answer: 'No. Everything stays on your device. We never see your selected platforms, your progress, or any personal information. The only data we collect is anonymous analytics (page views) to improve the site.',
   },
   {
@@ -448,7 +448,7 @@ const faqItems: { question: string; answer: ReactNode }[] = [
     question: 'Will you walk me through the exact settings on each site?',
     answer: (
       <span>
-        Honestly, no. Social Scrub is more of a glorified spreadsheet—it helps you remember which platforms you have accounts on and track your progress through generic privacy steps. We don&apos;t provide step-by-step instructions for each site&apos;s specific settings menus. For detailed, platform-specific guidance on locking down the most popular social sites, we recommend{' '}
+        Honestly, no. Social Scrub is more of a glorified spreadsheet—it helps you remember which platforms you have accounts on and track your progress through generic privacy steps. We do provide the same general reminders for every site, but we don&apos;t offer step-by-step instructions for each site&apos;s specific settings menus. For detailed, platform-specific guidance on locking down the most popular social sites, we recommend{' '}
         <a 
           href="https://blockparty.app" 
           target="_blank" 

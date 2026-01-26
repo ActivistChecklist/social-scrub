@@ -379,7 +379,8 @@ export default function StepPage({ params }: StepPageProps) {
           </div>
 
           {/* Block Party suggestion - full width, breaks container */}
-          {!isDeleteStep && stepNumber === 9 && platform.hasBlockParty && (
+          {/* Shows on steps 7, 8, 9 for platforms with Block Party support */}
+          {!isDeleteStep && [7, 8, 9].includes(stepNumber) && platform.hasBlockParty && (
             <BlockPartySuggestion />
           )}
 
