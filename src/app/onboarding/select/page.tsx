@@ -8,7 +8,7 @@ import { getPlatformsByPriority, PRIORITY_LABELS } from '@/lib/platforms';
 import { Platform } from '@/lib/types';
 import Button from '@/components/ui/Button';
 import PlatformCard from '@/components/PlatformCard';
-import { Plus, X, Check, ArrowDown } from 'lucide-react';
+import { Plus, X, Check } from 'lucide-react';
 
 export default function PlatformSelection() {
   const router = useRouter();
@@ -19,7 +19,6 @@ export default function PlatformSelection() {
   useEffect(() => {
     trackPageView();
   }, [trackPageView]);
-  const [expanded, setExpanded] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);
   const [currentCustomInput, setCurrentCustomInput] = useState('');
@@ -95,12 +94,6 @@ export default function PlatformSelection() {
 
   const totalSelected = selectedPlatforms.size + customPlatforms.length;
 
-  const showAllPlatforms = () => {
-    setExpanded(true);
-  };
-
-  const canExpand = !expanded;
-
   return (
     <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       {/* Header */}
@@ -169,22 +162,48 @@ export default function PlatformSelection() {
             );
           })()}
 
-          {/* Show all platforms button */}
-          {canExpand && (
-            <div className="text-center py-6">
-              <button
-                onClick={showAllPlatforms}
-                className="inline-flex items-center justify-center gap-3 px-6 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors w-full max-w-md"
-              >
-                <span className="text-base font-semibold text-gray-700 dark:text-gray-200">
-                  Show me more sites to pick from
-                </span>
-                <ArrowDown size={18} />
-              </button>
-            </div>
-          )}
+          {/* Additional priority sections */}
+          {(['high', 'medium', 'low'] as const).map((priority) => {
+            const platforms = platformsByPriority[priority];
+            const { emoji, label } = PRIORITY_LABELS[priority];
+            const allSelected = isSectionFullySelected(priority);
 
-          {/* Custom platforms section - right after "show me more" button */}
+            return (
+              <div key={priority} className="animate-fade-in">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                    <span>{emoji}</span>
+                    <span>{label}</span>
+                    <span className="text-sm font-normal text-gray-400">
+                      ({platforms.length})
+                    </span>
+                  </h2>
+                  <button
+                    onClick={() => handleSelectAllInSection(priority)}
+                    className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
+                      allSelected
+                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    {allSelected ? '✓ Selected' : 'Select all'}
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {platforms.map((platform) => (
+                    <PlatformCard
+                      key={platform.id}
+                      platform={platform}
+                      selected={selectedPlatforms.has(platform.id)}
+                      onClick={() => handleTogglePlatform(platform.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Custom platforms section */}
           <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
             {!showCustomInput ? (
               <button
@@ -249,47 +268,6 @@ export default function PlatformSelection() {
               </div>
             )}
           </div>
-
-          {/* Additional priority sections (shown after "show me more" is clicked) */}
-          {!canExpand && (['high', 'medium', 'low'] as const).map((priority) => {
-            const platforms = platformsByPriority[priority];
-            const { emoji, label } = PRIORITY_LABELS[priority];
-            const allSelected = isSectionFullySelected(priority);
-
-            return (
-              <div key={priority} className="animate-fade-in">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <span>{emoji}</span>
-                    <span>{label}</span>
-                    <span className="text-sm font-normal text-gray-400">
-                      ({platforms.length})
-                    </span>
-                  </h2>
-                  <button
-                    onClick={() => handleSelectAllInSection(priority)}
-                    className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
-                      allSelected
-                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    {allSelected ? '✓ Selected' : 'Select all'}
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {platforms.map((platform) => (
-                    <PlatformCard
-                      key={platform.id}
-                      platform={platform}
-                      selected={selectedPlatforms.has(platform.id)}
-                      onClick={() => handleTogglePlatform(platform.id)}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
 
         </div>
       </section>
