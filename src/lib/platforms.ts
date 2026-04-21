@@ -207,6 +207,14 @@ export const PLATFORMS: Platform[] = [
     importanceReason: 'Can reveal the region you live in and your activity patterns'
   },
   {
+    id: 'calendly',
+    name: 'Calendly',
+    category: 'professional',
+    priority: 'high',
+    url: 'https://calendly.com',
+    importanceReason: 'Public scheduling links can reveal your phone number, zoom link, availability, timezone, etc.'
+  },
+  {
     id: 'medium',
     name: 'Medium',
     icon: 'medium',
