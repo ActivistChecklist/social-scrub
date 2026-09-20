@@ -478,6 +478,14 @@ export const PLATFORMS: Platform[] = [
     url: 'https://disqus.com',
     importanceReason: 'This comment system runs on many sites across the internet so you might use it without knowing. Your comment history could reaveal information.'
   },
+  {
+    id: 'cvs',
+    name: 'CVS',
+    category: 'shopping',
+    priority: 'medium',
+    url: 'https://cvs.com',
+    importanceReason: 'Account recovery reveals the last four digits of your phone number to anyone with your email'
+  },
 
   // Extra platforms moved to medium priority
   {
@@ -578,6 +586,14 @@ export const PLATFORMS: Platform[] = [
     priority: 'medium',
     url: 'https://offerup.com',
     importanceReason: 'Can reveal your location through listings and meetup preferences'
+  },
+  {
+    id: 'poshmark',
+    name: 'Poshmark',
+    category: 'shopping',
+    priority: 'medium',
+    url: 'https://poshmark.com',
+    importanceReason: 'Exposes a lot of profile info through its API, including your location.'
   },
 
   // 🟡 LOW PRIORITY
@@ -737,6 +753,22 @@ export const PLATFORMS: Platform[] = [
     priority: 'low',
     url: 'https://mountainproject.com',
     importanceReason: 'Can reveral your friends and possibly where you live'
+  },
+  {
+    id: 'kaya',
+    name: 'Kaya',
+    category: 'other',
+    priority: 'low',
+    url: 'https://kayaclimb.com',
+    importanceReason: 'Can reveal where you climb'
+  },
+  {
+    id: 'thedyrt',
+    name: 'The Dyrt',
+    category: 'other',
+    priority: 'low',
+    url: 'https://thedyrt.com',
+    importanceReason: 'Can reveal where you live and where you travel'
   },
 
   // LOW PRIORITY - Dating Apps
@@ -987,6 +1019,15 @@ export const PLATFORMS: Platform[] = [
     url: 'https://todoist.com',
     importanceReason: 'Profile can reveal your name'
   },
+  {
+    id: 'credly',
+    name: 'Credly',
+    icon: 'credly',
+    category: 'professional',
+    priority: 'low',
+    url: 'https://credly.com',
+    importanceReason: 'Public badge profiles can reveal your employer, certifications, and full name'
+  },
 
   // LOW PRIORITY - Forums/Communities
   {
@@ -1060,6 +1101,14 @@ export const PLATFORMS: Platform[] = [
     priority: 'low',
     url: 'https://kik.com',
     importanceReason: 'Can reveal your username and profile info'
+  },
+  {
+    id: 'voxer',
+    name: 'Voxer',
+    category: 'messaging',
+    priority: 'low',
+    url: 'https://voxer.com',
+    importanceReason: 'If someone has your phone number or email already, they can use Voxer to find your real your real name.'
   },
 
   // LOW PRIORITY - Photo/Video
