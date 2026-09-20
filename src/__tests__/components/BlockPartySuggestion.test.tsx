@@ -6,7 +6,7 @@ describe('BlockPartySuggestion', () => {
   it('renders the component with correct heading', () => {
     render(<BlockPartySuggestion />);
 
-    expect(screen.getByText('Automate your settings scan with Block Party')).toBeInTheDocument();
+    expect(screen.getByText('Want to automate this? Use Block Party!')).toBeInTheDocument();
   });
 
   it('shows the promo code JOINTHEPARTY', () => {
@@ -23,18 +23,16 @@ describe('BlockPartySuggestion', () => {
     expect(links[0]).toHaveAttribute('href', 'https://www.blockpartyapp.com');
   });
 
-  it('shows the not affiliated disclaimer', () => {
+  it('discloses that the recommendation is not an ad', () => {
     render(<BlockPartySuggestion />);
 
-    expect(screen.getByText(/not affiliated with Block Party/i)).toBeInTheDocument();
+    expect(screen.getByText(/Not an ad/i)).toBeInTheDocument();
   });
 
   it('explains free vs paid versions', () => {
     render(<BlockPartySuggestion />);
 
-    expect(screen.getByText(/Free:/)).toBeInTheDocument();
-    expect(screen.getByText(/Paid:/)).toBeInTheDocument();
-    expect(screen.getByText(/Scans your privacy settings/i)).toBeInTheDocument();
-    expect(screen.getByText(/Automatically applies/i)).toBeInTheDocument();
+    expect(screen.getByText(/Free version scans your privacy settings/i)).toBeInTheDocument();
+    expect(screen.getByText(/paid version automatically applies/i)).toBeInTheDocument();
   });
 });
