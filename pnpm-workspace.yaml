@@ -1,0 +1,4 @@
+# Supply-chain hardening. pnpm will not install a version until it has been
+# public for 3 days, which gives the registry time to pull compromised releases.
+# Install scripts from dependencies stay blocked (pnpm's default).
+minimumReleaseAge: 4320
