@@ -73,6 +73,13 @@ export const CopyIcon = () => (
   </svg>
 );
 
+export const RefreshIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M13 8a5 5 0 1 1-1.46-3.54" {...line} stroke-width="1.5" />
+    <path d="M12.25 2v2.75H9.5" {...line} stroke-width="1.5" />
+  </svg>
+);
+
 export const CheckIcon = () => (
   <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
     <path d="M3.5 8.5l3 3 6-7" {...line} stroke-width="1.8" />

@@ -1,25 +1,31 @@
 import { useEffect, useState } from 'preact/hooks';
 import { track } from '../lib/events';
 import { nameIdeas, usernameIdeas } from '../lib/ideas';
-import { CheckIcon, CopyIcon } from './icons';
+import { CheckIcon, CopyIcon, RefreshIcon } from './icons';
 
 export type IdeaKind = 'names' | 'usernames';
 
-/** A few random names or usernames to copy, with a button for more. */
+/**
+ * A few random names or usernames to copy. The button for new ones sits beside the heading,
+ * so it stays in the same place however long the ideas are.
+ */
 export function Ideas({ kind }: { kind: IdeaKind }) {
   const make = () => (kind === 'names' ? nameIdeas(3) : usernameIdeas(3));
   const [ideas, setIdeas] = useState(make);
 
   return (
     <div class="ideas">
-      <b>{kind === 'names' ? 'Name ideas' : 'Username ideas'}</b>
-      <div class="idea-list">
+      <div class="ideas-head">
+        <b>{kind === 'names' ? 'Name ideas' : 'Username ideas'}</b>
+        <button type="button" class="btn btn-xs ideas-new" onClick={() => setIdeas(make())}>
+          <RefreshIcon />
+          New ideas
+        </button>
+      </div>
+      <div class="idea-list" aria-live="polite">
         {ideas.map((idea) => (
           <IdeaChip key={idea} idea={idea} kind={kind} />
         ))}
-        <button type="button" class="link-btn idea-more" onClick={() => setIdeas(make())}>
-          More
-        </button>
       </div>
     </div>
   );

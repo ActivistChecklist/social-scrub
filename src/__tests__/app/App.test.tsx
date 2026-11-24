@@ -126,6 +126,17 @@ describe('App', () => {
     for (const idea of ideas) expect(idea).toMatch(/^[A-Za-z0-9]{1,15}$/);
   });
 
+  it('keeps the New ideas button beside the heading, outside the list it refreshes', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Change display name')!);
+    const button = $<HTMLButtonElement>('#column-info .ideas-new')!;
+    expect(button.textContent).toBe('New ideas');
+    expect(button.closest('.ideas-head')).not.toBeNull();
+    expect(button.closest('.idea-list')).toBeNull();
+    click(button);
+    expect($$('#column-info .idea')).toHaveLength(3);
+    expect($('#column-info .ideas-new')).toBe(button);
+  });
+
   it('copies an idea when it is clicked and marks it copied', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });

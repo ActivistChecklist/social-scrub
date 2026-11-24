@@ -385,7 +385,11 @@ img.logo { object-fit: contain; }
 .idea:hover { background: var(--accent-bg-hover); border-color: var(--accent); }
 .idea .i { width: 13px; height: 13px; opacity: .8; }
 .idea.copied { background: var(--done-bg); border-color: var(--done-line); color: var(--done); }
-.idea-more { margin-left: 4px; font-size: 12.5px; }
+.ideas-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+.ideas .ideas-head b { margin-bottom: 0; }
+.btn-xs { height: 26px; padding: 0 9px 0 7px; gap: 5px; font-size: 12.5px; flex: none; }
+.btn-xs:hover { background: var(--sunken); }
+.btn-xs .i { width: 14px; height: 14px; }
 .pop-links ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
 .pop-links a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }
 .tip {
