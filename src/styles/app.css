@@ -169,7 +169,9 @@ button, input { font: inherit; color: inherit; }
 .grid col.col-platform { width: var(--col-platform); }
 .grid col.col-plan { width: var(--col-plan); }
 .grid col.col-step { width: var(--col-step); }
-.grid col.col-extra { width: var(--col-extra); }
+/* The last column takes all the leftover width, so the step columns stay exactly --col-step
+   wide at any screen size. The Deleted checkbox's position depends on that. */
+.grid col.col-extra { width: auto; }
 .grid th, .grid td { padding: 0; height: var(--row-h); border-bottom: 1px solid var(--line); background: var(--surface); vertical-align: middle; }
 
 .grid thead th {
