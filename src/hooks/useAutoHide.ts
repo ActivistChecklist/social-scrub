@@ -4,6 +4,12 @@ import type { RefObject } from 'preact';
 const PHONE = '(max-width: 760px)';
 /** How far to scroll in one direction before the bar hides or comes back. */
 const TRAVEL = 24;
+/**
+ * After the bar hides or shows, the sheet changes height (over the .22s slide). Near the
+ * end of the list the browser then clamps scrollTop, which looks like scrolling. Scroll
+ * movement in this window is not counted, so the clamp can't flip the bar back.
+ */
+const SETTLE_MS = 350;
 
 /**
  * On a phone, slides the top bar away while the sheet scrolls down and brings it back
@@ -24,11 +30,14 @@ export function useAutoHide(bar: RefObject<HTMLElement | null>, scroller: RefObj
     let hidden = false;
     let lastY = sheet.scrollTop;
     let travel = 0;
+    let settleUntil = 0;
 
     const measure = () => document.documentElement.style.setProperty('--top-h', `${el.offsetHeight}px`);
     const set = (next: boolean) => {
       if (next === hidden) return;
       hidden = next;
+      travel = 0;
+      settleUntil = Date.now() + SETTLE_MS;
       setAway(next);
     };
     const mustShow = () =>
@@ -47,6 +56,7 @@ export function useAutoHide(bar: RefObject<HTMLElement | null>, scroller: RefObj
         set(false);
         return;
       }
+      if (Date.now() < settleUntil) return;
       // Count distance in the current direction; a change of direction starts over.
       travel = Math.sign(dy) === Math.sign(travel) ? travel + dy : dy;
       if (travel > TRAVEL) set(true);
