@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Social Scrub is a privacy-focused Next.js web app that guides non-technical users through securing their social media accounts to prevent doxxing. Users select from 130+ platforms and complete 8 universal privacy steps for each.
+Social Scrub is a privacy-focused, single-page web app that helps non-technical people lock down their social media accounts to prevent doxxing. It works like a spreadsheet: rows are platforms (138 built in, plus any the person adds), columns are eight privacy steps. Everything is saved in the browser's localStorage. There is no server.
+
+The first version (a multi-page Next.js app) lives on the `archive/v1-nextjs` branch and the `v1-nextjs` tag. Don't build on it.
 
 ## Workflow (CRITICAL)
 
@@ -13,117 +15,87 @@ Social Scrub is a privacy-focused Next.js web app that guides non-technical user
 **NEVER commit to main.** Always follow this workflow:
 
 1. **Create a feature branch**: If we are not already on a feature branch, make one `dev/feature-name` (e.g., `dev/add-export-button`, `dev/fix-navigation-bug`).
-2. **When to commit:** If we are on a feature branch with uncommitted changes, commit them before starting this round of work (if its sizeable). Do not end a set of changes with anything stashed. Don't use stash at all if you can avoid it. Always just commit things.
+2. **When to commit:** If we are on a feature branch with uncommitted changes, commit them before starting this round of work (if it's sizeable). Do not end a set of changes with anything stashed. Don't use stash at all if you can avoid it. Always just commit things.
 3. **Make atomic commits** as you work: Each commit should represent a single logical change with a clear commit message. Do not include a mention to claude in the commit message. IMPORTANT: If I send you a long list of changes in one prompt, commit after each thing that you designate as a separate "task".
 4. **Only work on feature branches**: Never make commits directly to `main`
 5. If you're using the GitHub CLI, the command is always `gh-ac` instead of the usual `gh`
 
-Example workflow:
-
-```bash
-git checkout -b dev/feature-name
-# make changes
-git add .
-git commit -m "Add initial structure for feature"
-# make more changes
-git commit -m "Complete feature implementation"
-```
-
 ### Subagent Usage
 
-**Spin up subagents when useful**, especially for:
-
-- Exploring unfamiliar parts of the codebase
-- Complex multi-file investigations
-- Understanding how systems interact
-- Researching implementation patterns
-
-Use the Task tool with appropriate subagent types (explore, generalPurpose) to work efficiently.
+**Spin up subagents when useful**, especially for exploring unfamiliar parts of the codebase, multi-file investigations, and researching implementation patterns.
 
 ### Testing Requirements
 
-**Always follow these testing rules:**
-
-1. **Add tests for new features**: When adding a new feature, always write corresponding unit tests. Place them in the appropriate `src/__tests__/` subdirectory mirroring the source structure.
-
-2. **Add tests for bug fixes**: When fixing a bug, add a test that would have caught the bug to prevent regression.
-
-3. **Run tests after any change**: After modifying any feature or fixing a bug, run `yarn test:run` to ensure existing tests still pass.
-
-4. **Test file naming**: Use `*.test.ts` or `*.test.tsx` suffix, matching the source file name (e.g., `storage.ts` → `storage.test.ts`).
-
-5. **Run build before completing**: Run `yarn build` to catch TypeScript and lint errors before considering work complete.
+1. **Add tests for new features** in `src/__tests__/`, mirroring the source structure (`src/lib/state.ts` -> `src/__tests__/lib/state.test.ts`).
+2. **Add tests for bug fixes** that would have caught the bug.
+3. **Run tests after any change**: `pnpm test:run`.
+4. **Test file naming**: `*.test.ts` or `*.test.tsx`.
+5. **Run the build before completing**: `pnpm build` typechecks and builds. There is no separate linter.
 
 ### Use PRD for large features
 
-When you receive a large set of design instructions or UI/UX feedback from the user, update `prd.md` with the new requirements before implementing them. This keeps the PRD as the source of truth for design decisions.
+When you receive a large set of design instructions or UI/UX feedback, update `prd.md` with the new requirements before implementing them. The PRD is the source of truth for design decisions.
+
+## Privacy and security rules
+
+These are product requirements, not preferences:
+
+- **Nothing leaves the browser.** No analytics, no network requests from the app, no server storage.
+- **No third-party resources.** No CDNs, no Google Fonts, no remote images. Fonts and logos are bundled or in `public/`. The Content Security Policy in `vercel.json` only allows `'self'` and will break anything else.
+- **No inline scripts or `style="..."` in HTML.** Set styles from code through Preact's `style` prop, which the CSP allows.
+- **Keep dependencies few.** Runtime deps are `preact` and `@fontsource-variable/public-sans`. Ask before adding a package; prefer a small local helper. `pnpm-workspace.yaml` holds back releases younger than 3 days.
+- **Treat stored data as untrusted.** `parseState` in `src/lib/storage.ts` validates everything it reads.
+- **Exports guard against formula injection** (`neutralizeFormula` in `src/lib/export.ts`).
 
 ## Commands
 
-- `yarn dev` - Start development server
-- `yarn build` - Production build
-- `yarn lint` - Run ESLint
-- `yarn test` - Run Vitest in watch mode
-- `yarn test:run` - Run tests once
-- `yarn test:e2e` - Run Playwright E2E tests
+- `pnpm dev` - Start the dev server
+- `pnpm build` - Typecheck and build the static site into `dist/`
+- `pnpm preview` - Serve `dist/` with the production security headers from `vercel.json`
+- `pnpm test` - Vitest in watch mode
+- `pnpm test:run` - Run tests once
+- `pnpm logos` - Regenerate `src/data/logos.generated.ts` after adding or changing an `icon`
+
+Run a single test file: `pnpm test:run src/__tests__/lib/storage.test.ts`
 
 ## Architecture
 
-### Tech Stack
+### Tech stack
 
-- Next.js 14 (App Router) with TypeScript
-- Tailwind CSS for styling
-- Vercel KV for optional server-side session persistence
-- Vitest + Playwright for testing
+- Vite + Preact + TypeScript, static output in `dist/`
+- Plain CSS in `src/styles/app.css` with color tokens on `:root` and a dark palette under `prefers-color-scheme`
+- Vitest + happy-dom for tests
+- pnpm
 
-### Key Data Flow
-
-All state flows through the `useSession` hook (`src/hooks/useSession.ts`), which:
-
-1. Loads session from localStorage on mount
-2. Auto-saves to localStorage on every state change
-3. Provides methods for platform progress updates
-
-Session data can optionally be saved to Vercel KV via the API routes for cross-device access.
-
-### Core Types (`src/lib/types.ts`)
-
-- **Session**: Root state containing platforms array, customSites, and onboarding status
-- **PlatformProgress**: Per-platform tracking with status (not_started/in_progress/secured/skipped), completed/skipped steps array, and method (manual/deleted/block_party)
-- **Platform**: Static platform definitions with id, name, category, priority
-
-### Storage Layer (`src/lib/storage.ts`)
-
-Pure functions for session manipulation. Components call `useSession` which wraps these functions with React state. Key helpers:
-
-- `markStepComplete`/`markStepSkipped` - Progress a platform through steps
-- `markPlatformDeleted`/`markPlatformSkipped` - Complete a platform immediately
-- `calculatePlatformProgress` - Returns 0-100 completion percentage
-
-### Route Structure
+### Layout
 
 ```
-/                           Welcome page
-/onboarding                 "How it works" explainer
-/onboarding/select          Platform multi-select
-/dashboard                  Main view showing all platforms
-/platform/[platformId]      Platform intro with Start/Skip
-/platform/[platformId]/[step]  Step 1-9 instructions
-/platform/[platformId]/complete  Celebration screen
-/session/[sessionId]        Load server-saved session
-/api/session                Session persistence API
+index.html, privacy.html   The two pages
+src/main.tsx               Mounts <App />
+src/app/App.tsx            Owns state, saves on every change, runs row animations and focus restore
+src/components/            Header (summary, Download), Toolbar (search, Add platform, filter),
+                           Sheet (table, groups, column popovers, add row), Row, StatusIcon, Logo, Footer
+src/hooks/                 useTips (hover hints), useDismiss (closing popovers)
+src/lib/state.ts           Pure state functions: check, plan, cycle steps, add/remove custom platforms
+src/lib/storage.ts         localStorage read/validate/write, migration from the first version, clear all
+src/lib/export.ts          Export rows, CSV, file download
+src/lib/xlsx.ts            Minimal .xlsx writer (stored zip + SpreadsheetML)
+src/lib/motion.ts          Row slide animation, focus restore, arrow-key navigation
+src/data/platforms.ts      The platform list
+src/data/steps.ts          Step copy, column popovers, groups, the platforms checked on first visit
+src/data/logos.ts          Resolves a platform to a logo (simple-icons glyph, colored tile, image or letter)
 ```
 
-### Platform Data (`src/lib/platforms.ts`)
+### State
 
-130+ platforms with priority levels (highest/high/medium/low) and categories (social, professional, dating, etc.). The 9 universal steps are defined in `src/lib/steps.ts`.
+`AppState` (`src/lib/state.ts`) holds an `entries` map keyed by platform id. Each entry has `checked`, `plan` (`keep` or `delete`), `steps` (each `done` or `skipped`), `deleted`, and `order`. Checked rows are listed by `order`, so a newly checked row goes to the bottom of the checked rows in its group. All updates are pure functions that return a new state; `App.commit` saves and re-renders. Nothing is written to storage until the person changes something.
 
-### Session IDs (`src/lib/session-id.ts`)
+Storage key: `social-scrub-v2`. The first version used `social-scrub-session`, which `loadState` migrates from once.
 
-Generates memorable IDs like "bright-butterfly" from 200 adjectives × 200 nouns for shareable session URLs.
+### Adding a platform
 
-## Testing
+Add a line to `src/data/platforms.ts`. Logo: `icon` (simple-icons slug, then run `pnpm logos`) or `image` (file in `public/logos/`). The platform data test fails if a logo doesn't resolve.
 
-Unit tests are in `src/__tests__/lib/` and `src/__tests__/components/`. E2E tests are in `src/__tests__/e2e/`.
+### Deploy
 
-Run a single test file: `yarn test:run -- src/__tests__/lib/storage.test.ts`
+Static hosting configured in `vercel.json`: build command, output directory, security headers, and redirects from the first version's routes.

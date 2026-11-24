@@ -1,82 +1,60 @@
-# SocialScrub.app
+# Social Scrub
 
-**Protect yourself from doxxing by locking down your social media accounts.**
+**Lock down your social media accounts and make yourself harder to dox.**
 
-## Use the App
+**[Use it at socialscrub.app](https://socialscrub.app)**. No sign-up. Your progress stays in your browser.
 
-**[Launch Social Scrub (https://socialscrub.app)](https://socialscrub.app)** - No signup required. Your progress is saved locally in your browser.
+## What it is
 
----
+One page that works like a spreadsheet. Each row is a platform (138 of them, plus any you add), and each column is something to do on that account:
 
-## What is Social Scrub?
+- change your display name, profile photo, username and email
+- remove location and bio details
+- review old posts and photos
+- hide your friends list
+- lock down privacy settings
 
-Social Scrub is a privacy-focused web app that guides you through securing your social media accounts to prevent doxxing. It helps activists, journalists, and anyone concerned about online privacy systematically lock down their digital footprint.
+Check the platforms you have, decide whether to keep or delete each one, then work across the row. Steps you can't do on a site, or don't want to, can be marked as skipped. You can download everything as an Excel or CSV file.
 
-### How It Works
+## Privacy
 
-1. **Select your platforms** - Choose from 130+ social media and online services
-2. **Follow step-by-step guides** - Complete 8 universal privacy steps for each platform:
-   - Delete or keep the account
-   - Change your display name
-   - Replace your profile photo
-   - Randomize your username
-   - Use unique email addresses
-   - Remove bio/location info
-   - Clean up posts and photos
-   - Hide friends lists
-   - Adjust privacy settings
-3. **Track your progress** - Visual dashboard shows what you've secured
+- Your checkmarks are saved in your browser's local storage and nowhere else.
+- No accounts, no analytics, no cookies.
+- The page loads nothing from other sites. Fonts and logos are served from this site.
+- "Clear all data" at the bottom of the sheet removes everything it saved.
 
-### Privacy First
+## Related
 
-- **100% local storage** - Your data never leaves your device
-- **No accounts required** - Just bookmark the page to save progress
-- **No tracking** - We don't collect any analytics or personal information
-
-### Why This Matters
-
-Doxxing (publishing someone's private information online) can lead to harassment, stalking, and real-world danger. Social Scrub helps you:
-
-- Break the links between your accounts that strangers can trace
-- Remove identifying information that can be combined to find you
-- Lock down privacy settings that platforms leave open by default
-
-### Related Resources
-
-- **[Activist Checklist](https://activistchecklist.org)** - Comprehensive security guide for activists
-- **[Doxxing Defense](https://activistchecklist.org/doxxing)** - Deep dive into protecting yourself from doxxing
+- [Activist Checklist](https://activistchecklist.org): security guides for activists
+- [Doxxing defense](https://activistchecklist.org/doxxing)
 
 ---
 
 ## Development
 
-### Prerequisites
-
-- Node.js 18+
-- Yarn
-
-### Setup
+Requires Node 22 or later and [pnpm](https://pnpm.io).
 
 ```bash
-# Install dependencies
-yarn install
-
-# Start development server
-yarn dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+| Command | What it does |
+| --- | --- |
+| `pnpm dev` | Start the dev server |
+| `pnpm build` | Typecheck and build the static site into `dist/` |
+| `pnpm preview` | Serve `dist/` with the production security headers |
+| `pnpm test:run` | Run the tests once |
+| `pnpm logos` | Rebuild the logo file after adding an `icon` to a platform |
 
-### Commands
+### Stack
 
-- `yarn dev` - Start development server
-- `yarn build` - Production build
-- `yarn lint` - Run ESLint
-- `yarn test:run` - Run tests
+Vite, Preact and TypeScript, built as a static site with no server. The only runtime packages are `preact` and the self-hosted Public Sans font. Excel export is a small writer in `src/lib/xlsx.ts`, so there's no spreadsheet library.
 
-### Tech Stack
+### Adding a platform
 
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Vitest for testing
+Add a line to `src/data/platforms.ts`. For the logo, either set `icon` to a [simple-icons](https://simpleicons.org) slug and run `pnpm logos`, or put an image in `public/logos/` and set `image`. Leave both out to show the first letter. `pnpm test:run` checks that every logo resolves.
+
+### The first version
+
+The original multi-page Next.js app is preserved on the `archive/v1-nextjs` branch and the `v1-nextjs` tag. Progress saved by that version carries over automatically.
