@@ -1,345 +1,125 @@
-import { describe, it, expect } from 'vitest';
-import {
-  createEmptySession,
-  createPlatformProgress,
-  markStepComplete,
-  markStepSkipped,
-  markPlatformDeleted,
-  markPlatformComplete,
-  clearStep,
-  getSessionStats,
-  calculatePlatformProgress,
-} from '@/lib/storage';
+import { describe, expect, it } from 'vitest';
+import { STARTERS } from '../../data/steps';
+import { createInitialState, cycleStep, toggleChecked } from '../../lib/state';
+import { LEGACY_KEYS, STORAGE_KEY, clearAllData, loadState, migrateLegacy, parseState, saveState } from '../../lib/storage';
 
-describe('storage', () => {
-  describe('createEmptySession', () => {
-    it('should create a session with default values', () => {
-      const session = createEmptySession();
+function memoryStore(initial: Record<string, string> = {}) {
+  const data = new Map(Object.entries(initial));
+  return {
+    data,
+    getItem: (k: string) => data.get(k) ?? null,
+    setItem: (k: string, v: string) => void data.set(k, v),
+    removeItem: (k: string) => void data.delete(k),
+  };
+}
 
-      expect(session.id).toBeDefined();
-      expect(session.createdAt).toBeDefined();
-      expect(session.lastActiveAt).toBeDefined();
-      expect(session.storageType).toBe('local');
-      expect(session.platforms).toEqual([]);
-      expect(session.customSites).toEqual([]);
-      expect(session.onboardingComplete).toBe(false);
-    });
+describe('loadState', () => {
+  it('starts fresh and writes nothing when storage is empty', () => {
+    const store = memoryStore();
+    const s = loadState(store);
+    expect(Object.keys(s.entries).sort()).toEqual([...STARTERS].sort());
+    expect(store.data.size).toBe(0);
   });
 
-  describe('createPlatformProgress', () => {
-    it('should create platform progress with default values', () => {
-      const progress = createPlatformProgress('facebook');
-
-      expect(progress.platformId).toBe('facebook');
-      expect(progress.status).toBe('not_started');
-      expect(progress.hasAccount).toBe(null);
-      expect(progress.currentStep).toBe(1);
-      expect(progress.completedSteps).toEqual([]);
-      expect(progress.skippedSteps).toEqual([]);
-    });
+  it('round-trips saved progress', () => {
+    const store = memoryStore();
+    const s = cycleStep(toggleChecked(createInitialState(), 'reddit'), 'reddit', 'posts');
+    saveState(s, store);
+    expect(loadState(store)).toEqual(s);
   });
 
-  describe('markStepComplete', () => {
-    it('should add step to completed steps', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      session = markStepComplete(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.completedSteps).toContain(1);
-      expect(progress.currentStep).toBe(2);
-      expect(progress.status).toBe('in_progress');
-    });
-
-    it('should not add duplicate steps', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      session = markStepComplete(session, 'facebook', 1);
-      session = markStepComplete(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.completedSteps).toEqual([1]);
-    });
-
-    it('should mark platform as secured when all steps are done', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // Complete all 9 steps
-      for (let i = 1; i <= 9; i++) {
-        session = markStepComplete(session, 'facebook', i);
-      }
-
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('secured');
-      expect(progress.completedAt).toBeDefined();
-    });
-
-    it('should toggle from skipped to completed', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // First skip the step
-      session = markStepSkipped(session, 'facebook', 1);
-      expect(session.platforms[0].skippedSteps).toContain(1);
-      expect(session.platforms[0].completedSteps).not.toContain(1);
-
-      // Now mark as completed - should remove from skipped and add to completed
-      session = markStepComplete(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.completedSteps).toContain(1);
-      expect(progress.skippedSteps).not.toContain(1);
-    });
+  it('survives storage that throws', () => {
+    const broken = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => {
+        throw new Error('blocked');
+      },
+      removeItem: () => {
+        throw new Error('blocked');
+      },
+    };
+    expect(loadState(broken).version).toBe(2);
+    expect(() => saveState(createInitialState(), broken)).not.toThrow();
+    expect(() => clearAllData(broken)).not.toThrow();
   });
 
-  describe('markStepSkipped', () => {
-    it('should add step to skipped steps', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
+  it('falls back to a fresh start when the saved value is not JSON', () => {
+    expect(loadState(memoryStore({ [STORAGE_KEY]: '{oops' })).entries.facebook.checked).toBe(true);
+  });
+});
 
-      session = markStepSkipped(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.skippedSteps).toContain(1);
-      expect(progress.currentStep).toBe(2);
+describe('parseState', () => {
+  it('drops anything it does not recognize', () => {
+    const s = parseState({
+      version: 2,
+      nextOrder: 'x',
+      onlyMine: 'yes',
+      custom: [
+        { id: 'custom-ok', name: '  Ravelry ' },
+        { id: '<script>', name: 'bad id' },
+        { id: 'custom-blank', name: '   ' },
+      ],
+      entries: {
+        reddit: { checked: true, plan: 'nuke', steps: { name: 'done', email: 'maybe', hack: 'done' }, order: 3 },
+        'custom-ok': { checked: true, plan: 'delete', deleted: 'yes', order: 4 },
+        notaplatform: { checked: true },
+        __proto__: { checked: true },
+      },
     });
-
-    it('should toggle from completed to skipped', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // First complete the step
-      session = markStepComplete(session, 'facebook', 1);
-      expect(session.platforms[0].completedSteps).toContain(1);
-      expect(session.platforms[0].skippedSteps).not.toContain(1);
-
-      // Now mark as skipped - should remove from completed and add to skipped
-      session = markStepSkipped(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.skippedSteps).toContain(1);
-      expect(progress.completedSteps).not.toContain(1);
-    });
+    expect(s).not.toBeNull();
+    expect(s!.custom).toEqual([{ id: 'custom-ok', name: 'Ravelry' }]);
+    expect(s!.entries.reddit).toEqual({ checked: true, plan: 'keep', steps: { name: 'done' }, deleted: false, order: 3 });
+    expect(s!.entries['custom-ok']).toMatchObject({ plan: 'delete', deleted: false });
+    expect(Object.keys(s!.entries).sort()).toEqual(['custom-ok', 'reddit']);
+    expect(s!.nextOrder).toBe(5);
+    expect(s!.onlyMine).toBe(false);
   });
 
-  describe('markPlatformDeleted', () => {
-    it('should mark platform as secured with deleted method', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
+  it('rejects other versions', () => {
+    expect(parseState({ version: 1 })).toBeNull();
+    expect(parseState(null)).toBeNull();
+  });
+});
 
-      session = markPlatformDeleted(session, 'facebook');
+describe('migrateLegacy', () => {
+  const legacy = {
+    platforms: [
+      { platformId: 'facebook', status: 'in_progress', hasAccount: 'yes', completedSteps: [2, 3], skippedSteps: [4] },
+      { platformId: 'venmo', status: 'secured', method: 'deleted', completedSteps: [1] },
+      { platformId: 'tiktok', status: 'skipped', hasAccount: null, completedSteps: [] },
+      { platformId: 'reddit', status: 'not_started', hasAccount: 'no' },
+      { platformId: 'instagram', status: 'secured', method: 'block_party', completedSteps: [] },
+      { platformId: 'gone-platform', status: 'secured' },
+    ],
+    customSites: [{ id: 'old', name: 'Church directory', status: 'in_progress', completedSteps: [9], skippedSteps: [] }],
+  };
 
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('secured');
-      expect(progress.method).toBe('deleted');
-      expect(progress.completedSteps).toEqual([1]);
-      expect(progress.completedAt).toBeDefined();
-    });
+  it('carries over checked rows, steps and deletions', () => {
+    const s = migrateLegacy(legacy)!;
+    expect(s.entries.facebook).toMatchObject({ checked: true, plan: 'keep', steps: { name: 'done', photo: 'done', username: 'skipped' } });
+    expect(s.entries.venmo).toMatchObject({ checked: true, plan: 'delete', deleted: true });
+    expect(s.entries.instagram.steps.privacy).toBe('done');
+    expect(s.entries.tiktok).toBeUndefined();
+    expect(s.entries.reddit).toBeUndefined();
+    expect(s.entries['gone-platform']).toBeUndefined();
+    expect(s.custom).toEqual([{ id: 'custom-legacy-0', name: 'Church directory' }]);
+    expect(s.entries['custom-legacy-0'].steps.privacy).toBe('done');
   });
 
-  describe('getSessionStats', () => {
-    it('should calculate correct stats', () => {
-      const session = createEmptySession();
-      session.platforms = [
-        { ...createPlatformProgress('facebook'), status: 'secured' },
-        { ...createPlatformProgress('twitter'), status: 'in_progress' },
-        { ...createPlatformProgress('instagram'), status: 'not_started' },
-        { ...createPlatformProgress('linkedin'), status: 'skipped' },
-      ];
-
-      const stats = getSessionStats(session);
-
-      expect(stats.total).toBe(4);
-      expect(stats.secured).toBe(1);
-      expect(stats.inProgress).toBe(1);
-      expect(stats.notStarted).toBe(1);
-      expect(stats.skipped).toBe(1);
-    });
-
-    it('should include custom sites in stats', () => {
-      const session = createEmptySession();
-      session.platforms = [
-        { ...createPlatformProgress('facebook'), status: 'secured' },
-        { ...createPlatformProgress('twitter'), status: 'in_progress' },
-      ];
-      session.customSites = [
-        {
-          id: 'custom-1',
-          name: 'Custom Site 1',
-          priority: 'medium',
-          status: 'secured',
-          completedSteps: [1, 2, 3],
-          skippedSteps: [],
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: 'custom-2',
-          name: 'Custom Site 2',
-          priority: 'medium',
-          status: 'not_started',
-          completedSteps: [],
-          skippedSteps: [],
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: 'custom-3',
-          name: 'Custom Site 3',
-          priority: 'high',
-          status: 'in_progress',
-          completedSteps: [1],
-          skippedSteps: [],
-          createdAt: new Date().toISOString(),
-        },
-      ];
-
-      const stats = getSessionStats(session);
-
-      // 2 built-in + 3 custom = 5 total
-      expect(stats.total).toBe(5);
-      // 1 built-in secured + 1 custom secured = 2
-      expect(stats.secured).toBe(2);
-      // 1 built-in in_progress + 1 custom in_progress = 2
-      expect(stats.inProgress).toBe(2);
-      // 0 built-in not_started + 1 custom not_started = 1
-      expect(stats.notStarted).toBe(1);
-      expect(stats.skipped).toBe(0);
-    });
+  it('is used when there is no new data yet, and the result is valid', () => {
+    const store = memoryStore({ [LEGACY_KEYS[0]]: JSON.stringify(legacy) });
+    const s = loadState(store);
+    expect(s.entries.venmo.deleted).toBe(true);
+    expect(parseState(JSON.parse(JSON.stringify(s)))).toEqual(s);
   });
+});
 
-  describe('calculatePlatformProgress', () => {
-    it('should return 100 for secured platforms', () => {
-      const progress = {
-        ...createPlatformProgress('facebook'),
-        status: 'secured' as const,
-      };
-
-      expect(calculatePlatformProgress(progress)).toBe(100);
-    });
-
-    it('should calculate percentage for in-progress platforms', () => {
-      const progress = {
-        ...createPlatformProgress('facebook'),
-        status: 'in_progress' as const,
-        completedSteps: [2, 3, 4, 5], // Step 1 is delete step, doesn't count
-        skippedSteps: [],
-      };
-
-      // 4 non-delete steps handled out of 8 (steps 2-9) = 50%
-      expect(calculatePlatformProgress(progress)).toBe(50);
-    });
-  });
-
-  describe('clearStep', () => {
-    it('should remove step from completed steps', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // Complete steps 1 and 2
-      session = markStepComplete(session, 'facebook', 1);
-      session = markStepComplete(session, 'facebook', 2);
-
-      // Clear step 1
-      session = clearStep(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.completedSteps).toEqual([2]);
-      expect(progress.completedSteps).not.toContain(1);
-    });
-
-    it('should remove step from skipped steps', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // Skip step 1, complete step 2
-      session = markStepSkipped(session, 'facebook', 1);
-      session = markStepComplete(session, 'facebook', 2);
-
-      // Clear the skipped step
-      session = clearStep(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.skippedSteps).toEqual([]);
-      expect(progress.skippedSteps).not.toContain(1);
-    });
-
-    it('should update status correctly after clearing steps', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // Complete one step
-      session = markStepComplete(session, 'facebook', 1);
-      expect(session.platforms[0].status).toBe('in_progress');
-
-      // Clear that step - should go back to not_started
-      session = clearStep(session, 'facebook', 1);
-
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('not_started');
-    });
-
-    it('should revert secured status when steps are cleared', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // Complete all 9 steps
-      for (let i = 1; i <= 9; i++) {
-        session = markStepComplete(session, 'facebook', i);
-      }
-      expect(session.platforms[0].status).toBe('secured');
-
-      // Clear one step - should go back to in_progress
-      session = clearStep(session, 'facebook', 5);
-
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('in_progress');
-      expect(progress.completedSteps).not.toContain(5);
-    });
-  });
-
-  describe('markPlatformComplete', () => {
-    it('should mark platform as secured', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      session = markPlatformComplete(session, 'facebook');
-
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('secured');
-      expect(progress.completedAt).toBeDefined();
-    });
-
-    it('should work on in-progress platforms', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-
-      // Start some progress
-      session = markStepComplete(session, 'facebook', 1);
-      session = markStepComplete(session, 'facebook', 2);
-      expect(session.platforms[0].status).toBe('in_progress');
-
-      // Mark as complete
-      session = markPlatformComplete(session, 'facebook');
-
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('secured');
-      expect(progress.completedAt).toBeDefined();
-      // Should preserve existing completed steps
-      expect(progress.completedSteps).toContain(1);
-      expect(progress.completedSteps).toContain(2);
-    });
-
-    it('should work on not_started platforms', () => {
-      let session = createEmptySession();
-      session.platforms = [createPlatformProgress('facebook')];
-      expect(session.platforms[0].status).toBe('not_started');
-
-      session = markPlatformComplete(session, 'facebook');
-
-      const progress = session.platforms[0];
-      expect(progress.status).toBe('secured');
-    });
+describe('clearAllData', () => {
+  it('removes the current and the old keys', () => {
+    const store = memoryStore({ [STORAGE_KEY]: '{}', [LEGACY_KEYS[0]]: '{}', [LEGACY_KEYS[1]]: 'dark', unrelated: 'keep me' });
+    clearAllData(store);
+    expect([...store.data.keys()]).toEqual(['unrelated']);
   });
 });
