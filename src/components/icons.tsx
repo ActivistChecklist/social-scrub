@@ -41,3 +41,27 @@ export const QuestionIcon = () => (
     <circle cx="8" cy="11.3" r=".8" fill="currentColor" />
   </svg>
 );
+
+export const SunIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="2.75" {...line} stroke-width="1.5" />
+    <path
+      d="M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9"
+      {...line}
+      stroke-width="1.5"
+    />
+  </svg>
+);
+
+export const MoonIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M8 2a4.25 4.25 0 0 0 6 6A6 6 0 1 1 8 2z" {...line} stroke-width="1.5" />
+  </svg>
+);
+
+export const LaptopIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <rect x="3" y="3" width="10" height="7.5" rx="1.25" {...line} stroke-width="1.5" />
+    <path d="M1.5 13h13" {...line} stroke-width="1.5" />
+  </svg>
+);

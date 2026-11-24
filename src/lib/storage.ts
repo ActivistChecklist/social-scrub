@@ -9,11 +9,14 @@ import {
   type Entry,
   type Mark,
 } from './state';
+import type { Theme } from './theme';
 
 /** Everything lives in this one key, in this browser only. */
 export const STORAGE_KEY = 'social-scrub-v2';
+/** The light or dark choice from the theme menu. No key means follow the device. The first version used the same key and values. */
+export const THEME_KEY = 'social-scrub-theme';
 /** Keys the first version of the site used. Read once to carry progress over, and wiped by "Clear all data". */
-export const LEGACY_KEYS = ['social-scrub-session', 'social-scrub-theme'];
+export const LEGACY_KEYS = ['social-scrub-session'];
 const LEGACY_SESSION_KEY = LEGACY_KEYS[0];
 
 const STEP_IDS = new Set<string>(STEPS.map((s) => s.id));
@@ -148,8 +151,27 @@ export function saveState(state: AppState, s: Store | null = store()): void {
   }
 }
 
+export function loadTheme(s: Store | null = store()): Theme {
+  try {
+    const v = s?.getItem(THEME_KEY);
+    return v === 'light' || v === 'dark' ? v : 'system';
+  } catch {
+    return 'system';
+  }
+}
+
+/** Following the device removes the key, so nothing is left behind. */
+export function saveTheme(theme: Theme, s: Store | null = store()): void {
+  try {
+    if (theme === 'system') s?.removeItem(THEME_KEY);
+    else s?.setItem(THEME_KEY, theme);
+  } catch {
+    // Storage is full or blocked. The theme still changes for this visit.
+  }
+}
+
 export function clearAllData(s: Store | null = store()): void {
-  for (const key of [STORAGE_KEY, ...LEGACY_KEYS]) {
+  for (const key of [STORAGE_KEY, THEME_KEY, ...LEGACY_KEYS]) {
     try {
       s?.removeItem(key);
     } catch {

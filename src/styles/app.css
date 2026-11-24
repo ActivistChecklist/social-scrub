@@ -41,8 +41,11 @@
 
   color-scheme: light dark;
 }
+/* Dark colors come from the device setting unless the theme menu picked one. The menu sets
+   data-theme on <html> (src/lib/theme.ts, and public/theme-init.js before the first paint).
+   The two dark blocks must match; src/__tests__/styles/app.test.ts checks. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0F1114; --surface: #15181C; --sunken: #1D2026; --dim-row: #131619; --hover: #1A1E23;
     --ink: #E8EBEF; --ink-2: #C4C9D1; --muted: #8D95A2; --faint: #5B626D; --why: #737B88;
     --line: #242830; --line-strong: #363C46;
@@ -51,6 +54,16 @@
     --focus: #7D9BFF; --flash: #3A3417; --shadow: rgba(0, 0, 0, 0.5);
   }
 }
+:root[data-theme="dark"] {
+  --bg: #0F1114; --surface: #15181C; --sunken: #1D2026; --dim-row: #131619; --hover: #1A1E23;
+  --ink: #E8EBEF; --ink-2: #C4C9D1; --muted: #8D95A2; --faint: #5B626D; --why: #737B88;
+  --line: #242830; --line-strong: #363C46;
+  --done: #57C48D; --done-bg: #15301F; --done-line: #1F4530; --on-done: #0C2216; --progress: #E2B24E;
+  --del: #F08B7F; --del-bg: #351C19; --on-del: #2B0F0B;
+  --focus: #7D9BFF; --flash: #3A3417; --shadow: rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -91,9 +104,10 @@ button, input { font: inherit; color: inherit; }
 .summary strong { color: var(--ink); font-weight: 600; }
 .bar-end { margin-left: auto; display: flex; gap: 6px; align-items: center; }
 .narrow-only { display: none; }
-.dl-wrap { position: relative; }
-.btn.privacy-btn { border-color: transparent; background: transparent; color: var(--muted); font-weight: 500; padding: 0 10px; }
-.btn.privacy-btn:hover { color: var(--ink); background: var(--sunken); }
+.dl-wrap, .theme-wrap { position: relative; }
+.btn.privacy-btn, .btn.theme-btn { border-color: transparent; background: transparent; color: var(--muted); font-weight: 500; padding: 0 10px; }
+.btn.privacy-btn:hover, .btn.theme-btn:hover, .btn.theme-btn[aria-expanded="true"] { color: var(--ink); background: var(--sunken); }
+.bar .btn.theme-btn { width: 34px; padding: 0; justify-content: center; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 7px;
@@ -122,6 +136,9 @@ button, input { font: inherit; color: inherit; }
 .menu button:hover, .menu button:focus-visible { background: var(--sunken); }
 .menu button span { font-size: 12.5px; color: var(--muted); }
 .menu p { margin: 4px 10px 6px; font-size: 12px; color: var(--muted); }
+.theme-menu { min-width: 160px; }
+.theme-menu button { justify-content: flex-start; align-items: center; gap: 9px; }
+.theme-menu button span { margin-left: auto; font-size: 12px; }
 
 /* ---------- Toolbar ---------- */
 .tools {
@@ -399,6 +416,7 @@ img.logo { object-fit: contain; }
   .wide-only, .btn-label, .privacy-label { display: none; }
   .narrow-only { display: inline; }
   .bar .btn, .tools .btn-sm, .privacy-btn { padding: 0 9px; }
+  .bar-end { gap: 4px; }
   .tools { flex-wrap: nowrap; gap: 8px; padding-block: 8px; }
   .search { flex: 1 1 auto; }
   .switch { gap: 6px; font-size: 12.5px; white-space: nowrap; }
@@ -411,6 +429,10 @@ img.logo { object-fit: contain; }
   /* Group rows scroll away on a phone, so only the column headers stay put. */
   .grp th { position: static; height: 32px; }
   .seg button { padding: 0 8px; }
+}
+/* Narrow phones: the words already give the progress, so the meter makes way for the header buttons. */
+@media (max-width: 420px) {
+  .meter { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .row.moved td { animation: none; }
