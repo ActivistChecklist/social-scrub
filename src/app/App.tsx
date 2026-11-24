@@ -1,8 +1,9 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { Header } from '../components/Header';
 import type { RowActions } from '../components/Row';
-import { Sheet } from '../components/Sheet';
+import { Sheet, type AddSource } from '../components/Sheet';
 import { Toolbar } from '../components/Toolbar';
+import { track } from '../lib/events';
 import { downloadExport } from '../lib/export';
 import { focusKey, prefersReducedMotion, restoreFocus, revealRow, rowTops, slideRows, type FocusKey } from '../lib/motion';
 import {
@@ -10,9 +11,12 @@ import {
   checkAll,
   createInitialState,
   cycleStep,
+  groupOf,
+  isChecked,
   removeCustom,
   setOnlyMine,
   setPlan,
+  statusOf,
   toggleChecked,
   toggleDeleted,
   type AppState,
@@ -54,31 +58,60 @@ export function App() {
     a.focus = a.tops = a.reveal = null;
   });
 
+  // Each action also sends an anonymous count (see lib/events.ts). Counts never say which platform.
   const act = useMemo<RowActions>(
     () => ({
-      toggle: (id) => commit(toggleChecked(current.current, id), { slide: true }),
-      checkAll: (ids) => commit(checkAll(current.current, ids), { slide: true }),
-      plan: (id, plan) => commit(setPlan(current.current, id, plan)),
-      step: (id, step) => commit(cycleStep(current.current, id, step)),
-      deleted: (id) => commit(toggleDeleted(current.current, id)),
-      remove: (id) => commit(removeCustom(current.current, id), { slide: true }),
+      toggle: (id) => {
+        const wasChecked = isChecked(current.current, id);
+        if (commit(toggleChecked(current.current, id), { slide: true })) {
+          track(wasChecked ? 'uncheck_platform' : 'check_platform', { group: groupOf(id) });
+        }
+      },
+      checkAll: (ids) => {
+        const count = ids.filter((id) => !isChecked(current.current, id)).length;
+        if (commit(checkAll(current.current, ids), { slide: true })) {
+          track('select_all', { group: ids.length ? groupOf(ids[0]) : '', count });
+        }
+      },
+      plan: (id, plan) => {
+        if (commit(setPlan(current.current, id, plan))) track('set_plan', { plan });
+      },
+      step: (id, step) => {
+        const before = statusOf(current.current.entries[id]);
+        const next = cycleStep(current.current, id, step);
+        if (!commit(next)) return;
+        track('mark_step', { step, mark: next.entries[id].steps[step] ?? 'cleared' });
+        if (before !== 'done' && statusOf(next.entries[id]) === 'done') track('finish_platform', { how: 'secured' });
+      },
+      deleted: (id) => {
+        const next = toggleDeleted(current.current, id);
+        if (!commit(next)) return;
+        const deleted = next.entries[id].deleted;
+        track('mark_deleted', { deleted });
+        if (deleted) track('finish_platform', { how: 'deleted' });
+      },
+      remove: (id) => {
+        if (commit(removeCustom(current.current, id), { slide: true })) track('remove_platform');
+      },
     }),
     [],
   );
 
   /** Adds (or finds) a platform, then scrolls to it. Returns false when the name was empty. */
-  const addPlatform = (name: string, clearSearch: boolean) => {
+  const addPlatform = (name: string, from: AddSource | 'toolbar') => {
     const { state: next, id } = addCustom(current.current, name);
     if (!id) return false;
     // Clear the search so the new row isn't filtered out.
-    const searchWillChange = clearSearch && query !== '';
+    const searchWillChange = from !== 'sheet' && query !== '';
     if (searchWillChange) setQuery('');
     if (commit(next) || searchWillChange) after.current.reveal = id;
     else revealRow(scroller.current, id); // Already listed and checked, and nothing will re-render.
+    track('add_platform', { from, listed: groupOf(id) !== 'custom' });
     return true;
   };
 
   const clearAll = () => {
+    track('clear_data');
     clearAllData();
     const fresh = createInitialState();
     current.current = fresh;
@@ -89,13 +122,21 @@ export function App() {
 
   return (
     <div class="app">
-      <Header state={state} onDownload={(kind) => downloadExport(current.current, kind)} />
+      <Header
+        state={state}
+        onDownload={(format) => {
+          downloadExport(current.current, format);
+          track('download', { format });
+        }}
+      />
       <Toolbar
         query={query}
         onQuery={setQuery}
         onlyMine={state.onlyMine}
-        onOnlyMine={(v) => commit(setOnlyMine(current.current, v))}
-        onAdd={(name) => addPlatform(name, true)}
+        onOnlyMine={(on) => {
+          if (commit(setOnlyMine(current.current, on))) track('filter_checked', { on });
+        }}
+        onAdd={(name) => addPlatform(name, 'toolbar')}
       />
       <Sheet state={state} query={query} act={act} scroller={scroller} onAdd={addPlatform} onClearAll={clearAll} />
     </div>

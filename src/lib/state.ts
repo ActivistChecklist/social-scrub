@@ -49,6 +49,13 @@ export function allPlatforms(state: AppState): Platform[] {
   return PLATFORMS.concat(state.custom.map(customToPlatform));
 }
 
+const BUILT_IN_GROUP = new Map<string, string>(PLATFORMS.map((p) => [p.id, p.priority]));
+
+/** The priority group a platform belongs to, or "custom" for one the person added. */
+export function groupOf(id: string): string {
+  return BUILT_IN_GROUP.get(id) ?? 'custom';
+}
+
 export function isChecked(state: AppState, id: string): boolean {
   return state.entries[id]?.checked === true;
 }

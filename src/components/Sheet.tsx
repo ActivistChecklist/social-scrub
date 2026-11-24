@@ -4,11 +4,15 @@ import { GROUPS, PLAN_INFO, PLATFORM_INFO, STEPS, type ColumnInfo } from '../dat
 import type { Platform } from '../data/types';
 import { useDismiss } from '../hooks/useDismiss';
 import { useTips } from '../hooks/useTips';
+import { track } from '../lib/events';
 import { moveFocusWithArrows } from '../lib/motion';
 import { allPlatforms, isChecked, isFinished, statusOf, type AppState } from '../lib/state';
 import { Footer } from './Footer';
 import { ArrowDownIcon } from './icons';
 import { COLUMN_COUNT, Row, type RowActions } from './Row';
+
+/** Where a platform was added from, for the anonymous counts. */
+export type AddSource = 'search' | 'sheet';
 
 interface SheetProps {
   state: AppState;
@@ -16,7 +20,7 @@ interface SheetProps {
   act: RowActions;
   scroller: RefObject<HTMLElement | null>;
   /** Returns false when the name was empty. */
-  onAdd(name: string, fromSearch: boolean): boolean;
+  onAdd(name: string, from: AddSource): boolean;
   onClearAll(): void;
 }
 
@@ -48,6 +52,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
 
   const toggleInfo = (key: string, content: ColumnInfo, trigger: HTMLElement) => {
     if (info?.key === key) return closeInfo('toggle');
+    track('open_help', { column: key });
     const r = trigger.getBoundingClientRect();
     const width = Math.min(340, window.innerWidth - 32);
     setInfo({
@@ -192,7 +197,7 @@ function AddRow({ query, found, onAdd }: { query: string; found: number; onAdd: 
           {typed ? (
             <>
               <span class="add-note">{found ? 'Not the one you meant?' : `No listed platform matches "${typed}".`}</span>
-              <button type="button" class="btn btn-sm" onClick={() => onAdd(typed, true)}>
+              <button type="button" class="btn btn-sm" onClick={() => onAdd(typed, 'search')}>
                 Add "{typed.slice(0, 60)}"
               </button>
             </>
@@ -201,7 +206,7 @@ function AddRow({ query, found, onAdd }: { query: string; found: number; onAdd: 
               class="add-form"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (onAdd(name, false)) setName('');
+                if (onAdd(name, 'sheet')) setName('');
               }}
             >
               <input
