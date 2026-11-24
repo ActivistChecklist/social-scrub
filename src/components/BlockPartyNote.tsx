@@ -1,5 +1,4 @@
 import type { RefObject } from 'preact';
-import { useState } from 'preact/hooks';
 import { track } from '../lib/events';
 
 export const BLOCK_PARTY_URL = 'https://www.blockpartyapp.com';
@@ -15,8 +14,6 @@ export function openBlockPartyNote(dialog: HTMLDialogElement | null) {
 
 /** Why the sheet points to Block Party, and that we're not affiliated with it. */
 export function BlockPartyNote({ dialog }: { dialog: RefObject<HTMLDialogElement | null> }) {
-  const [copied, setCopied] = useState(false);
-
   const close = () => {
     const d = dialog.current;
     if (!d) return;
@@ -24,42 +21,32 @@ export function BlockPartyNote({ dialog }: { dialog: RefObject<HTMLDialogElement
     else d.removeAttribute('open');
   };
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(CODE);
-      setCopied(true);
-    } catch {
-      // Copying can be blocked. The code is on screen to type.
-    }
-  };
-
   return (
     <dialog
       ref={dialog}
       class="modal"
       aria-labelledby="bp-title"
-      onClose={() => setCopied(false)}
       onClick={(e) => {
         if (e.target === dialog.current) close();
       }}
     >
       <div class="modal-in">
         <h2 id="bp-title">About Block Party</h2>
-        <p>We're not affiliated with Block Party and get nothing for recommending it.</p>
+        <p>
+          We're not affiliated with{' '}
+          <a href={BLOCK_PARTY_URL} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'about' })}>
+            Block Party
+          </a>{' '}
+          and get nothing for recommending it.
+        </p>
         <p>
           Platforms make their privacy settings ridiculously hard to find. Block Party finds them for you and makes the changes in a few
           clicks.
         </p>
-        <p class="bp-code">
-          It's free for one site. The code <b>{CODE}</b> makes the paid plan cheaper.
-          <button type="button" class="link-btn" onClick={copy}>
-            {copied ? 'Copied' : 'Copy code'}
-          </button>
+        <p>
+          It's free for one site. The code <b class="bp-code">{CODE}</b> makes the paid plan cheaper.
         </p>
-        <div class="modal-actions">
-          <a href={BLOCK_PARTY_URL} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'about' })}>
-            Go to Block Party
-          </a>
+        <div class="modal-actions end">
           <button type="button" class="btn btn-sm" onClick={close}>
             Close
           </button>

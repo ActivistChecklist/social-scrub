@@ -167,7 +167,10 @@ describe('App', () => {
     click($('tr[data-id=facebook] .bp-about'));
     expect(dialog.open).toBe(true);
     expect(dialog.textContent).toContain("We're not affiliated with Block Party");
-    expect(dialog.textContent).toContain('JOINTHEPARTY');
+    expect(dialog.textContent).toContain('The code JOINTHEPARTY makes the paid plan cheaper.');
+    expect(dialog.querySelector('p a')?.getAttribute('href')).toBe('https://www.blockpartyapp.com');
+    expect(dialog.textContent).not.toContain('Copy code');
+    expect(dialog.textContent).not.toContain('Go to Block Party');
   });
 
   it('links to the contact page from the footer', () => {

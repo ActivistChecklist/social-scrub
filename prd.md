@@ -60,7 +60,7 @@ Help non-technical people find every account that could expose them and lock eac
 - Use a unique email lists alias services under "Helpful": Qwacky (Chrome extension for DuckDuckGo addresses), Firefox Relay, SimpleLogin, and Google's note on the Gmail + trick.
 - Clean up old posts links to Cyd for deleting old posts on X in bulk.
 - The Privacy settings popover doesn't mention Block Party; the row note does.
-- The Block Party row note ends with a "?" that opens a short note: we're not affiliated with Block Party, platforms make privacy settings very hard to find and Block Party makes it easier, it's free for one site, and the code JOINTHEPARTY makes it cheaper (with a copy button).
+- The Block Party row note ends with a "?" that opens a short note: we're not affiliated with Block Party, platforms make privacy settings very hard to find and Block Party makes it easier, it's free for one site, and the code JOINTHEPARTY makes it cheaper. "Block Party" in the first sentence is the link; the only button is Close.
 
 ## Anonymous counts
 
