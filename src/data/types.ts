@@ -13,6 +13,8 @@ export interface Platform {
   why?: string;
   /** Block Party can lock down this platform's privacy settings */
   blockParty?: boolean;
+  /** Cyd (cyd.social) can delete this platform's old posts in bulk */
+  cyd?: boolean;
 }
 
 export type StepId = 'name' | 'photo' | 'username' | 'email' | 'bio' | 'posts' | 'friends' | 'privacy';

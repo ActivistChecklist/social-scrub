@@ -29,6 +29,9 @@ const MARK_WORD = { done: 'done', skipped: 'skipped' } as const;
 
 export const COLUMN_COUNT = STEPS.length + 3;
 
+/** Cyd backs up and deletes old posts on X and Bluesky. */
+const CYD_URL = 'https://cyd.social/';
+
 export function Row({ platform: p, entry, act }: { platform: Platform; entry: Entry | undefined; act: RowActions }) {
   const checked = entry?.checked === true;
   const status = statusOf(entry);
@@ -117,17 +120,27 @@ export function Row({ platform: p, entry, act }: { platform: Platform; entry: En
         </td>
       )}
       <td class="c-extra">
-        {checked && entry && p.blockParty && entry.plan === 'keep' && !entry.steps.privacy && (
-          <span class="bp-note">
-            <a href={BLOCK_PARTY_URL} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'row' })}>
-              Block Party
-            </a>{' '}
-            can make this easier
-            <button type="button" class="bp-about" aria-label="About Block Party" data-focus="bp-about" onClick={act.blockPartyInfo}>
-              <QuestionIcon />
-            </button>
-          </span>
-        )}
+        <div class="extra-notes">
+          {checked && entry && p.blockParty && entry.plan === 'keep' && !entry.steps.privacy && (
+            <span class="bp-note">
+              <a href={BLOCK_PARTY_URL} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'row' })}>
+                Block Party
+              </a>{' '}
+              can make this easier
+              <button type="button" class="bp-about" aria-label="About Block Party" data-focus="bp-about" onClick={act.blockPartyInfo}>
+                <QuestionIcon />
+              </button>
+            </span>
+          )}
+          {checked && entry && p.cyd && entry.plan === 'keep' && !entry.steps.posts && (
+            <span class="cyd-note">
+              <a href={CYD_URL} target="_blank" rel="noopener noreferrer" onClick={() => track('open_resource', { column: 'posts' })}>
+                Cyd
+              </a>{' '}
+              can delete your old posts
+            </span>
+          )}
+        </div>
       </td>
     </tr>
   );

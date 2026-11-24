@@ -30,6 +30,13 @@ afterEach(() => {
 });
 
 describe('App', () => {
+  it('shows the app icon as the header logo', () => {
+    const logo = $<HTMLImageElement>('.brand img');
+    expect(logo?.getAttribute('src')).toBe('/android-chrome-192x192.png');
+    expect(logo?.getAttribute('alt')).toBe('');
+    expect($('.brand')?.textContent).toBe('Social Scrub');
+  });
+
   it('opens with the common accounts checked and writes nothing yet', () => {
     expect(rowIds(0).slice(0, STARTERS.length)).toEqual(STARTERS);
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
@@ -167,6 +174,22 @@ describe('App', () => {
     expect(note('facebook')).toBeNull();
     click($('tr[data-id=instagram] [data-v=delete]'));
     expect(note('instagram')).toBeNull();
+  });
+
+  it('mentions Cyd after Block Party on the X and Bluesky rows only', () => {
+    click($('tr[data-id=twitter] .pc-btn'));
+    click($('tr[data-id=bluesky] .pc-btn'));
+    const notes = (id: string) => [...root.querySelectorAll(`tr[data-id=${id}] .extra-notes > span`)].map((s) => s.className);
+    expect(notes('twitter')).toEqual(['bp-note', 'cyd-note']);
+    expect(notes('bluesky')).toEqual(['bp-note', 'cyd-note']);
+    expect($('tr[data-id=twitter] .cyd-note')?.textContent).toBe('Cyd can delete your old posts');
+    expect($<HTMLAnchorElement>('tr[data-id=twitter] .cyd-note a')?.href).toBe('https://cyd.social/');
+    expect($('tr[data-id=facebook] .cyd-note')).toBeNull();
+    // Gone once old posts are cleaned up, and no longer in the column help.
+    click($('tr[data-id=twitter] .cell[data-focus=step-posts]'));
+    expect($('tr[data-id=twitter] .cyd-note')).toBeNull();
+    click($$('.th-btn').find((b) => b.textContent === 'Clean up old posts')!);
+    expect($('#column-info')?.textContent).not.toContain('Cyd');
   });
 
   it('explains the Block Party recommendation from the question mark', () => {

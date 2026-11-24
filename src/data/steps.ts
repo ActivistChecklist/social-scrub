@@ -60,7 +60,6 @@ export const STEPS: Step[] = [
     title: 'Review old posts and photos',
     desc: 'Old posts can show where you live, work and spend time. Photos can carry hidden location data.',
     how: 'Scroll back through your posts. Delete or hide anything that shows your home, your neighborhood, your workplace or your routine.',
-    links: [{ name: 'Cyd', note: 'can delete your old posts on X in bulk.', href: 'https://cyd.social/' }],
   },
   {
     id: 'friends',

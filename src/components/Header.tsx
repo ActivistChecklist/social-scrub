@@ -4,7 +4,7 @@ import { eventsEnabled, track } from '../lib/events';
 import { summary, type AppState } from '../lib/state';
 import type { Theme } from '../lib/theme';
 import { ClearData } from './ClearData';
-import { BrandMark, DownloadIcon, LaptopIcon, LockIcon, MoonIcon, SunIcon } from './icons';
+import { DownloadIcon, LaptopIcon, LockIcon, MoonIcon, SunIcon } from './icons';
 
 interface HeaderProps {
   state: AppState;
@@ -21,7 +21,8 @@ export function Header({ state, theme, onTheme, onDownload, onClearAll }: Header
   return (
     <header class="bar">
       <h1 class="brand">
-        <BrandMark />
+        {/* The same shield as the favicon and app icon. */}
+        <img src="/android-chrome-192x192.png" alt="" width={24} height={24} decoding="async" />
         Social Scrub
       </h1>
       <div class="summary" aria-live="polite">

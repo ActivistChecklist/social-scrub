@@ -65,13 +65,3 @@ export const LaptopIcon = () => (
     <path d="M1.5 13h13" {...line} stroke-width="1.5" />
   </svg>
 );
-
-/** The Social Scrub mark: a page with one line blacked out. */
-export const BrandMark = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-    <rect class="cut" x="6" y="6.6" width="12" height="1.7" rx=".85" />
-    <rect class="cut" x="6" y="10.4" width="12" height="3.6" rx=".8" />
-    <rect class="cut" x="6" y="16" width="7" height="1.7" rx=".85" />
-  </svg>
-);
