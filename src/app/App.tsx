@@ -3,6 +3,7 @@ import { Header } from '../components/Header';
 import type { RowActions } from '../components/Row';
 import { Sheet, type AddSource } from '../components/Sheet';
 import { Toolbar } from '../components/Toolbar';
+import { useAutoHide } from '../hooks/useAutoHide';
 import { track } from '../lib/events';
 import { downloadExport } from '../lib/export';
 import { focusKey, prefersReducedMotion, restoreFocus, revealRow, rowTops, slideRows, type FocusKey } from '../lib/motion';
@@ -27,6 +28,8 @@ export function App() {
   const [state, setState] = useState<AppState>(loadState);
   const [query, setQuery] = useState('');
   const scroller = useRef<HTMLElement>(null);
+  const top = useRef<HTMLDivElement>(null);
+  const topAway = useAutoHide(top, scroller);
 
   // The latest state, readable from event handlers without waiting for a render.
   const current = useRef(state);
@@ -59,7 +62,7 @@ export function App() {
   });
 
   // Each action also sends an anonymous count (see lib/events.ts). Counts never say which platform.
-  const act = useMemo<RowActions>(
+  const act = useMemo<Omit<RowActions, 'blockPartyInfo'>>(
     () => ({
       toggle: (id) => {
         const wasChecked = isChecked(current.current, id);
@@ -122,23 +125,25 @@ export function App() {
 
   return (
     <div class="app">
-      <Header
-        state={state}
-        onClearAll={clearAll}
-        onDownload={(format) => {
-          downloadExport(current.current, format);
-          track('download', { format });
-        }}
-      />
-      <Toolbar
-        query={query}
-        onQuery={setQuery}
-        onlyMine={state.onlyMine}
-        onOnlyMine={(on) => {
-          if (commit(setOnlyMine(current.current, on))) track('filter_checked', { on });
-        }}
-        onAdd={(name) => addPlatform(name, 'toolbar')}
-      />
+      <div class={topAway ? 'top away' : 'top'} ref={top}>
+        <Header
+          state={state}
+          onClearAll={clearAll}
+          onDownload={(format) => {
+            downloadExport(current.current, format);
+            track('download', { format });
+          }}
+        />
+        <Toolbar
+          query={query}
+          onQuery={setQuery}
+          onlyMine={state.onlyMine}
+          onOnlyMine={(on) => {
+            if (commit(setOnlyMine(current.current, on))) track('filter_checked', { on });
+          }}
+          onAdd={(name) => addPlatform(name, 'toolbar')}
+        />
+      </div>
       <Sheet state={state} query={query} act={act} scroller={scroller} onAdd={addPlatform} onClearAll={clearAll} />
     </div>
   );

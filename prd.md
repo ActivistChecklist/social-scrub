@@ -16,7 +16,7 @@ Help non-technical people find every account that could expose them and lock eac
 ## The sheet
 
 - Rows are platforms, grouped by priority: Highest, High, Medium, Lower. "Your own platforms" appears above Highest once someone adds one.
-- Columns: Platform, Keep or delete, then eight steps: Display name, Profile photo, Username, Email, Bio & location, Posts & photos, Friends list, Privacy settings.
+- Columns: Platform, Keep or delete, then eight steps, each header starting with what to do: Change display name, Remove or change photo, Use a random username, Use a unique email, Remove bio & location, Clean up old posts, Hide friends list, Lock down privacy.
 - Column headers open a short popover with what the step is and how to do it.
 - Each group header shows "X of Y done" for the checked rows in it, and nothing else.
 - The header row and platform column stay in place while scrolling. On a phone the sheet scrolls sideways.
@@ -55,8 +55,12 @@ Help non-technical people find every account that could expose them and lock eac
 
 ## Help popovers
 
-- Each column header opens a popover with what the step is and how to do it.
-- The Privacy settings popover links to Block Party, which can check those settings for free and change them on a paid plan.
+- Each column header opens a popover with what the step is and, for steps, how to do it. The Platform column has no "How" part.
+- Change display name and Use a random username offer three random ideas made on the device (from the first version's word lists), with "More". Tapping one copies it. Usernames use only letters and digits (like CalmHeron482), since X rejects periods and Facebook rejects underscores, and fit X's 15-character limit.
+- Use a unique email lists alias services under "Helpful": Qwacky (Chrome extension for DuckDuckGo addresses), Firefox Relay, SimpleLogin, and Google's note on the Gmail + trick.
+- Clean up old posts links to Cyd for deleting old posts on X in bulk.
+- The Privacy settings popover doesn't mention Block Party; the row note does.
+- The Block Party row note ends with a "?" that opens a short note: we're not affiliated with Block Party, platforms make privacy settings very hard to find and Block Party makes it easier, it's free for one site, and the code JOINTHEPARTY makes it cheaper. "Block Party" in the first sentence is the link; the only button is Close.
 
 ## Anonymous counts
 
@@ -81,7 +85,11 @@ Help non-technical people find every account that could expose them and lock eac
 - Public Sans, self-hosted. No monospace type.
 - Neutral greys with a slight cool tint; ink-colored primary actions; green for done, amber for in progress, red for delete.
 - Light and dark themes follow the system setting.
-- Works on phones: the sheet scrolls sideways, rows get a little taller, and long text wraps.
+- Works on phones (tested at iPhone 13 mini size, 375 x 630 visible):
+  - The header and toolbar are one row each. Download and Add platform show only their icons, the summary reads "1 of 14 done", and the filter switch reads "Only checked".
+  - Scrolling down slides the header and toolbar away; scrolling up brings them back. They stay while the search box has focus or a menu is open.
+  - Only the column headers stay stuck while scrolling. Group rows scroll with the list.
+  - The sheet scrolls sideways inside its own area, rows get a little taller, and long text wraps.
 
 ## Not in this version
 

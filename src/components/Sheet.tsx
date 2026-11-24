@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 import { GROUPS, PLAN_INFO, PLATFORM_INFO, STEPS, type ColumnInfo } from '../data/steps';
 import type { Platform } from '../data/types';
@@ -7,7 +7,9 @@ import { useTips } from '../hooks/useTips';
 import { track } from '../lib/events';
 import { moveFocusWithArrows } from '../lib/motion';
 import { allPlatforms, isChecked, isFinished, statusOf, type AppState } from '../lib/state';
+import { BlockPartyNote, openBlockPartyNote } from './BlockPartyNote';
 import { Footer } from './Footer';
+import { Ideas } from './Ideas';
 import { ArrowDownIcon } from './icons';
 import { COLUMN_COUNT, Row, type RowActions } from './Row';
 
@@ -17,7 +19,7 @@ export type AddSource = 'search' | 'sheet';
 interface SheetProps {
   state: AppState;
   query: string;
-  act: RowActions;
+  act: Omit<RowActions, 'blockPartyInfo'>;
   scroller: RefObject<HTMLElement | null>;
   /** Returns false when the name was empty. */
   onAdd(name: string, from: AddSource): boolean;
@@ -28,14 +30,35 @@ interface OpenInfo {
   key: string;
   info: ColumnInfo;
   left: number;
-  top: number;
+  /** Placed under the header when there's room, otherwise above it. Exactly one is set. */
+  top?: number;
+  bottom?: number;
+  /** Caps the height to the room on that side; the popover scrolls inside if it needs more. */
+  maxHeight: number;
   trigger: HTMLElement;
+}
+
+const POP_GAP = 8;
+const POP_MARGIN = 12;
+/** Below this much room under the header, the popover opens above it if there's more room there. */
+const POP_MIN_BELOW = 240;
+
+/** Where a column popover goes so all of it stays on screen. */
+export function placePopover(trigger: DOMRect, viewport: { width: number; height: number }) {
+  const width = Math.min(340, viewport.width - 32);
+  const left = Math.max(16, Math.min(trigger.left + trigger.width / 2 - width / 2, viewport.width - width - 16));
+  const below = viewport.height - trigger.bottom - POP_GAP - POP_MARGIN;
+  const above = trigger.top - POP_GAP - POP_MARGIN;
+  if (below >= POP_MIN_BELOW || below >= above) return { left, top: trigger.bottom + POP_GAP, maxHeight: Math.max(below, 120) };
+  return { left, bottom: viewport.height - trigger.top + POP_GAP, maxHeight: above };
 }
 
 export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetProps) {
   const tip = useRef<HTMLDivElement>(null);
   const pop = useRef<HTMLDivElement>(null);
   const [info, setInfo] = useState<OpenInfo | null>(null);
+  const bpDialog = useRef<HTMLDialogElement>(null);
+  const rowAct = useMemo<RowActions>(() => ({ ...act, blockPartyInfo: () => openBlockPartyNote(bpDialog.current) }), [act]);
 
   useTips(scroller, tip, state);
 
@@ -49,19 +72,20 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
     [setInfo],
   );
   useDismiss(info !== null, closeInfo, pop);
+  // The popover is pinned to the screen, so it closes once the sheet scrolls away from its column.
+  useEffect(() => {
+    const sheet = scroller.current;
+    if (!info || !sheet) return;
+    const onScroll = () => closeInfo('outside');
+    sheet.addEventListener('scroll', onScroll, { passive: true });
+    return () => sheet.removeEventListener('scroll', onScroll);
+  }, [info, closeInfo, scroller]);
 
   const toggleInfo = (key: string, content: ColumnInfo, trigger: HTMLElement) => {
     if (info?.key === key) return closeInfo('toggle');
     track('open_help', { column: key });
-    const r = trigger.getBoundingClientRect();
-    const width = Math.min(340, window.innerWidth - 32);
-    setInfo({
-      key,
-      info: content,
-      trigger,
-      left: Math.max(16, Math.min(r.left + r.width / 2 - width / 2, window.innerWidth - width - 16)),
-      top: r.bottom + 8,
-    });
+    const place = placePopover(trigger.getBoundingClientRect(), { width: window.innerWidth, height: window.innerHeight });
+    setInfo({ key, info: content, trigger, ...place });
   };
 
   const headerButton = (key: string, label: string, content: ColumnInfo) => (
@@ -105,7 +129,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           </th>
         </tr>
         {mine.map((p) => (
-          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={act} />
+          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} />
         ))}
         {showDivider && (
           <tr class="divider" key="divider">
@@ -121,7 +145,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           </tr>
         )}
         {rest.map((p) => (
-          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={act} />
+          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} />
         ))}
       </tbody>
     );
@@ -164,23 +188,46 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
       <Footer onClearAll={onClearAll} />
 
       {info && (
-        <div class="pop" id="column-info" role="dialog" aria-label={info.info.title} ref={pop} style={{ left: `${info.left}px`, top: `${info.top}px` }}>
+        <div
+          class="pop"
+          id="column-info"
+          role="dialog"
+          aria-label={info.info.title}
+          ref={pop}
+          style={{
+            left: `${info.left}px`,
+            top: info.top === undefined ? '' : `${info.top}px`,
+            bottom: info.bottom === undefined ? '' : `${info.bottom}px`,
+            maxHeight: `${info.maxHeight}px`,
+          }}
+        >
           <h2>{info.info.title}</h2>
           <p>{info.info.desc}</p>
-          <p class="how">
-            <b>How</b>
-            {info.info.how}
-          </p>
-          {info.info.tool && (
-            <p class="tool">
-              {info.info.tool.text}{' '}
-              <a href={info.info.tool.href} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'help' })}>
-                {info.info.tool.linkText}
-              </a>
+          {info.info.how && (
+            <p class="how">
+              <b>How</b>
+              {info.info.how}
             </p>
+          )}
+          {info.info.ideas && <Ideas key={info.key} kind={info.info.ideas} />}
+          {info.info.links && (
+            <div class="pop-links">
+              <b>Helpful</b>
+              <ul>
+                {info.info.links.map((l) => (
+                  <li key={l.href}>
+                    <a href={l.href} target="_blank" rel="noopener noreferrer" onClick={() => track('open_resource', { column: info.key })}>
+                      {l.name}
+                    </a>{' '}
+                    {l.note}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}
+      <BlockPartyNote dialog={bpDialog} />
       <div class="tip" ref={tip} aria-hidden="true" hidden />
     </main>
   );

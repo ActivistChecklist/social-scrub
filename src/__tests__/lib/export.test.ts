@@ -20,13 +20,13 @@ describe('exportRows', () => {
     const fb = rows.find((r) => r[1] === 'Facebook')!;
     expect(fb[col('Have it')]).toBe('Yes');
     expect(fb[col('Keep or delete')]).toBe('Keep');
-    expect(fb[col('Display name')]).toBe('Done');
-    expect(fb[col('Username')]).toBe('Skipped');
+    expect(fb[col('Change display name')]).toBe('Done');
+    expect(fb[col('Use a random username')]).toBe('Skipped');
     expect(fb[col('Status')]).toBe('In progress');
     const li = rows.find((r) => r[1] === 'LinkedIn')!;
     expect(li[col('Keep or delete')]).toBe('Delete');
     expect(li[col('Deleted')]).toBe('Yes');
-    expect(li[col('Display name')]).toBe('');
+    expect(li[col('Change display name')]).toBe('');
     const reddit = rows.find((r) => r[1] === 'Reddit')!;
     expect(reddit[col('Have it')]).toBe('');
   });

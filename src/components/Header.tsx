@@ -31,7 +31,7 @@ export function Header({ state, onDownload, onClearAll }: HeaderProps) {
               <strong>
                 {finished} of {checked}
               </strong>{' '}
-              accounts done
+              <span class="wide-only">accounts </span>done
             </span>
           </>
         ) : (
@@ -124,9 +124,17 @@ function DownloadMenu({ onDownload }: { onDownload(kind: 'xlsx' | 'csv'): void }
 
   return (
     <div class="dl-wrap" ref={wrap}>
-      <button ref={button} type="button" class="btn btn-primary" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)}>
+      <button
+        ref={button}
+        type="button"
+        class="btn btn-primary"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Download"
+        onClick={() => setOpen(!open)}
+      >
         <DownloadIcon />
-        Download
+        <span class="btn-label">Download</span>
       </button>
       {open && (
         <div class="menu" role="menu">

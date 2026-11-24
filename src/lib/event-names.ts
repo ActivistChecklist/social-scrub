@@ -16,6 +16,8 @@ export const EVENT_NAMES = [
   'open_help',
   'open_privacy',
   'open_block_party',
+  'open_resource',
+  'copy_idea',
   'download',
   'clear_data',
 ] as const;
