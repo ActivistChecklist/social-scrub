@@ -88,6 +88,13 @@ describe('App', () => {
     expect($('tbody tr[data-id] .p-name')?.textContent).toBe('Ravelry');
   });
 
+  it('links to Block Party from the privacy settings help', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Privacy settings')!);
+    const link = $<HTMLAnchorElement>('#column-info .tool a');
+    expect(link?.href).toBe('https://www.blockpartyapp.com/');
+    expect(link?.rel).toContain('noopener');
+  });
+
   it('shows the reason on unchecked rows', () => {
     expect($('tr[data-id=reddit] .why')?.textContent).toBe('Can reveal your interests and community memberships');
   });

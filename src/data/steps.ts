@@ -1,4 +1,4 @@
-import type { Priority, Step } from './types';
+import type { Priority, Step, ToolLink } from './types';
 
 /** The eight things to do on every account you keep, in column order. */
 export const STEPS: Step[] = [
@@ -57,6 +57,11 @@ export const STEPS: Step[] = [
     title: 'Lock down privacy settings',
     desc: 'Most sites start with everything public. Pick the most private option for each setting.',
     how: 'Go to Settings, then Privacy. Check who can see your posts and who can find you by email or phone number.',
+    tool: {
+      text: 'Block Party can check these settings on the biggest platforms for free, and change them for you on a paid plan.',
+      linkText: 'Try Block Party',
+      href: 'https://www.blockpartyapp.com',
+    },
   },
 ];
 
@@ -64,6 +69,7 @@ export interface ColumnInfo {
   title: string;
   desc: string;
   how: string;
+  tool?: ToolLink;
 }
 
 export const PLATFORM_INFO: ColumnInfo = {

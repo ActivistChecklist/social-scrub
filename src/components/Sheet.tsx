@@ -166,6 +166,14 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
             <b>How</b>
             {info.info.how}
           </p>
+          {info.info.tool && (
+            <p class="tool">
+              {info.info.tool.text}{' '}
+              <a href={info.info.tool.href} target="_blank" rel="noopener noreferrer">
+                {info.info.tool.linkText}
+              </a>
+            </p>
+          )}
         </div>
       )}
       <div class="tip" ref={tip} aria-hidden="true" hidden />

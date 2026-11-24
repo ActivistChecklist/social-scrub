@@ -15,6 +15,13 @@ export interface Platform {
 
 export type StepId = 'name' | 'photo' | 'username' | 'email' | 'bio' | 'posts' | 'friends' | 'privacy';
 
+/** A tool or resource mentioned at the end of a column's popover. */
+export interface ToolLink {
+  text: string;
+  linkText: string;
+  href: string;
+}
+
 export interface Step {
   id: StepId;
   /** Column header */
@@ -23,4 +30,5 @@ export interface Step {
   title: string;
   desc: string;
   how: string;
+  tool?: ToolLink;
 }

@@ -314,6 +314,8 @@ img.logo { object-fit: contain; }
 .pop p { margin: 0 0 10px; }
 .pop .how { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 .pop .how b { display: block; color: var(--ink-2); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+.pop .tool { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+.pop .tool a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }
 .tip {
   position: fixed; z-index: 55; pointer-events: none; transform: translate(-50%, calc(-100% - 4px));
   background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 500; line-height: 1.3;
