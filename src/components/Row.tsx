@@ -2,6 +2,8 @@ import { STEPS } from '../data/steps';
 import type { Platform, StepId } from '../data/types';
 import { track } from '../lib/events';
 import { statusOf, type Entry, type Mark, type Plan } from '../lib/state';
+import { BLOCK_PARTY_URL } from './BlockPartyNote';
+import { QuestionIcon } from './icons';
 import { Logo } from './Logo';
 import { StatusIcon } from './StatusIcon';
 
@@ -12,6 +14,8 @@ export interface RowActions {
   step(id: string, step: StepId): void;
   deleted(id: string): void;
   remove(id: string): void;
+  /** Opens the note on why the sheet points to Block Party. */
+  blockPartyInfo(): void;
 }
 
 /** What clicking a step box will do next. Skipped covers both "the site won't let me" and "I'd rather not". */
@@ -25,7 +29,6 @@ const MARK_WORD = { done: 'done', skipped: 'skipped' } as const;
 
 export const COLUMN_COUNT = STEPS.length + 3;
 
-const BLOCK_PARTY_URL = 'https://www.blockpartyapp.com';
 
 export function Row({ platform: p, entry, act }: { platform: Platform; entry: Entry | undefined; act: RowActions }) {
   const checked = entry?.checked === true;
@@ -121,6 +124,9 @@ export function Row({ platform: p, entry, act }: { platform: Platform; entry: En
               Block Party
             </a>{' '}
             can make this easier
+            <button type="button" class="bp-about" aria-label="About Block Party" data-focus="bp-about" onClick={act.blockPartyInfo}>
+              <QuestionIcon />
+            </button>
           </span>
         )}
       </td>

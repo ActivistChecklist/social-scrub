@@ -194,7 +194,13 @@ button, input { font: inherit; color: inherit; }
 /* Right of the last step: a short pointer to Block Party on the platforms it supports. */
 .grid .c-extra { padding: 0 12px; }
 .bp-note { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.bp-note { display: inline-flex; align-items: center; gap: 4px; }
 .bp-note a { color: var(--ink-2); font-weight: 600; text-underline-offset: 2px; }
+.bp-about { display: inline-grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--faint); cursor: pointer; }
+.bp-about:hover { color: var(--ink); background: var(--sunken); }
+.bp-about .i { width: 15px; height: 15px; }
+.bp-code { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.bp-code b { color: var(--ink); letter-spacing: .02em; }
 
 .grp th {
   position: sticky; top: var(--thead-h); z-index: 2; height: 36px; text-align: left;

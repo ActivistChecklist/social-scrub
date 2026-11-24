@@ -62,7 +62,7 @@ export function App() {
   });
 
   // Each action also sends an anonymous count (see lib/events.ts). Counts never say which platform.
-  const act = useMemo<RowActions>(
+  const act = useMemo<Omit<RowActions, 'blockPartyInfo'>>(
     () => ({
       toggle: (id) => {
         const wasChecked = isChecked(current.current, id);

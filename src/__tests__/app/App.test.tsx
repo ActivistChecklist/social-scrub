@@ -97,7 +97,7 @@ describe('App', () => {
   it('lists email alias services in the email help', () => {
     click($$('.th-btn').find((b) => b.textContent === 'Use a unique email')!);
     const links = [...root.querySelectorAll<HTMLAnchorElement>('#column-info .pop-links a')];
-    expect(links.map((a) => a.textContent)).toContain('DuckDuckGo Email Protection');
+    expect(links.map((a) => a.textContent)).toContain('Qwacky');
     for (const a of links) {
       expect(a.href).toMatch(/^https:\/\//);
       expect(a.rel).toContain('noopener');
@@ -159,6 +159,15 @@ describe('App', () => {
     expect(note('facebook')).toBeNull();
     click($('tr[data-id=instagram] [data-v=delete]'));
     expect(note('instagram')).toBeNull();
+  });
+
+  it('explains the Block Party recommendation from the question mark', () => {
+    const dialog = [...root.querySelectorAll<HTMLDialogElement>('dialog.modal')].find((d) => d.textContent?.includes('About Block Party'))!;
+    expect(dialog.open).toBe(false);
+    click($('tr[data-id=facebook] .bp-about'));
+    expect(dialog.open).toBe(true);
+    expect(dialog.textContent).toContain("We're not affiliated with Block Party");
+    expect(dialog.textContent).toContain('JOINTHEPARTY');
   });
 
   it('links to the contact page from the footer', () => {

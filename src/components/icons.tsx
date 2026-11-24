@@ -34,6 +34,14 @@ export const LockIcon = () => (
   </svg>
 );
 
+export const QuestionIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="6.25" {...line} stroke-width="1.4" />
+    <path d="M6.3 6.4a1.75 1.75 0 1 1 2.4 1.6c-.45.2-.7.55-.7 1.05v.25" {...line} stroke-width="1.4" />
+    <circle cx="8" cy="11.3" r=".8" fill="currentColor" />
+  </svg>
+);
+
 /** The Social Scrub mark: a page with one line blacked out. */
 export const BrandMark = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true">

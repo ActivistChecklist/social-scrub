@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 import { GROUPS, PLAN_INFO, PLATFORM_INFO, STEPS, type ColumnInfo } from '../data/steps';
 import type { Platform } from '../data/types';
@@ -7,6 +7,7 @@ import { useTips } from '../hooks/useTips';
 import { track } from '../lib/events';
 import { moveFocusWithArrows } from '../lib/motion';
 import { allPlatforms, isChecked, isFinished, statusOf, type AppState } from '../lib/state';
+import { BlockPartyNote, openBlockPartyNote } from './BlockPartyNote';
 import { Footer } from './Footer';
 import { Ideas } from './Ideas';
 import { ArrowDownIcon } from './icons';
@@ -18,7 +19,7 @@ export type AddSource = 'search' | 'sheet';
 interface SheetProps {
   state: AppState;
   query: string;
-  act: RowActions;
+  act: Omit<RowActions, 'blockPartyInfo'>;
   scroller: RefObject<HTMLElement | null>;
   /** Returns false when the name was empty. */
   onAdd(name: string, from: AddSource): boolean;
@@ -37,6 +38,8 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
   const tip = useRef<HTMLDivElement>(null);
   const pop = useRef<HTMLDivElement>(null);
   const [info, setInfo] = useState<OpenInfo | null>(null);
+  const bpDialog = useRef<HTMLDialogElement>(null);
+  const rowAct = useMemo<RowActions>(() => ({ ...act, blockPartyInfo: () => openBlockPartyNote(bpDialog.current) }), [act]);
 
   useTips(scroller, tip, state);
 
@@ -114,7 +117,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           </th>
         </tr>
         {mine.map((p) => (
-          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={act} />
+          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} />
         ))}
         {showDivider && (
           <tr class="divider" key="divider">
@@ -130,7 +133,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           </tr>
         )}
         {rest.map((p) => (
-          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={act} />
+          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} />
         ))}
       </tbody>
     );
@@ -200,6 +203,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           )}
         </div>
       )}
+      <BlockPartyNote dialog={bpDialog} />
       <div class="tip" ref={tip} aria-hidden="true" hidden />
     </main>
   );
