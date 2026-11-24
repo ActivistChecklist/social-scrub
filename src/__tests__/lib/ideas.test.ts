@@ -10,9 +10,10 @@ describe('nameIdeas', () => {
 });
 
 describe('usernameIdeas', () => {
-  it('only uses characters every big platform accepts, within the shortest length limit', () => {
+  it('only uses letters and digits, which every big platform accepts, within the shortest length limit', () => {
     for (const u of usernameIdeas(20)) {
-      expect(u).toMatch(/^[a-z0-9_]+$/);
+      expect(u).toMatch(/^[A-Za-z0-9]+$/);
+      expect(u).not.toMatch(/[_.-]/); // Facebook rejects underscores, X rejects periods
       expect(u.length).toBeLessThanOrEqual(MAX_USERNAME);
     }
   });

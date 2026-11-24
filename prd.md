@@ -56,7 +56,7 @@ Help non-technical people find every account that could expose them and lock eac
 ## Help popovers
 
 - Each column header opens a popover with what the step is and, for steps, how to do it. The Platform column has no "How" part.
-- Change display name and Use a random username offer three random ideas made on the device (from the first version's word lists), with "More". Tapping one copies it. Usernames use only lowercase letters, digits and underscores, and fit X's 15-character limit.
+- Change display name and Use a random username offer three random ideas made on the device (from the first version's word lists), with "More". Tapping one copies it. Usernames use only letters and digits (like CalmHeron482), since X rejects periods and Facebook rejects underscores, and fit X's 15-character limit.
 - Use a unique email lists alias services under "Helpful": Qwacky (Chrome extension for DuckDuckGo addresses), Firefox Relay, SimpleLogin, and Google's note on the Gmail + trick.
 - Clean up old posts links to Cyd for deleting old posts on X in bulk.
 - The Privacy settings popover doesn't mention Block Party; the row note does.

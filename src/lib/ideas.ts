@@ -26,13 +26,16 @@ export function nameIdeas(count = 3, random = secureRandom): string[] {
   return unique(count, () => `${pick(FIRST_NAMES, random)} ${pick(LAST_NAMES, random)}`);
 }
 
+const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+
 /**
- * Usernames like "calm_heron_482": letters, digits and underscores only, which every big
- * platform accepts, and short enough for X.
+ * Usernames like "CalmHeron482": letters and digits only, with no separator, because the big
+ * platforms disagree on the rest (X allows underscores but not periods, Facebook the opposite).
+ * Capitals keep the words readable, and the length fits X's 15-character limit.
  */
 export function usernameIdeas(count = 3, random = secureRandom): string[] {
   return unique(count, () => {
-    const name = `${pick(ADJECTIVES, random)}_${pick(NOUNS, random)}_${100 + Math.floor(random() * 900)}`.toLowerCase();
-    return name.length <= MAX_USERNAME && /^[a-z0-9_]+$/.test(name) ? name : null;
+    const name = `${capitalize(pick(ADJECTIVES, random))}${capitalize(pick(NOUNS, random))}${100 + Math.floor(random() * 900)}`;
+    return name.length <= MAX_USERNAME && /^[A-Za-z0-9]+$/.test(name) ? name : null;
   });
 }

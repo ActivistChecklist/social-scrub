@@ -108,7 +108,7 @@ describe('App', () => {
     click($$('.th-btn').find((b) => b.textContent === 'Use a random username')!);
     const ideas = [...root.querySelectorAll<HTMLButtonElement>('#column-info .idea')].map((b) => b.textContent!);
     expect(ideas).toHaveLength(3);
-    for (const idea of ideas) expect(idea).toMatch(/^[a-z0-9_]{1,15}$/);
+    for (const idea of ideas) expect(idea).toMatch(/^[A-Za-z0-9]{1,15}$/);
   });
 
   it('keeps the platform and privacy settings help short', () => {
