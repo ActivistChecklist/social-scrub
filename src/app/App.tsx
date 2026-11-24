@@ -124,6 +124,7 @@ export function App() {
     <div class="app">
       <Header
         state={state}
+        onClearAll={clearAll}
         onDownload={(format) => {
           downloadExport(current.current, format);
           track('download', { format });

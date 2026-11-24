@@ -2,9 +2,16 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { useDismiss, type DismissReason } from '../hooks/useDismiss';
 import { eventsEnabled, track } from '../lib/events';
 import { summary, type AppState } from '../lib/state';
+import { ClearData } from './ClearData';
 import { BrandMark, DownloadIcon, LockIcon } from './icons';
 
-export function Header({ state, onDownload }: { state: AppState; onDownload(kind: 'xlsx' | 'csv'): void }) {
+interface HeaderProps {
+  state: AppState;
+  onDownload(kind: 'xlsx' | 'csv'): void;
+  onClearAll(): void;
+}
+
+export function Header({ state, onDownload, onClearAll }: HeaderProps) {
   const { checked, finished } = summary(state);
   const pct = checked ? Math.round((finished / checked) * 100) : 0;
 
@@ -32,7 +39,7 @@ export function Header({ state, onDownload }: { state: AppState; onDownload(kind
         )}
       </div>
       <div class="bar-end">
-        <PrivacyNote />
+        <PrivacyNote onClearAll={onClearAll} />
         <DownloadMenu onDownload={onDownload} />
       </div>
     </header>
@@ -40,7 +47,7 @@ export function Header({ state, onDownload }: { state: AppState; onDownload(kind
 }
 
 /** A short "your data stays here" note, with a link to the full privacy page. */
-function PrivacyNote() {
+function PrivacyNote({ onClearAll }: { onClearAll(): void }) {
   const dialog = useRef<HTMLDialogElement>(null);
 
   const open = () => {
@@ -77,10 +84,12 @@ function PrivacyNote() {
           <p>Everything you check is saved in this browser only. There's no account, and we never see which platforms you have.</p>
           {eventsEnabled && (
             <p>
-              To learn what's useful, we count anonymous clicks, like "a box was checked". They never say which platform. If your browser
-              sends Do Not Track or Global Privacy Control, we count nothing.
+              We count visits, including which site linked you here, and anonymous clicks like "a box was checked". They never say which
+              platform, and our server scrambles your IP address before counting. If your browser sends Do Not Track or Global Privacy
+              Control, we count nothing.
             </p>
           )}
+          <ClearData onClearAll={onClearAll} lead="On a shared or work computer?" />
           <div class="modal-actions">
             <a href="/privacy.html">Read the privacy page</a>
             <button type="button" class="btn btn-sm" onClick={close} autofocus>
