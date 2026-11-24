@@ -30,8 +30,27 @@ interface OpenInfo {
   key: string;
   info: ColumnInfo;
   left: number;
-  top: number;
+  /** Placed under the header when there's room, otherwise above it. Exactly one is set. */
+  top?: number;
+  bottom?: number;
+  /** Caps the height to the room on that side; the popover scrolls inside if it needs more. */
+  maxHeight: number;
   trigger: HTMLElement;
+}
+
+const POP_GAP = 8;
+const POP_MARGIN = 12;
+/** Below this much room under the header, the popover opens above it if there's more room there. */
+const POP_MIN_BELOW = 240;
+
+/** Where a column popover goes so all of it stays on screen. */
+export function placePopover(trigger: DOMRect, viewport: { width: number; height: number }) {
+  const width = Math.min(340, viewport.width - 32);
+  const left = Math.max(16, Math.min(trigger.left + trigger.width / 2 - width / 2, viewport.width - width - 16));
+  const below = viewport.height - trigger.bottom - POP_GAP - POP_MARGIN;
+  const above = trigger.top - POP_GAP - POP_MARGIN;
+  if (below >= POP_MIN_BELOW || below >= above) return { left, top: trigger.bottom + POP_GAP, maxHeight: Math.max(below, 120) };
+  return { left, bottom: viewport.height - trigger.top + POP_GAP, maxHeight: above };
 }
 
 export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetProps) {
@@ -65,15 +84,8 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
   const toggleInfo = (key: string, content: ColumnInfo, trigger: HTMLElement) => {
     if (info?.key === key) return closeInfo('toggle');
     track('open_help', { column: key });
-    const r = trigger.getBoundingClientRect();
-    const width = Math.min(340, window.innerWidth - 32);
-    setInfo({
-      key,
-      info: content,
-      trigger,
-      left: Math.max(16, Math.min(r.left + r.width / 2 - width / 2, window.innerWidth - width - 16)),
-      top: r.bottom + 8,
-    });
+    const place = placePopover(trigger.getBoundingClientRect(), { width: window.innerWidth, height: window.innerHeight });
+    setInfo({ key, info: content, trigger, ...place });
   };
 
   const headerButton = (key: string, label: string, content: ColumnInfo) => (
@@ -176,7 +188,19 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
       <Footer onClearAll={onClearAll} />
 
       {info && (
-        <div class="pop" id="column-info" role="dialog" aria-label={info.info.title} ref={pop} style={{ left: `${info.left}px`, top: `${info.top}px` }}>
+        <div
+          class="pop"
+          id="column-info"
+          role="dialog"
+          aria-label={info.info.title}
+          ref={pop}
+          style={{
+            left: `${info.left}px`,
+            top: info.top === undefined ? '' : `${info.top}px`,
+            bottom: info.bottom === undefined ? '' : `${info.bottom}px`,
+            maxHeight: `${info.maxHeight}px`,
+          }}
+        >
           <h2>{info.info.title}</h2>
           <p>{info.info.desc}</p>
           {info.info.how && (

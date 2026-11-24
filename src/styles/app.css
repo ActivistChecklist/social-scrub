@@ -336,6 +336,8 @@ img.logo { object-fit: contain; }
   position: fixed; z-index: 50; width: min(340px, calc(100vw - 32px));
   background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px;
   box-shadow: 0 14px 36px var(--shadow); padding: 14px 16px 12px; font-size: 13.5px; color: var(--ink-2);
+  /* Its height is capped to the room on screen (set from Sheet); anything taller scrolls inside. */
+  overflow-y: auto; overscroll-behavior: contain;
 }
 .pop h2 { margin: 0 0 6px; font-size: 14px; color: var(--ink); }
 .pop p { margin: 0 0 10px; }
