@@ -104,6 +104,14 @@ describe('App', () => {
     }
   });
 
+  it('links to an avatar source in the photo help', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Remove or change photo')!);
+    const link = root.querySelector<HTMLAnchorElement>('#column-info .pop-links a');
+    expect(link?.textContent).toBe('StrongPhrase');
+    expect(link?.href).toBe('https://strongphrase.net/identity/');
+    expect(link?.target).toBe('_blank');
+  });
+
   it('offers username ideas that work on every big platform', () => {
     click($$('.th-btn').find((b) => b.textContent === 'Use a random username')!);
     const ideas = [...root.querySelectorAll<HTMLButtonElement>('#column-info .idea')].map((b) => b.textContent!);
