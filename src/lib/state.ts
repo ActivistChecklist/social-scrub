@@ -79,6 +79,13 @@ export function toggleChecked(state: AppState, id: string): AppState {
   return { ...next, nextOrder: state.nextOrder + 1 };
 }
 
+/** Checks every row in `ids` that isn't checked yet, in the order given. */
+export function checkAll(state: AppState, ids: string[]): AppState {
+  let next = state;
+  for (const id of ids) if (!isChecked(next, id)) next = toggleChecked(next, id);
+  return next;
+}
+
 export function setPlan(state: AppState, id: string, plan: Plan): AppState {
   if (!isChecked(state, id)) return state;
   return withEntry(state, id, (e) => ({ ...e, plan }));

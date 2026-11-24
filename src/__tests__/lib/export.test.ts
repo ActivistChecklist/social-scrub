@@ -31,10 +31,10 @@ describe('exportRows', () => {
     expect(reddit[col('Have it')]).toBe('');
   });
 
-  it('lists your own platforms last', () => {
+  it('lists your own platforms first, like the sheet', () => {
     const { state } = addCustom(createInitialState(), 'Ravelry', () => 'custom-r');
     const rows = exportRows(state);
-    expect(rows.at(-1)!.slice(0, 2)).toEqual(['Your own platforms', 'Ravelry']);
+    expect(rows[1].slice(0, 2)).toEqual(['Your own platforms', 'Ravelry']);
   });
 });
 

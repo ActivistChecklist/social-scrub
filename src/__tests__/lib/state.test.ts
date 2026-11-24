@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { STARTERS, STEPS } from '../../data/steps';
 import {
   addCustom,
+  checkAll,
   createInitialState,
   cycleStep,
   removeCustom,
@@ -47,6 +48,21 @@ describe('toggleChecked', () => {
     let s = cycleStep(fresh(), 'facebook', 'name');
     s = toggleChecked(toggleChecked(s, 'facebook'), 'facebook');
     expect(s.entries.facebook.steps.name).toBe('done');
+  });
+});
+
+describe('checkAll', () => {
+  it('checks the unchecked rows in order and leaves checked ones alone', () => {
+    const before = fresh();
+    const s = checkAll(before, ['reddit', 'facebook', 'youtube']);
+    expect(s.entries.facebook).toBe(before.entries.facebook);
+    expect(s.entries.reddit).toMatchObject({ checked: true, plan: 'keep' });
+    expect(s.entries.youtube.order).toBe(s.entries.reddit.order + 1);
+  });
+
+  it('returns the same state when there is nothing to check', () => {
+    const s = fresh();
+    expect(checkAll(s, STARTERS)).toBe(s);
   });
 });
 

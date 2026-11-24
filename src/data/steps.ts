@@ -78,12 +78,13 @@ export const PLAN_INFO: ColumnInfo = {
   how: 'Look for "Delete account" or "Close account" in settings. Most sites wait about 30 days before the account is gone for good.',
 };
 
+/** Sheet order. "Your own platforms" only shows once someone adds one. */
 export const GROUPS: { id: Priority | 'custom'; label: string }[] = [
+  { id: 'custom', label: 'Your own platforms' },
   { id: 'highest', label: 'Highest priority' },
   { id: 'high', label: 'High priority' },
   { id: 'medium', label: 'Medium priority' },
   { id: 'low', label: 'Lower priority' },
-  { id: 'custom', label: 'Your own platforms' },
 ];
 
 /** Most people have these, so a first visit starts with them checked. */
