@@ -9,7 +9,7 @@ Help non-technical people find every account that could expose them and lock eac
 ## Principles
 
 - **One page, one utility.** It should feel like a well-made spreadsheet, not a website. No onboarding flow, no wizard.
-- **Privacy first.** Everything is stored in the browser. No analytics, no third-party requests, no server.
+- **Privacy first.** The checklist is stored only in the browser. No accounts, no third-party requests, no server storage. Anonymous counts never identify a platform.
 - **Plain language, short copy.** Explain only what someone needs at that moment. Cut hints that restate the obvious.
 - **Calm layout.** Rows move as little as possible. Instructions sit inline where they're needed.
 
@@ -49,8 +49,25 @@ Help non-technical people find every account that could expose them and lock eac
 
 ## Header and footer
 
-- Header: the Social Scrub mark, a progress bar with "X of Y accounts done", and a Download menu (Excel .xlsx, CSV). No count of remaining steps.
+- Header: the Social Scrub mark, a progress bar with "X of Y accounts done", a "Saved only on this device" button, and a Download menu (Excel .xlsx, CSV). No count of remaining steps.
+- "Saved only on this device" opens a short modal: the checklist stays in this browser, there's no account, we never see which platforms you have, and (when counts are on) what is counted. It links to the full privacy page. On a phone the button shows only its lock icon.
 - Footer (at the end of the sheet): "Your checkmarks are saved only in this browser. Nothing is sent anywhere.", a "Clear all data" link with an in-page confirmation, and links to the privacy page, Activist Checklist and the source code.
+
+## Help popovers
+
+- Each column header opens a popover with what the step is and how to do it.
+- The Privacy settings popover links to Block Party, which can check those settings for free and change them on a paid plan.
+
+## Anonymous counts
+
+- Each main action sends a count: check or uncheck a platform, Select all, keep or delete, mark a step, mark deleted, finish a platform, add or remove a platform, the "hide unchecked" filter, opening a help popover or the privacy note, downloading, and clearing data.
+- A count carries only coarse details: the priority group, the step column, keep or delete, done or skipped, the file format. Never a platform id, a custom platform name, or anything typed.
+- No counts are sent when the browser sends Do Not Track or Global Privacy Control.
+- Off unless the build sets an endpoint. The payload matches Umami's /api/send, ideally forwarded through a path on this site.
+
+## Hosting
+
+- Static files on a host still to be chosen (Railway or May First). The security headers and old-route redirects live in `deploy/security.json`.
 
 ## Export
 
@@ -68,5 +85,5 @@ Help non-technical people find every account that could expose them and lock eac
 ## Not in this version
 
 - Server-saved sessions and shareable session links from the first version.
-- Analytics. The first version sent anonymized page views to a self-hosted server.
-- Block Party suggestions and the random name generators.
+- Page-view analytics. The first version sent anonymized page views to a self-hosted server. This version only counts actions, and only when configured.
+- The Block Party step flow (only a link in the Privacy settings popover remains) and the random name generators.

@@ -39,8 +39,8 @@ When you receive a large set of design instructions or UI/UX feedback, update `p
 
 These are product requirements, not preferences:
 
-- **Nothing leaves the browser.** No analytics, no network requests from the app, no server storage.
-- **No third-party resources.** No CDNs, no Google Fonts, no remote images. Fonts and logos are bundled or in `public/`. The Content Security Policy in `vercel.json` only allows `'self'` and will break anything else.
+- **The checklist never leaves the browser.** No accounts, no server storage. The only request the app makes is the optional anonymous count in `src/lib/events.ts`. A count may name the action, the priority group or the step column, but never a platform, a custom platform name, or anything typed. `src/__tests__/app/events.test.tsx` enforces this. Counts are skipped when the browser sends Do Not Track or Global Privacy Control.
+- **No third-party resources.** No CDNs, no Google Fonts, no remote images. Fonts and logos are bundled or in `public/`. The Content Security Policy in `deploy/security.json` only allows `'self'` and will break anything else.
 - **No inline scripts or `style="..."` in HTML.** Set styles from code through Preact's `style` prop, which the CSP allows.
 - **Keep dependencies few.** Runtime deps are `preact` and `@fontsource-variable/public-sans`. Ask before adding a package; prefer a small local helper. `pnpm-workspace.yaml` holds back releases younger than 3 days.
 - **Treat stored data as untrusted.** `parseState` in `src/lib/storage.ts` validates everything it reads.
@@ -50,7 +50,7 @@ These are product requirements, not preferences:
 
 - `pnpm dev` - Start the dev server
 - `pnpm build` - Typecheck and build the static site into `dist/`
-- `pnpm preview` - Serve `dist/` with the production security headers from `vercel.json`
+- `pnpm preview` - Serve `dist/` with the production security headers from `deploy/security.json`
 - `pnpm test` - Vitest in watch mode
 - `pnpm test:run` - Run tests once
 - `pnpm logos` - Regenerate `src/data/logos.generated.ts` after adding or changing an `icon`
@@ -72,7 +72,7 @@ Run a single test file: `pnpm test:run src/__tests__/lib/storage.test.ts`
 index.html, privacy.html   The two pages
 src/main.tsx               Mounts <App />
 src/app/App.tsx            Owns state, saves on every change, runs row animations and focus restore
-src/components/            Header (summary, Download), Toolbar (search, Add platform, filter),
+src/components/            Header (summary, privacy note, Download), Toolbar (search, Add platform, filter),
                            Sheet (table, groups, column popovers, add row), Row, StatusIcon, Logo, Footer
 src/hooks/                 useTips (hover hints), useDismiss (closing popovers)
 src/lib/state.ts           Pure state functions: check, plan, cycle steps, add/remove custom platforms
@@ -80,6 +80,7 @@ src/lib/storage.ts         localStorage read/validate/write, migration from the 
 src/lib/export.ts          Export rows, CSV, file download
 src/lib/xlsx.ts            Minimal .xlsx writer (stored zip + SpreadsheetML)
 src/lib/motion.ts          Row slide animation, focus restore, arrow-key navigation
+src/lib/events.ts          Optional anonymous action counts (Umami-shaped, off unless configured)
 src/data/platforms.ts      The platform list
 src/data/steps.ts          Step copy, column popovers, groups, the platforms checked on first visit
 src/data/logos.ts          Resolves a platform to a logo (simple-icons glyph, colored tile, image or letter)
@@ -97,4 +98,4 @@ Add a line to `src/data/platforms.ts`. Logo: `icon` (simple-icons slug, then run
 
 ### Deploy
 
-Static hosting configured in `vercel.json`: build command, output directory, security headers, and redirects from the first version's routes.
+Static files, host not chosen yet (Railway or May First). `deploy/security.json` holds the headers and redirects the host must apply, and `deploy/README.md` says what the host needs to do. Anonymous counts are configured at build time with `VITE_EVENTS_URL` and `VITE_EVENTS_SITE_ID` (see `.env.example`); without them nothing is sent.

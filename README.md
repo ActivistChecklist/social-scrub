@@ -19,7 +19,7 @@ Check the platforms you have, decide whether to keep or delete each one, then wo
 ## Privacy
 
 - Your checkmarks are saved in your browser's local storage and nowhere else.
-- No accounts, no analytics, no cookies.
+- No accounts and no cookies. If anonymous counts are turned on, they say what kind of action happened ("a box was checked"), never which platform or anything typed, and they stop when your browser sends Do Not Track or Global Privacy Control.
 - The page loads nothing from other sites. Fonts and logos are served from this site.
 - "Clear all data" at the bottom of the sheet removes everything it saved.
 
@@ -46,6 +46,8 @@ pnpm dev
 | `pnpm preview` | Serve `dist/` with the production security headers |
 | `pnpm test:run` | Run the tests once |
 | `pnpm logos` | Rebuild the logo file after adding an `icon` to a platform |
+
+See [deploy/README.md](deploy/README.md) for hosting: the build is static files plus the security headers in `deploy/security.json`.
 
 ### Stack
 
