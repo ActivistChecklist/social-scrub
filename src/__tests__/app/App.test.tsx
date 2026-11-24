@@ -213,6 +213,17 @@ describe('App', () => {
     click($('tr[data-id=instagram] [data-v=delete]'));
     expect($$('tr[data-id=instagram] .idea-inline')).toHaveLength(0);
 
+    // Marking the box, done or skipped, hides that step's idea. Clearing it brings the same idea back.
+    const nameBox = () => $('tr[data-id=facebook] .cell[data-focus=step-name]')!;
+    click(nameBox());
+    expect(idea('facebook', 'name')).toBeUndefined();
+    expect(idea('facebook', 'username')).toBeTruthy();
+    click(nameBox());
+    expect(nameBox().dataset.state).toBe('skipped');
+    expect(idea('facebook', 'name')).toBeUndefined();
+    click(nameBox());
+    expect(idea('facebook', 'name')).toBe(before);
+
     toggle();
     expect($$('.idea-inline')).toHaveLength(0);
   });

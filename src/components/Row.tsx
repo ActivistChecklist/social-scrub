@@ -99,7 +99,8 @@ export function Row({ platform: p, entry, act, ideas }: { platform: Platform; en
           ) : (
             STEPS.map((s) => {
               const mark = entry.steps[s.id];
-              const ideaKind = showIdeas ? IDEA_STEPS[s.id] : undefined;
+              // Once the box is marked, done or skipped, the idea has done its job.
+              const ideaKind = showIdeas && !mark ? IDEA_STEPS[s.id] : undefined;
               return (
                 <td class="c-step" key={s.id}>
                   <button
