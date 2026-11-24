@@ -30,7 +30,7 @@ export const STEPS: Step[] = [
     id: 'username',
     label: 'Use a random username',
     title: 'Change your username',
-    desc: "Use a username you don't use anywhere else. The same handle on two sites links those accounts instantly.",
+    desc: "Use a username you don't use anywhere else. The same handle on two sites links those accounts.",
     how: 'Look for "Username" or "Handle" in account settings and change it to something random. Some sites won\'t let you.',
     ideas: 'usernames',
   },
