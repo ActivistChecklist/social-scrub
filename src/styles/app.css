@@ -180,7 +180,7 @@ button, input { font: inherit; color: inherit; }
 }
 .grid thead th.c-platform { z-index: 4; text-align: left; padding-left: var(--gut-l); }
 .th-btn {
-  border: 0; background: transparent; color: inherit; cursor: help; padding: 2px 3px; border-radius: 4px; line-height: 1.25;
+  border: 0; background: transparent; color: inherit; cursor: help; padding: 2px 3px; border-radius: 4px; line-height: 1.2;
   text-decoration: underline dotted var(--faint); text-underline-offset: 3px; font-weight: 600; font-size: 12px;
 }
 .th-btn:hover, .th-btn[aria-expanded="true"] { color: var(--ink); text-decoration-color: var(--ink-2); }
@@ -335,8 +335,18 @@ img.logo { object-fit: contain; }
 .pop p { margin: 0 0 10px; }
 .pop .how { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 .pop .how b { display: block; color: var(--ink-2); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
-.pop .tool { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
-.pop .tool a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }
+.pop .how + .ideas, .pop .how + .pop-links, .pop .ideas + .pop-links { margin-top: 10px; }
+.ideas, .pop-links { padding-top: 10px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.ideas b, .pop-links b { display: block; color: var(--ink-2); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.idea-list { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.idea {
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: 6px;
+  padding: 4px 8px; font-size: 13px; font-weight: 500; cursor: copy;
+}
+.idea:hover { background: var(--sunken); }
+.idea-more { margin-left: 4px; font-size: 12.5px; }
+.pop-links ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.pop-links a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }
 .tip {
   position: fixed; z-index: 55; pointer-events: none; transform: translate(-50%, calc(-100% - 4px));
   background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 500; line-height: 1.3;
@@ -367,7 +377,7 @@ img.logo { object-fit: contain; }
 
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
-  :root { --col-platform: 178px; --col-plan: 128px; --col-step: 66px; --col-extra: 232px; --row-h: 44px; --thead-h: 48px; }
+  :root { --col-platform: 178px; --col-plan: 128px; --col-step: 66px; --col-extra: 232px; --row-h: 44px; --thead-h: 52px; }
   /* One row each for the header and the toolbar. Buttons drop their words; their labels stay for screen readers. */
   .bar { flex-wrap: nowrap; gap: 10px; padding-block: 8px; }
   .brand { font-size: 15px; gap: 7px; }
@@ -385,7 +395,7 @@ img.logo { object-fit: contain; }
   .add-wrap { position: static; }
   .add-pop { left: var(--gut-l); right: var(--gut-r); width: auto; top: calc(100% - 4px); }
   .grid thead th { padding-bottom: 5px; }
-  .th-btn { font-size: 11.5px; }
+  .th-btn { font-size: 11px; line-height: 1.15; padding-inline: 1px; }
   /* Group rows scroll away on a phone, so only the column headers stay put. */
   .grp th { position: static; height: 32px; }
   .seg button { padding: 0 8px; }

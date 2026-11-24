@@ -88,11 +88,34 @@ describe('App', () => {
     expect($('tbody tr[data-id] .p-name')?.textContent).toBe('Ravelry');
   });
 
-  it('links to Block Party from the privacy settings help', () => {
-    click($$('.th-btn').find((b) => b.textContent === 'Privacy settings')!);
-    const link = $<HTMLAnchorElement>('#column-info .tool a');
-    expect(link?.href).toBe('https://www.blockpartyapp.com/');
-    expect(link?.rel).toContain('noopener');
+  it('starts each step header with what to do', () => {
+    const headers = $$('thead .th-btn').map((b) => b.textContent);
+    expect(headers).toContain('Remove or change photo');
+    expect(headers).toContain('Use a random username');
+  });
+
+  it('lists email alias services in the email help', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Use a unique email')!);
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('#column-info .pop-links a')];
+    expect(links.map((a) => a.textContent)).toContain('DuckDuckGo Email Protection');
+    for (const a of links) {
+      expect(a.href).toMatch(/^https:\/\//);
+      expect(a.rel).toContain('noopener');
+    }
+  });
+
+  it('offers username ideas that work on every big platform', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Use a random username')!);
+    const ideas = [...root.querySelectorAll<HTMLButtonElement>('#column-info .idea')].map((b) => b.textContent!);
+    expect(ideas).toHaveLength(3);
+    for (const idea of ideas) expect(idea).toMatch(/^[a-z0-9_]{1,15}$/);
+  });
+
+  it('keeps the platform and privacy settings help short', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Platform')!);
+    expect($('#column-info .how')).toBeNull();
+    click($$('.th-btn').find((b) => b.textContent === 'Lock down privacy')!);
+    expect($('#column-info')?.textContent).not.toContain('Block Party');
   });
 
   it('opens a short privacy note from the header', () => {

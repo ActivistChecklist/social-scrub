@@ -8,6 +8,7 @@ import { track } from '../lib/events';
 import { moveFocusWithArrows } from '../lib/motion';
 import { allPlatforms, isChecked, isFinished, statusOf, type AppState } from '../lib/state';
 import { Footer } from './Footer';
+import { Ideas } from './Ideas';
 import { ArrowDownIcon } from './icons';
 import { COLUMN_COUNT, Row, type RowActions } from './Row';
 
@@ -175,17 +176,27 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
         <div class="pop" id="column-info" role="dialog" aria-label={info.info.title} ref={pop} style={{ left: `${info.left}px`, top: `${info.top}px` }}>
           <h2>{info.info.title}</h2>
           <p>{info.info.desc}</p>
-          <p class="how">
-            <b>How</b>
-            {info.info.how}
-          </p>
-          {info.info.tool && (
-            <p class="tool">
-              {info.info.tool.text}{' '}
-              <a href={info.info.tool.href} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'help' })}>
-                {info.info.tool.linkText}
-              </a>
+          {info.info.how && (
+            <p class="how">
+              <b>How</b>
+              {info.info.how}
             </p>
+          )}
+          {info.info.ideas && <Ideas key={info.key} kind={info.info.ideas} />}
+          {info.info.links && (
+            <div class="pop-links">
+              <b>Helpful</b>
+              <ul>
+                {info.info.links.map((l) => (
+                  <li key={l.href}>
+                    <a href={l.href} target="_blank" rel="noopener noreferrer" onClick={() => track('open_resource', { column: info.key })}>
+                      {l.name}
+                    </a>{' '}
+                    {l.note}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

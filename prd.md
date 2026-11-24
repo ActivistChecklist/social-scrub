@@ -16,7 +16,7 @@ Help non-technical people find every account that could expose them and lock eac
 ## The sheet
 
 - Rows are platforms, grouped by priority: Highest, High, Medium, Lower. "Your own platforms" appears above Highest once someone adds one.
-- Columns: Platform, Keep or delete, then eight steps: Display name, Profile photo, Username, Email, Bio & location, Posts & photos, Friends list, Privacy settings.
+- Columns: Platform, Keep or delete, then eight steps, each header starting with what to do: Change display name, Remove or change photo, Use a random username, Use a unique email, Remove bio & location, Clean up old posts, Hide friends list, Lock down privacy.
 - Column headers open a short popover with what the step is and how to do it.
 - Each group header shows "X of Y done" for the checked rows in it, and nothing else.
 - The header row and platform column stay in place while scrolling. On a phone the sheet scrolls sideways.
@@ -55,8 +55,11 @@ Help non-technical people find every account that could expose them and lock eac
 
 ## Help popovers
 
-- Each column header opens a popover with what the step is and how to do it.
-- The Privacy settings popover links to Block Party, which can check those settings for free and change them on a paid plan.
+- Each column header opens a popover with what the step is and, for steps, how to do it. The Platform column has no "How" part.
+- Change display name and Use a random username offer three random ideas made on the device (from the first version's word lists), with "More". Tapping one copies it. Usernames use only lowercase letters, digits and underscores, and fit X's 15-character limit.
+- Use a unique email lists alias services under "Helpful": DuckDuckGo Email Protection, Firefox Relay, SimpleLogin, and Google's note on the Gmail + trick.
+- Clean up old posts links to Cyd for deleting old posts on X in bulk.
+- The Privacy settings popover doesn't mention Block Party; the row note does.
 
 ## Anonymous counts
 

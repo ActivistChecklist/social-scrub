@@ -1,81 +1,79 @@
-import type { Priority, Step, ToolLink } from './types';
+import type { ColumnInfo, Priority, Step } from './types';
+
+export type { ColumnInfo };
 
 /** The eight things to do on every account you keep, in column order. */
 export const STEPS: Step[] = [
   {
     id: 'name',
-    label: 'Display name',
+    label: 'Change display name',
     title: 'Change your display name',
     desc: "Use a name that isn't your real one. Your real name is the easiest way for a stranger to connect this account to you.",
     how: 'Open your profile or account settings and look for "Name" or "Display name". Pick a nickname you don\'t use anywhere else.',
+    ideas: 'names',
   },
   {
     id: 'photo',
-    label: 'Profile photo',
+    label: 'Remove or change photo',
     title: 'Change your profile photo',
     desc: 'Remove your photo or swap it for one without your face. Reverse image search can match the same photo across sites.',
     how: "Remove the photo or replace it with a simple pattern or illustration. Don't reuse the same image on another site.",
   },
   {
     id: 'username',
-    label: 'Username',
+    label: 'Use a random username',
     title: 'Change your username',
     desc: "Use a username you don't use anywhere else. The same handle on two sites links those accounts instantly.",
     how: 'Look for "Username" or "Handle" in account settings and change it to something random. Some sites won\'t let you.',
+    ideas: 'usernames',
   },
   {
     id: 'email',
-    label: 'Email',
+    label: 'Use a unique email',
     title: 'Use a different email address',
     desc: "Give each site its own address so a leaked email can't tie your accounts together.",
-    how: 'If you use Gmail, add "+sitename" before the @, like alex+facebook@gmail.com. Mail still reaches your inbox.',
+    how: 'If you use Gmail, add "+sitename" before the @, like alex+facebook@gmail.com. Mail still reaches your inbox. For more privacy, use an alias service.',
+    links: [
+      { name: 'DuckDuckGo Email Protection', note: 'makes free addresses that forward to your inbox.', href: 'https://duckduckgo.com/email/' },
+      { name: 'Firefox Relay', note: 'makes free forwarding addresses, from Mozilla.', href: 'https://relay.firefox.com/' },
+      { name: 'SimpleLogin', note: 'is an open-source alias service from Proton.', href: 'https://simplelogin.io/' },
+      { name: 'The Gmail + trick', note: 'is explained by Google here.', href: 'https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html' },
+    ],
   },
   {
     id: 'bio',
-    label: 'Bio & location',
+    label: 'Remove bio & location',
     title: 'Remove location and bio details',
     desc: 'Take out your city, employer, school and anything else that narrows down who you are.',
     how: 'Edit your profile. Remove specific places, workplaces, school names and graduation years.',
   },
   {
     id: 'posts',
-    label: 'Posts & photos',
+    label: 'Clean up old posts',
     title: 'Review old posts and photos',
     desc: 'Old posts can show where you live, work and spend time. Photos can carry hidden location data.',
     how: 'Scroll back through your posts. Delete or hide anything that shows your home, your neighborhood, your workplace or your routine.',
+    links: [{ name: 'Cyd', note: 'can delete your old posts on X in bulk.', href: 'https://cyd.social/' }],
   },
   {
     id: 'friends',
-    label: 'Friends list',
+    label: 'Hide friends list',
     title: 'Hide your friends list',
     desc: "Your connections can identify you even when your profile doesn't.",
     how: 'In privacy settings, look for "Who can see your friends" or "Who can see who you follow" and set it to "Only me".',
   },
   {
     id: 'privacy',
-    label: 'Privacy settings',
+    label: 'Lock down privacy',
     title: 'Lock down privacy settings',
     desc: 'Most sites start with everything public. Pick the most private option for each setting.',
     how: 'Go to Settings, then Privacy. Check who can see your posts and who can find you by email or phone number.',
-    tool: {
-      text: 'Block Party can check these settings on the biggest platforms for free, and change them for you on a paid plan.',
-      linkText: 'Try Block Party',
-      href: 'https://www.blockpartyapp.com',
-    },
   },
 ];
-
-export interface ColumnInfo {
-  title: string;
-  desc: string;
-  how: string;
-  tool?: ToolLink;
-}
 
 export const PLATFORM_INFO: ColumnInfo = {
   title: 'Your accounts',
   desc: 'Check every platform you have an account on, including ones you stopped using. Old accounts still turn up in searches.',
-  how: 'Each unchecked row says why that platform matters. Once checked, hover the name to see it again, or press and hold it on a phone. Missing one? Use Add platform in the toolbar.',
 };
 
 export const PLAN_INFO: ColumnInfo = {

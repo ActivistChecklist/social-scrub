@@ -17,20 +17,27 @@ export interface Platform {
 
 export type StepId = 'name' | 'photo' | 'username' | 'email' | 'bio' | 'posts' | 'friends' | 'privacy';
 
-/** A tool or resource mentioned at the end of a column's popover. */
-export interface ToolLink {
-  text: string;
-  linkText: string;
+/** A service or guide listed under "Helpful" in a column's popover. */
+export interface ResourceLink {
+  name: string;
+  /** Continues the name as a sentence, starting lowercase. */
+  note: string;
   href: string;
 }
 
-export interface Step {
-  id: StepId;
-  /** Column header */
-  label: string;
+/** What a column's popover explains. */
+export interface ColumnInfo {
   /** Popover heading */
   title: string;
   desc: string;
-  how: string;
-  tool?: ToolLink;
+  how?: string;
+  /** Random ideas to copy, made on the device. */
+  ideas?: 'names' | 'usernames';
+  links?: ResourceLink[];
+}
+
+export interface Step extends ColumnInfo {
+  id: StepId;
+  /** Column header. Starts with what to do. */
+  label: string;
 }
