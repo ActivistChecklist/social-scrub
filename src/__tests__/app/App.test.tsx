@@ -176,6 +176,22 @@ describe('App', () => {
     expect(note('instagram')).toBeNull();
   });
 
+  it('mentions Cyd after Block Party on the X and Bluesky rows only', () => {
+    click($('tr[data-id=twitter] .pc-btn'));
+    click($('tr[data-id=bluesky] .pc-btn'));
+    const notes = (id: string) => [...root.querySelectorAll(`tr[data-id=${id}] .extra-notes > span`)].map((s) => s.className);
+    expect(notes('twitter')).toEqual(['bp-note', 'cyd-note']);
+    expect(notes('bluesky')).toEqual(['bp-note', 'cyd-note']);
+    expect($('tr[data-id=twitter] .cyd-note')?.textContent).toBe('Cyd can delete your old posts');
+    expect($<HTMLAnchorElement>('tr[data-id=twitter] .cyd-note a')?.href).toBe('https://cyd.social/');
+    expect($('tr[data-id=facebook] .cyd-note')).toBeNull();
+    // Gone once old posts are cleaned up, and no longer in the column help.
+    click($('tr[data-id=twitter] .cell[data-focus=step-posts]'));
+    expect($('tr[data-id=twitter] .cyd-note')).toBeNull();
+    click($$('.th-btn').find((b) => b.textContent === 'Clean up old posts')!);
+    expect($('#column-info')?.textContent).not.toContain('Cyd');
+  });
+
   it('explains the Block Party recommendation from the question mark', () => {
     const dialog = [...root.querySelectorAll<HTMLDialogElement>('dialog.modal')].find((d) => d.textContent?.includes('About Block Party'))!;
     expect(dialog.open).toBe(false);

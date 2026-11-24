@@ -59,7 +59,7 @@ Help non-technical people find every account that could expose them and lock eac
 - Change display name and Use a random username offer three random ideas made on the device (from the first version's word lists), with "More". Tapping one copies it. Usernames use only letters and digits (like CalmHeron482), since X rejects periods and Facebook rejects underscores, and fit X's 15-character limit.
 - Use a unique email lists alias services under "Helpful": Qwacky (Chrome extension for DuckDuckGo addresses), Firefox Relay, SimpleLogin, and Google's note on the Gmail + trick.
 - Remove or change photo links to StrongPhrase's identity generator (https://strongphrase.net/identity/), whose fake identities each come with an avatar.
-- Clean up old posts links to Cyd for deleting old posts on X in bulk.
+- On the X and Bluesky rows, a "Cyd can delete your old posts" note (linked to cyd.social) follows the Block Party note, until the old posts step is marked. The Clean up old posts popover doesn't mention Cyd.
 - The Privacy settings popover doesn't mention Block Party; the row note does.
 - The Block Party row note ends with a "?" that opens a short note: we're not affiliated with Block Party, platforms make privacy settings very hard to find and Block Party makes it easier, it's free for one site, and the code JOINTHEPARTY makes it cheaper. "Block Party" in the first sentence is the link; the only button is Close.
 

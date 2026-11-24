@@ -22,8 +22,8 @@ export const PLATFORMS: Platform[] = [
   { id: 'youtube', name: 'YouTube', priority: 'highest', icon: 'youtube', url: 'https://youtube.com', why: 'Can reveal your interests and possibly your location', blockParty: true },
   { id: 'tiktok', name: 'TikTok', priority: 'highest', icon: 'tiktok', url: 'https://tiktok.com', why: 'Can reveal location and social network', blockParty: true },
   { id: 'snapchat', name: 'SnapChat', priority: 'highest', icon: 'snapchat', url: 'https://snapchat.com', why: 'Can reveal location and social network', blockParty: true },
-  { id: 'twitter', name: 'X / Twitter', priority: 'highest', icon: 'x', url: 'https://x.com', why: 'Can reveal your social network and location', blockParty: true },
-  { id: 'bluesky', name: 'Bluesky', priority: 'highest', icon: 'bluesky', url: 'https://bsky.app', why: 'Can reveal location and social network', blockParty: true },
+  { id: 'twitter', name: 'X / Twitter', priority: 'highest', icon: 'x', url: 'https://x.com', why: 'Can reveal your social network and location', blockParty: true, cyd: true },
+  { id: 'bluesky', name: 'Bluesky', priority: 'highest', icon: 'bluesky', url: 'https://bsky.app', why: 'Can reveal location and social network', blockParty: true, cyd: true },
   { id: 'strava', name: 'Strava', priority: 'highest', icon: 'strava', url: 'https://strava.com', why: 'Can reveal your home address through activity patterns', blockParty: true },
 
   // High priority
