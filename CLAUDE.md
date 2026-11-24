@@ -65,7 +65,7 @@ Run a single test file: `pnpm test:run src/__tests__/lib/storage.test.ts`
 
 - Vite + Preact + TypeScript, static output in `dist/`
 - A dependency-free Node server (`server/`, run with Node's built-in TypeScript support) plus `@activistchecklist/umami-extra-privacy`, installed from GitHub by commit SHA. Update its SHA in `package.json` and `pnpm-workspace.yaml` together
-- Plain CSS in `src/styles/app.css` with color tokens on `:root` and a dark palette under `prefers-color-scheme`
+- Plain CSS in `src/styles/app.css` with color tokens on `:root` and a dark palette under `prefers-color-scheme`, or `data-theme` on `<html>` when someone picks Light or Dark
 - Vitest + happy-dom for tests
 - pnpm
 
@@ -75,11 +75,12 @@ Run a single test file: `pnpm test:run src/__tests__/lib/storage.test.ts`
 index.html, privacy.html   The two pages
 src/main.tsx               Mounts <App />
 src/app/App.tsx            Owns state, saves on every change, runs row animations and focus restore
-src/components/            Header (summary, privacy note, Download), Toolbar (search, Add platform, filter),
+src/components/            Header (summary, privacy note, Download, theme menu), Toolbar (search, Add platform, filter),
                            Sheet (table, groups, column popovers, add row), Row, StatusIcon, Logo, Footer
 src/hooks/                 useTips (hover hints), useDismiss (closing popovers)
 src/lib/state.ts           Pure state functions: check, plan, cycle steps, add/remove custom platforms
 src/lib/storage.ts         localStorage read/validate/write, migration from the first version, clear all
+src/lib/theme.ts           Applies the Light, Dark or System choice to <html>
 src/lib/export.ts          Export rows, CSV, file download
 src/lib/xlsx.ts            Minimal .xlsx writer (stored zip + SpreadsheetML)
 src/lib/motion.ts          Row slide animation, focus restore, arrow-key navigation
@@ -90,13 +91,14 @@ server/index.ts            Starts the server; reads PORT and UMAMI_* settings
 src/data/platforms.ts      The platform list
 src/data/steps.ts          Step copy, column popovers, groups, the platforms checked on first visit
 src/data/logos.ts          Resolves a platform to a logo (simple-icons glyph, colored tile, image or letter)
+public/theme-init.js       Applies a saved theme before the first paint (a file, since the CSP blocks inline scripts)
 ```
 
 ### State
 
 `AppState` (`src/lib/state.ts`) holds an `entries` map keyed by platform id. Each entry has `checked`, `plan` (`keep` or `delete`), `steps` (each `done` or `skipped`), `deleted`, and `order`. Checked rows are listed by `order`, so a newly checked row goes to the bottom of the checked rows in its group. All updates are pure functions that return a new state; `App.commit` saves and re-renders. Nothing is written to storage until the person changes something.
 
-Storage key: `social-scrub-v2`. The first version used `social-scrub-session`, which `loadState` migrates from once.
+Storage key: `social-scrub-v2`. The first version used `social-scrub-session`, which `loadState` migrates from once. The theme choice lives in `social-scrub-theme` (`light` or `dark`; no key means System), the same key and values the first version used.
 
 ### Adding a platform
 

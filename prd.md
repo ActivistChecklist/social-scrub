@@ -49,7 +49,8 @@ Help non-technical people find every account that could expose them and lock eac
 
 ## Header and footer
 
-- Header: the Social Scrub mark, a progress bar with "X of Y accounts done", a "Saved only on this device" button, and a Download menu (Excel .xlsx, CSV). No count of remaining steps.
+- Header: the Social Scrub mark, a progress bar with "X of Y accounts done", a "Saved only on this device" button, a Download menu (Excel .xlsx, CSV), and a theme button. No count of remaining steps.
+- The theme button matches the one on Activist Checklist: a sun or moon icon that opens Light, Dark and System, with "Active" next to the current one. The choice is saved in this browser; System removes it, and so does "Clear all data".
 - "Saved only on this device" opens a short modal: the checklist stays in this browser, there's no account, we never see which platforms you have, and (when counts are on) what is counted. It also offers "Clear all data" ("On a shared or work computer?") with the same confirmation, and links to the full privacy page. On a phone the button shows only its lock icon.
 - Footer (at the end of the sheet): "Your checklist is saved only in this browser.", a "Clear all data" link with an in-page confirmation, and links to the privacy page, Contact (https://activistchecklist.org/contact/), Activist Checklist and the source code.
 
@@ -85,9 +86,10 @@ Help non-technical people find every account that could expose them and lock eac
 
 - Public Sans, self-hosted. No monospace type.
 - Neutral greys with a slight cool tint; ink-colored primary actions; green for done, amber for in progress, red for delete.
-- Light and dark themes follow the system setting.
+- Light and dark themes follow the system setting until someone picks Light or Dark from the theme button.
 - Works on phones (tested at iPhone 13 mini size, 375 x 630 visible):
   - The header and toolbar are one row each. Download and Add platform show only their icons, the summary reads "1 of 14 done", and the filter switch reads "Only checked".
+  - Below 420px wide the progress bar is hidden so the header buttons fit; the summary text still gives the count.
   - Scrolling down slides the header and toolbar away; scrolling up brings them back. They stay while the search box has focus or a menu is open.
   - Only the column headers stay stuck while scrolling. Group rows scroll with the list.
   - The sheet scrolls sideways inside its own area, rows get a little taller, and long text wraps.

@@ -1,7 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { STARTERS } from '../../data/steps';
 import { createInitialState, cycleStep, toggleChecked } from '../../lib/state';
-import { LEGACY_KEYS, STORAGE_KEY, clearAllData, loadState, migrateLegacy, parseState, saveState } from '../../lib/storage';
+import {
+  LEGACY_KEYS,
+  STORAGE_KEY,
+  THEME_KEY,
+  clearAllData,
+  loadState,
+  loadTheme,
+  migrateLegacy,
+  parseState,
+  saveState,
+  saveTheme,
+} from '../../lib/storage';
 
 function memoryStore(initial: Record<string, string> = {}) {
   const data = new Map(Object.entries(initial));
@@ -116,9 +127,52 @@ describe('migrateLegacy', () => {
   });
 });
 
+describe('loadTheme and saveTheme', () => {
+  it('follows the device when nothing is saved', () => {
+    expect(loadTheme(memoryStore())).toBe('system');
+  });
+
+  it('round-trips light and dark', () => {
+    const store = memoryStore();
+    saveTheme('dark', store);
+    expect(store.data.get(THEME_KEY)).toBe('dark');
+    expect(loadTheme(store)).toBe('dark');
+    saveTheme('light', store);
+    expect(loadTheme(store)).toBe('light');
+  });
+
+  it('removes the key when set back to System', () => {
+    const store = memoryStore({ [THEME_KEY]: 'dark' });
+    saveTheme('system', store);
+    expect(store.data.size).toBe(0);
+  });
+
+  it('ignores anything that is not light or dark', () => {
+    for (const bad of ['system', 'purple', '', '"dark"', '<script>']) {
+      expect(loadTheme(memoryStore({ [THEME_KEY]: bad }))).toBe('system');
+    }
+  });
+
+  it('keeps working when storage throws', () => {
+    const broken = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => {
+        throw new Error('blocked');
+      },
+      removeItem: () => {
+        throw new Error('blocked');
+      },
+    };
+    expect(loadTheme(broken)).toBe('system');
+    expect(() => saveTheme('dark', broken)).not.toThrow();
+  });
+});
+
 describe('clearAllData', () => {
   it('removes the current and the old keys', () => {
-    const store = memoryStore({ [STORAGE_KEY]: '{}', [LEGACY_KEYS[0]]: '{}', [LEGACY_KEYS[1]]: 'dark', unrelated: 'keep me' });
+    const store = memoryStore({ [STORAGE_KEY]: '{}', [THEME_KEY]: 'dark', [LEGACY_KEYS[0]]: '{}', unrelated: 'keep me' });
     clearAllData(store);
     expect([...store.data.keys()]).toEqual(['unrelated']);
   });
