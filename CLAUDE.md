@@ -31,10 +31,6 @@ The first version (a multi-page Next.js app) lives on the `archive/v1-nextjs` br
 4. **Test file naming**: `*.test.ts` or `*.test.tsx`.
 5. **Run the build before completing**: `pnpm build` typechecks and builds. There is no separate linter.
 
-### Use PRD for large features
-
-When you receive a large set of design instructions or UI/UX feedback, update `prd.md` with the new requirements before implementing them. The PRD is the source of truth for design decisions.
-
 ## Privacy and security rules
 
 These are product requirements, not preferences:
