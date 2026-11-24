@@ -85,8 +85,8 @@ button, input { font: inherit; color: inherit; }
 .summary strong { color: var(--ink); font-weight: 600; }
 .bar-end { margin-left: auto; display: flex; gap: 6px; align-items: center; }
 .dl-wrap { position: relative; }
-.privacy-btn { border-color: transparent; background: transparent; color: var(--muted); font-weight: 500; padding: 0 10px; }
-.privacy-btn:hover { color: var(--ink); background: var(--sunken); }
+.btn.privacy-btn { border-color: transparent; background: transparent; color: var(--muted); font-weight: 500; padding: 0 10px; }
+.btn.privacy-btn:hover { color: var(--ink); background: var(--sunken); }
 
 .btn {
   display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 7px;
