@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { useDismiss, type DismissReason } from '../hooks/useDismiss';
+import { eventsEnabled, track } from '../lib/events';
 import { summary, type AppState } from '../lib/state';
-import { BrandMark, DownloadIcon } from './icons';
+import { BrandMark, DownloadIcon, LockIcon } from './icons';
 
 export function Header({ state, onDownload }: { state: AppState; onDownload(kind: 'xlsx' | 'csv'): void }) {
   const { checked, finished } = summary(state);
@@ -30,8 +31,65 @@ export function Header({ state, onDownload }: { state: AppState; onDownload(kind
           <span>Check the accounts you have to get started.</span>
         )}
       </div>
-      <DownloadMenu onDownload={onDownload} />
+      <div class="bar-end">
+        <PrivacyNote />
+        <DownloadMenu onDownload={onDownload} />
+      </div>
     </header>
+  );
+}
+
+/** A short "your data stays here" note, with a link to the full privacy page. */
+function PrivacyNote() {
+  const dialog = useRef<HTMLDialogElement>(null);
+
+  const open = () => {
+    const d = dialog.current;
+    if (!d) return;
+    if (typeof d.showModal === 'function') d.showModal();
+    else d.setAttribute('open', '');
+    track('open_privacy');
+  };
+  const close = () => {
+    const d = dialog.current;
+    if (!d) return;
+    if (typeof d.close === 'function') d.close();
+    else d.removeAttribute('open');
+  };
+
+  return (
+    <>
+      <button type="button" class="btn privacy-btn" aria-haspopup="dialog" aria-label="Privacy: saved only on this device" onClick={open}>
+        <LockIcon />
+        <span class="privacy-label">Saved only on this device</span>
+      </button>
+      <dialog
+        ref={dialog}
+        class="modal"
+        aria-labelledby="privacy-title"
+        onClick={(e) => {
+          // A click on the dimmed area around the box lands on the dialog itself.
+          if (e.target === dialog.current) close();
+        }}
+      >
+        <div class="modal-in">
+          <h2 id="privacy-title">Your checklist stays on this device</h2>
+          <p>Everything you check is saved in this browser only. There's no account, and we never see which platforms you have.</p>
+          {eventsEnabled && (
+            <p>
+              To learn what's useful, we count anonymous clicks, like "a box was checked". They never say which platform. If your browser
+              sends Do Not Track or Global Privacy Control, we count nothing.
+            </p>
+          )}
+          <div class="modal-actions">
+            <a href="/privacy.html">Read the privacy page</a>
+            <button type="button" class="btn btn-sm" onClick={close} autofocus>
+              Close
+            </button>
+          </div>
+        </div>
+      </dialog>
+    </>
   );
 }
 
@@ -56,7 +114,7 @@ function DownloadMenu({ onDownload }: { onDownload(kind: 'xlsx' | 'csv'): void }
   };
 
   return (
-    <div class="bar-end" ref={wrap}>
+    <div class="dl-wrap" ref={wrap}>
       <button ref={button} type="button" class="btn btn-primary" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)}>
         <DownloadIcon />
         Download

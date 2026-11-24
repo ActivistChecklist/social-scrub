@@ -27,6 +27,13 @@ export const ArrowDownIcon = () => (
   </svg>
 );
 
+export const LockIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <rect x="3" y="7" width="10" height="7" rx="1.5" {...line} stroke-width="1.5" />
+    <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" {...line} stroke-width="1.5" />
+  </svg>
+);
+
 /** The Social Scrub mark: a page with one line blacked out. */
 export const BrandMark = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true">

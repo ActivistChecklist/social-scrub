@@ -83,7 +83,10 @@ button, input { font: inherit; color: inherit; }
 .meter { width: 132px; height: 6px; border-radius: 3px; background: var(--sunken); overflow: hidden; flex: none; }
 .meter span { display: block; height: 100%; background: var(--done); transition: width .3s ease; }
 .summary strong { color: var(--ink); font-weight: 600; }
-.bar-end { margin-left: auto; display: flex; gap: 8px; align-items: center; position: relative; }
+.bar-end { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.dl-wrap { position: relative; }
+.privacy-btn { border-color: transparent; background: transparent; color: var(--muted); font-weight: 500; padding: 0 10px; }
+.privacy-btn:hover { color: var(--ink); background: var(--sunken); }
 
 .btn {
   display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 7px;
@@ -323,6 +326,19 @@ img.logo { object-fit: contain; }
   width: max-content; max-width: min(300px, calc(100vw - 32px));
 }
 
+/* ---------- Privacy note ---------- */
+.modal {
+  width: min(400px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--line-strong); border-radius: 12px;
+  background: var(--surface); color: var(--ink-2); box-shadow: 0 24px 60px var(--shadow);
+}
+/* ::backdrop doesn't reliably inherit page tokens, so its dim is set directly and works on both themes. */
+.modal::backdrop { background: rgba(8, 10, 14, 0.45); }
+.modal-in { padding: 20px 22px 18px; }
+.modal h2 { margin: 0 0 8px; font-size: 17px; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance; }
+.modal p { margin: 0 0 10px; font-size: 14px; line-height: 1.5; }
+.modal-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; }
+.modal-actions a { color: var(--ink); font-size: 13.5px; font-weight: 600; text-underline-offset: 2px; }
+
 /* ---------- Privacy page ---------- */
 .doc { max-width: 40rem; margin: 0 auto; padding-block: 40px 64px; padding-left: var(--gut-l); padding-right: var(--gut-r); font-size: 15px; line-height: 1.6; }
 .doc-back { font-size: 13.5px; color: var(--ink-2); }
@@ -339,6 +355,8 @@ img.logo { object-fit: contain; }
   .meter { width: 96px; }
   .search { flex: 1 1 160px; }
   .add-pop { left: auto; right: 0; }
+  .privacy-label { display: none; }
+  .privacy-btn { padding: 0 9px; }
   .seg button { padding: 0 8px; }
 }
 @media (prefers-reduced-motion: reduce) {

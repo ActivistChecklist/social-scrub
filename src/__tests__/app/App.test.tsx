@@ -95,6 +95,17 @@ describe('App', () => {
     expect(link?.rel).toContain('noopener');
   });
 
+  it('opens a short privacy note from the header', () => {
+    const dialog = $<HTMLDialogElement>('dialog.modal')!;
+    expect(dialog.open).toBe(false);
+    click($('.privacy-btn'));
+    expect(dialog.open).toBe(true);
+    expect(dialog.textContent).toContain('Your checklist stays on this device');
+    expect(dialog.querySelector('a')?.getAttribute('href')).toBe('/privacy.html');
+    click([...dialog.querySelectorAll('button')].find((b) => b.textContent === 'Close')!);
+    expect(dialog.open).toBe(false);
+  });
+
   it('shows the reason on unchecked rows', () => {
     expect($('tr[data-id=reddit] .why')?.textContent).toBe('Can reveal your interests and community memberships');
   });
