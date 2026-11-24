@@ -1,6 +1,6 @@
 import { render } from 'preact';
 import { act } from 'preact/test-utils';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../app/App';
 import { STARTERS } from '../../data/steps';
 import { STORAGE_KEY } from '../../lib/storage';
@@ -124,6 +124,18 @@ describe('App', () => {
     const ideas = [...root.querySelectorAll<HTMLButtonElement>('#column-info .idea')].map((b) => b.textContent!);
     expect(ideas).toHaveLength(3);
     for (const idea of ideas) expect(idea).toMatch(/^[A-Za-z0-9]{1,15}$/);
+  });
+
+  it('copies an idea when it is clicked and marks it copied', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    click($$('.th-btn').find((b) => b.textContent === 'Change display name')!);
+    const chip = $<HTMLButtonElement>('#column-info .idea')!;
+    const name = chip.textContent!;
+    await act(async () => chip.click());
+    expect(writeText).toHaveBeenCalledWith(name);
+    expect(chip.classList.contains('copied')).toBe(true);
+    expect(chip.getAttribute('aria-label')).toBe(`Copied ${name}`);
   });
 
   it('keeps the platform and privacy settings help short', () => {

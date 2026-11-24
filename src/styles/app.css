@@ -23,6 +23,13 @@
   --del-bg: #FBEDEA;
   --on-del: #FFFFFF;
   --focus: #2E5BE6;
+  /* Activist Checklist's purple and its light tint, for things to copy. Text uses a deeper
+     shade of the purple so it stays readable on the tint. */
+  --accent: #644FFF;
+  --accent-ink: #432FDA;
+  --accent-bg: #EDEBFF;
+  --accent-bg-hover: #DBD6FF;
+  --accent-line: #B3A9FF;
   --flash: #FFF1B8;
   --shadow: rgba(16, 20, 28, 0.14);
 
@@ -52,6 +59,7 @@
     --done: #57C48D; --done-bg: #15301F; --done-line: #1F4530; --on-done: #0C2216; --progress: #E2B24E;
     --del: #F08B7F; --del-bg: #351C19; --on-del: #2B0F0B;
     --focus: #7D9BFF; --flash: #3A3417; --shadow: rgba(0, 0, 0, 0.5);
+    --accent: #B0A8FA; --accent-ink: #C2BCFC; --accent-bg: #221E3D; --accent-bg-hover: #2E2856; --accent-line: #4D4494;
   }
 }
 :root[data-theme="dark"] {
@@ -61,6 +69,7 @@
   --done: #57C48D; --done-bg: #15301F; --done-line: #1F4530; --on-done: #0C2216; --progress: #E2B24E;
   --del: #F08B7F; --del-bg: #351C19; --on-del: #2B0F0B;
   --focus: #7D9BFF; --flash: #3A3417; --shadow: rgba(0, 0, 0, 0.5);
+  --accent: #B0A8FA; --accent-ink: #C2BCFC; --accent-bg: #221E3D; --accent-bg-hover: #2E2856; --accent-line: #4D4494;
   color-scheme: dark;
 }
 :root[data-theme="light"] { color-scheme: light; }
@@ -367,11 +376,15 @@ img.logo { object-fit: contain; }
 .ideas, .pop-links { padding-top: 10px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
 .ideas b, .pop-links b { display: block; color: var(--ink-2); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
 .idea-list { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+/* Ideas to copy: tinted chips with a copy icon, so they read as something to click. */
 .idea {
-  border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: 6px;
-  padding: 4px 8px; font-size: 13px; font-weight: 500; cursor: copy;
+  display: inline-flex; align-items: center; gap: 6px; min-width: 0;
+  border: 1px solid var(--accent-line); background: var(--accent-bg); color: var(--accent-ink); border-radius: 6px;
+  padding: 4px 7px 4px 9px; font-size: 13px; font-weight: 600; line-height: 1.25; cursor: copy;
 }
-.idea:hover { background: var(--sunken); }
+.idea:hover { background: var(--accent-bg-hover); border-color: var(--accent); }
+.idea .i { width: 13px; height: 13px; opacity: .8; }
+.idea.copied { background: var(--done-bg); border-color: var(--done-line); color: var(--done); }
 .idea-more { margin-left: 4px; font-size: 12.5px; }
 .pop-links ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
 .pop-links a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }

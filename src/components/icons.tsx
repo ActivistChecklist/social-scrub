@@ -65,3 +65,16 @@ export const LaptopIcon = () => (
     <path d="M1.5 13h13" {...line} stroke-width="1.5" />
   </svg>
 );
+
+export const CopyIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" {...line} stroke-width="1.5" />
+    <path d="M10.5 3.5v-.25A1.25 1.25 0 0 0 9.25 2h-5A1.25 1.25 0 0 0 3 3.25v5A1.25 1.25 0 0 0 4.25 9.5h.25" {...line} stroke-width="1.5" />
+  </svg>
+);
+
+export const CheckIcon = () => (
+  <svg class="i" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M3.5 8.5l3 3 6-7" {...line} stroke-width="1.8" />
+  </svg>
+);
