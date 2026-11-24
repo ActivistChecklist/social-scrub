@@ -18,6 +18,13 @@ export const STEPS: Step[] = [
     title: 'Change your profile photo',
     desc: 'Remove your photo or swap it for one without your face. Reverse image search can match the same photo across sites.',
     how: "Remove the photo or replace it with a simple pattern or illustration. Don't reuse the same image on another site.",
+    links: [
+      {
+        name: 'StrongPhrase',
+        note: 'makes fake identities, each with an avatar you can use instead of your photo.',
+        href: 'https://strongphrase.net/identity/',
+      },
+    ],
   },
   {
     id: 'username',
