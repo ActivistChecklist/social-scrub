@@ -81,7 +81,11 @@ Help non-technical people find every account that could expose them and lock eac
 - Public Sans, self-hosted. No monospace type.
 - Neutral greys with a slight cool tint; ink-colored primary actions; green for done, amber for in progress, red for delete.
 - Light and dark themes follow the system setting.
-- Works on phones: the sheet scrolls sideways, rows get a little taller, and long text wraps.
+- Works on phones (tested at iPhone 13 mini size, 375 x 630 visible):
+  - The header and toolbar are one row each. Download and Add platform show only their icons, the summary reads "1 of 14 done", and the filter switch reads "Only checked".
+  - Scrolling down slides the header and toolbar away; scrolling up brings them back. They stay while the search box has focus or a menu is open.
+  - Only the column headers stay stuck while scrolling. Group rows scroll with the list.
+  - The sheet scrolls sideways inside its own area, rows get a little taller, and long text wraps.
 
 ## Not in this version
 

@@ -30,7 +30,8 @@ export function Toolbar({ query, onQuery, onlyMine, onOnlyMine, onAdd }: Toolbar
       <AddPlatform query={query} onAdd={onAdd} />
       <label class="switch">
         <input id="only-mine" type="checkbox" checked={onlyMine} onChange={(e) => onOnlyMine(e.currentTarget.checked)} />
-        Hide platforms I haven't checked
+        <span class="wide-only">Hide platforms I haven't checked</span>
+        <span class="narrow-only">Only checked</span>
       </label>
     </div>
   );
@@ -61,13 +62,14 @@ function AddPlatform({ query, onAdd }: { query: string; onAdd(name: string): boo
         class="btn btn-sm"
         aria-expanded={open}
         aria-controls="add-platform"
+        aria-label="Add platform"
         onClick={() => {
           if (!open) setName(query.trim());
           setOpen(!open);
         }}
       >
         <PlusIcon />
-        Add platform
+        <span class="btn-label">Add platform</span>
       </button>
       {open && (
         <form

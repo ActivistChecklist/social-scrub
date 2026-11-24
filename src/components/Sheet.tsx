@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 import { GROUPS, PLAN_INFO, PLATFORM_INFO, STEPS, type ColumnInfo } from '../data/steps';
 import type { Platform } from '../data/types';
@@ -49,6 +49,14 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
     [setInfo],
   );
   useDismiss(info !== null, closeInfo, pop);
+  // The popover is pinned to the screen, so it closes once the sheet scrolls away from its column.
+  useEffect(() => {
+    const sheet = scroller.current;
+    if (!info || !sheet) return;
+    const onScroll = () => closeInfo('outside');
+    sheet.addEventListener('scroll', onScroll, { passive: true });
+    return () => sheet.removeEventListener('scroll', onScroll);
+  }, [info, closeInfo, scroller]);
 
   const toggleInfo = (key: string, content: ColumnInfo, trigger: HTMLElement) => {
     if (info?.key === key) return closeInfo('toggle');
