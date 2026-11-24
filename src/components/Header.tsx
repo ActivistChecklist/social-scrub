@@ -3,7 +3,7 @@ import { useDismiss, type DismissReason } from '../hooks/useDismiss';
 import { eventsEnabled, track } from '../lib/events';
 import { summary, type AppState } from '../lib/state';
 import { ClearData } from './ClearData';
-import { BrandMark, DownloadIcon, LockIcon } from './icons';
+import { DownloadIcon, LockIcon } from './icons';
 
 interface HeaderProps {
   state: AppState;
@@ -18,7 +18,8 @@ export function Header({ state, onDownload, onClearAll }: HeaderProps) {
   return (
     <header class="bar">
       <h1 class="brand">
-        <BrandMark />
+        {/* The same shield as the favicon and app icon. */}
+        <img src="/android-chrome-192x192.png" alt="" width={24} height={24} decoding="async" />
         Social Scrub
       </h1>
       <div class="summary" aria-live="polite">

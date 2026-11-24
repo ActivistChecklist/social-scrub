@@ -49,7 +49,7 @@ Help non-technical people find every account that could expose them and lock eac
 
 ## Header and footer
 
-- Header: the Social Scrub mark, a progress bar with "X of Y accounts done", a "Saved only on this device" button, and a Download menu (Excel .xlsx, CSV). No count of remaining steps.
+- Header: the Social Scrub logo (the green shield, the same image as the favicon and app icon), a progress bar with "X of Y accounts done", a "Saved only on this device" button, and a Download menu (Excel .xlsx, CSV). No count of remaining steps.
 - "Saved only on this device" opens a short modal: the checklist stays in this browser, there's no account, we never see which platforms you have, and (when counts are on) what is counted. It also offers "Clear all data" ("On a shared or work computer?") with the same confirmation, and links to the full privacy page. On a phone the button shows only its lock icon.
 - Footer (at the end of the sheet): "Your checklist is saved only in this browser.", a "Clear all data" link with an in-page confirmation, and links to the privacy page, Contact (https://activistchecklist.org/contact/), Activist Checklist and the source code.
 

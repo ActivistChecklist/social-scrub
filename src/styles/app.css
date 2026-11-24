@@ -83,8 +83,7 @@ button, input { font: inherit; color: inherit; }
   display: flex; align-items: center; gap: 14px 24px; flex-wrap: wrap;
 }
 .brand { display: flex; align-items: center; gap: 9px; margin: 0; font-weight: 800; font-size: 17px; letter-spacing: -0.02em; white-space: nowrap; }
-.brand svg { width: 22px; height: 22px; color: var(--ink); }
-.brand .cut { fill: var(--surface); }
+.brand img { width: 24px; height: 24px; border-radius: 6px; flex: none; }
 .summary { display: flex; align-items: center; gap: 4px 10px; font-size: 13px; color: var(--muted); min-width: 0; flex-wrap: wrap; }
 .summary > span { white-space: nowrap; }
 .meter { width: 132px; height: 6px; border-radius: 3px; background: var(--sunken); overflow: hidden; flex: none; }
@@ -390,7 +389,7 @@ img.logo { object-fit: contain; }
   /* One row each for the header and the toolbar. Buttons drop their words; their labels stay for screen readers. */
   .bar { flex-wrap: nowrap; gap: 10px; padding-block: 8px; }
   .brand { font-size: 15px; gap: 7px; }
-  .brand svg { width: 20px; height: 20px; }
+  .brand img { width: 22px; height: 22px; border-radius: 5px; }
   .summary { flex: 1 1 auto; flex-wrap: nowrap; gap: 6px; font-size: 12.5px; }
   .meter { width: 28px; }
   .wide-only, .btn-label, .privacy-label { display: none; }

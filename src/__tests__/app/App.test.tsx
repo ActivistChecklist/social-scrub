@@ -30,6 +30,13 @@ afterEach(() => {
 });
 
 describe('App', () => {
+  it('shows the app icon as the header logo', () => {
+    const logo = $<HTMLImageElement>('.brand img');
+    expect(logo?.getAttribute('src')).toBe('/android-chrome-192x192.png');
+    expect(logo?.getAttribute('alt')).toBe('');
+    expect($('.brand')?.textContent).toBe('Social Scrub');
+  });
+
   it('opens with the common accounts checked and writes nothing yet', () => {
     expect(rowIds(0).slice(0, STARTERS.length)).toEqual(STARTERS);
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
