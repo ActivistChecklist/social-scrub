@@ -22,10 +22,13 @@ import {
   toggleDeleted,
   type AppState,
 } from '../lib/state';
-import { clearAllData, loadState, saveState } from '../lib/storage';
+import { clearAllData, loadState, loadTheme, saveState, saveTheme } from '../lib/storage';
+import { applyTheme, type Theme } from '../lib/theme';
 
 export function App() {
   const [state, setState] = useState<AppState>(loadState);
+  const [theme, setTheme] = useState<Theme>(loadTheme);
+  useLayoutEffect(() => applyTheme(theme), [theme]);
   const [query, setQuery] = useState('');
   const scroller = useRef<HTMLElement>(null);
   const top = useRef<HTMLDivElement>(null);
@@ -116,6 +119,7 @@ export function App() {
   const clearAll = () => {
     track('clear_data');
     clearAllData();
+    setTheme('system');
     const fresh = createInitialState();
     current.current = fresh;
     setQuery('');
@@ -128,6 +132,11 @@ export function App() {
       <div class={topAway ? 'top away' : 'top'} ref={top}>
         <Header
           state={state}
+          theme={theme}
+          onTheme={(next) => {
+            saveTheme(next);
+            setTheme(next);
+          }}
           onClearAll={clearAll}
           onDownload={(format) => {
             downloadExport(current.current, format);
