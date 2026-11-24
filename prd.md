@@ -42,7 +42,7 @@ Help non-technical people find every account that could expose them and lock eac
 ## Adding platforms
 
 - "Add platform" in the toolbar opens a small form. It starts with whatever is typed in the search box.
-- A search that matches nothing offers `Add "name"`. A search that matches something still offers it, under "Not the one you meant?".
+- A search that matches nothing says so, with the `Add "name"` button on its own line underneath. A search that matches something still offers it, under "Not the one you meant?".
 - The last row of the sheet is also an add field.
 - Added platforms are checked and set to Keep. Unchecking one shows "Added by you. Remove".
 - Adding a name that's already listed checks the existing platform instead of making a duplicate.
@@ -50,8 +50,8 @@ Help non-technical people find every account that could expose them and lock eac
 ## Header and footer
 
 - Header: the Social Scrub mark, a progress bar with "X of Y accounts done", a "Saved only on this device" button, and a Download menu (Excel .xlsx, CSV). No count of remaining steps.
-- "Saved only on this device" opens a short modal: the checklist stays in this browser, there's no account, we never see which platforms you have, and (when counts are on) what is counted. It links to the full privacy page. On a phone the button shows only its lock icon.
-- Footer (at the end of the sheet): "Your checkmarks are saved only in this browser. Nothing is sent anywhere.", a "Clear all data" link with an in-page confirmation, and links to the privacy page, Activist Checklist and the source code.
+- "Saved only on this device" opens a short modal: the checklist stays in this browser, there's no account, we never see which platforms you have, and (when counts are on) what is counted. It also offers "Clear all data" ("On a shared or work computer?") with the same confirmation, and links to the full privacy page. On a phone the button shows only its lock icon.
+- Footer (at the end of the sheet): "Your checklist is saved only in this browser.", a "Clear all data" link with an in-page confirmation, and links to the privacy page, Contact (https://activistchecklist.org/contact/), Activist Checklist and the source code.
 
 ## Help popovers
 
@@ -60,14 +60,15 @@ Help non-technical people find every account that could expose them and lock eac
 
 ## Anonymous counts
 
+- Each page view is counted, with the page, the referrer (trimmed to origin and path), and the browser's language and screen size.
 - Each main action sends a count: check or uncheck a platform, Select all, keep or delete, mark a step, mark deleted, finish a platform, add or remove a platform, the "hide unchecked" filter, opening a help popover or the privacy note, downloading, and clearing data.
 - A count carries only coarse details: the priority group, the step column, keep or delete, done or skipped, the file format. Never a platform id, a custom platform name, or anything typed.
 - No counts are sent when the browser sends Do Not Track or Global Privacy Control.
-- Off unless the build sets an endpoint. The payload matches Umami's /api/send, ideally forwarded through a path on this site.
+- The browser posts to `/api/counter` on this site. The server forwards only known events, using @activistchecklist/umami-extra-privacy with the `geo-hash` IP level, to our self-hosted Umami. Same setup as Activist Checklist.
 
 ## Hosting
 
-- Static files on a host still to be chosen (Railway or May First). The security headers and old-route redirects live in `deploy/security.json`.
+- Railway, deployed from `main`, as one Node process. The security headers and old-route redirects live in `deploy/security.json`.
 
 ## Export
 
@@ -85,5 +86,4 @@ Help non-technical people find every account that could expose them and lock eac
 ## Not in this version
 
 - Server-saved sessions and shareable session links from the first version.
-- Page-view analytics. The first version sent anonymized page views to a self-hosted server. This version only counts actions, and only when configured.
 - The Block Party step flow (only a link in the Privacy settings popover remains) and the random name generators.

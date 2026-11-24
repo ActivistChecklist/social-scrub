@@ -19,7 +19,7 @@ Check the platforms you have, decide whether to keep or delete each one, then wo
 ## Privacy
 
 - Your checkmarks are saved in your browser's local storage and nowhere else.
-- No accounts and no cookies. If anonymous counts are turned on, they say what kind of action happened ("a box was checked"), never which platform or anything typed, and they stop when your browser sends Do Not Track or Global Privacy Control.
+- No accounts and no cookies. We count visits (including which site linked you here) and actions like "a box was checked", never which platform or anything typed. Counts pass through our own server, which scrambles IP addresses before they reach our analytics, and they stop when your browser sends Do Not Track or Global Privacy Control.
 - The page loads nothing from other sites. Fonts and logos are served from this site.
 - "Clear all data" at the bottom of the sheet removes everything it saved.
 
@@ -43,15 +43,16 @@ pnpm dev
 | --- | --- |
 | `pnpm dev` | Start the dev server |
 | `pnpm build` | Typecheck and build the static site into `dist/` |
+| `pnpm start` | Run the production server on the built site |
 | `pnpm preview` | Serve `dist/` with the production security headers |
 | `pnpm test:run` | Run the tests once |
 | `pnpm logos` | Rebuild the logo file after adding an `icon` to a platform |
 
-See [deploy/README.md](deploy/README.md) for hosting: the build is static files plus the security headers in `deploy/security.json`.
+See [deploy/README.md](deploy/README.md) for hosting. The site runs on Railway as one small Node server.
 
 ### Stack
 
-Vite, Preact and TypeScript, built as a static site with no server. The only runtime packages are `preact` and the self-hosted Public Sans font. Excel export is a small writer in `src/lib/xlsx.ts`, so there's no spreadsheet library.
+Vite, Preact and TypeScript, built as a static site, served by a small Node server that also relays anonymous counts through [umami-extra-privacy](https://github.com/ActivistChecklist/umami-extra-privacy). The browser's only runtime packages are `preact` and the self-hosted Public Sans font. Excel export is a small writer in `src/lib/xlsx.ts`, so there's no spreadsheet library.
 
 ### Adding a platform
 

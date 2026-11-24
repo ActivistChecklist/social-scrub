@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Social Scrub is a privacy-focused, single-page web app that helps non-technical people lock down their social media accounts to prevent doxxing. It works like a spreadsheet: rows are platforms (138 built in, plus any the person adds), columns are eight privacy steps. Everything is saved in the browser's localStorage. There is no server.
+Social Scrub is a privacy-focused, single-page web app that helps non-technical people lock down their social media accounts to prevent doxxing. It works like a spreadsheet: rows are platforms (138 built in, plus any the person adds), columns are eight privacy steps. The checklist is saved in the browser's localStorage. A small Node server (`server/`) serves the built site and relays anonymous counts to Umami.
 
 The first version (a multi-page Next.js app) lives on the `archive/v1-nextjs` branch and the `v1-nextjs` tag. Don't build on it.
 
@@ -39,7 +39,8 @@ When you receive a large set of design instructions or UI/UX feedback, update `p
 
 These are product requirements, not preferences:
 
-- **The checklist never leaves the browser.** No accounts, no server storage. The only request the app makes is the optional anonymous count in `src/lib/events.ts`. A count may name the action, the priority group or the step column, but never a platform, a custom platform name, or anything typed. `src/__tests__/app/events.test.tsx` enforces this. Counts are skipped when the browser sends Do Not Track or Global Privacy Control.
+- **The checklist never leaves the browser.** No accounts, no server storage. The only requests the app makes are anonymous counts (`src/lib/events.ts`): page views (page, referrer, language, screen) and actions. An action may name the priority group or the step column, but never a platform, a custom platform name, or anything typed. `src/__tests__/app/events.test.tsx` enforces this. Counts are skipped when the browser sends Do Not Track or Global Privacy Control.
+- **Counts go through our own server.** The browser posts to `/api/counter`; `server/app.ts` keeps only known fields and event names, then `@activistchecklist/umami-extra-privacy` scrambles the IP with `geo-hash` before forwarding to Umami. The server must never log requests, IPs or bodies.
 - **No third-party resources.** No CDNs, no Google Fonts, no remote images. Fonts and logos are bundled or in `public/`. The Content Security Policy in `deploy/security.json` only allows `'self'` and will break anything else.
 - **No inline scripts or `style="..."` in HTML.** Set styles from code through Preact's `style` prop, which the CSP allows.
 - **Keep dependencies few.** Runtime deps are `preact` and `@fontsource-variable/public-sans`. Ask before adding a package; prefer a small local helper. `pnpm-workspace.yaml` holds back releases younger than 3 days.
@@ -50,7 +51,8 @@ These are product requirements, not preferences:
 
 - `pnpm dev` - Start the dev server
 - `pnpm build` - Typecheck and build the static site into `dist/`
-- `pnpm preview` - Serve `dist/` with the production security headers from `deploy/security.json`
+- `pnpm start` - Run the production server (`server/index.ts`) on the built `dist/`. Reads `.env` if present
+- `pnpm preview` - Serve `dist/` with the production security headers from `deploy/security.json` (no counter endpoint)
 - `pnpm test` - Vitest in watch mode
 - `pnpm test:run` - Run tests once
 - `pnpm logos` - Regenerate `src/data/logos.generated.ts` after adding or changing an `icon`
@@ -62,6 +64,7 @@ Run a single test file: `pnpm test:run src/__tests__/lib/storage.test.ts`
 ### Tech stack
 
 - Vite + Preact + TypeScript, static output in `dist/`
+- A dependency-free Node server (`server/`, run with Node's built-in TypeScript support) plus `@activistchecklist/umami-extra-privacy`, installed from GitHub by commit SHA. Update its SHA in `package.json` and `pnpm-workspace.yaml` together
 - Plain CSS in `src/styles/app.css` with color tokens on `:root` and a dark palette under `prefers-color-scheme`
 - Vitest + happy-dom for tests
 - pnpm
@@ -80,7 +83,10 @@ src/lib/storage.ts         localStorage read/validate/write, migration from the 
 src/lib/export.ts          Export rows, CSV, file download
 src/lib/xlsx.ts            Minimal .xlsx writer (stored zip + SpreadsheetML)
 src/lib/motion.ts          Row slide animation, focus restore, arrow-key navigation
-src/lib/events.ts          Optional anonymous action counts (Umami-shaped, off unless configured)
+src/lib/events.ts          Anonymous page views and action counts, sent to /api/counter (production builds only)
+src/lib/event-names.ts     The action names the server will forward
+server/app.ts              Serves dist/ from memory with headers and redirects; /api/counter relay
+server/index.ts            Starts the server; reads PORT and UMAMI_* settings
 src/data/platforms.ts      The platform list
 src/data/steps.ts          Step copy, column popovers, groups, the platforms checked on first visit
 src/data/logos.ts          Resolves a platform to a logo (simple-icons glyph, colored tile, image or letter)
@@ -98,4 +104,4 @@ Add a line to `src/data/platforms.ts`. Logo: `icon` (simple-icons slug, then run
 
 ### Deploy
 
-Static files, host not chosen yet (Railway or May First). `deploy/security.json` holds the headers and redirects the host must apply, and `deploy/README.md` says what the host needs to do. Anonymous counts are configured at build time with `VITE_EVENTS_URL` and `VITE_EVENTS_SITE_ID` (see `.env.example`); without them nothing is sent.
+Railway, from the `main` branch: `pnpm build` then `pnpm start`. Keep it at one instance (the relay's daily key lives in memory). `deploy/security.json` holds the headers and redirects the server applies, and `deploy/README.md` covers settings and how counts are protected.
