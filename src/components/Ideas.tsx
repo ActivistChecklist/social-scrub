@@ -31,8 +31,11 @@ export function Ideas({ kind }: { kind: IdeaKind }) {
   );
 }
 
-/** One idea. Clicking copies it, and the copy icon turns into a check for a moment. */
-export function IdeaChip({ idea, kind, class: extra }: { idea: string; kind: IdeaKind; class?: string }) {
+/**
+ * One idea. Clicking copies it, and the copy icon turns into a check for a moment.
+ * `inline` is for the idea shown in a row, under the step's box.
+ */
+export function IdeaChip({ idea, kind, inline = false }: { idea: string; kind: IdeaKind; inline?: boolean }) {
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (!copied) return;
@@ -44,14 +47,21 @@ export function IdeaChip({ idea, kind, class: extra }: { idea: string; kind: Ide
     try {
       await navigator.clipboard.writeText(idea);
       setCopied(true);
-      track('copy_idea', { kind });
+      track('copy_idea', { kind, from: inline ? 'row' : 'help' });
     } catch {
       // Copying can be blocked. The idea is still on screen to type or select.
     }
   };
 
   return (
-    <button type="button" class={['idea', extra, copied && 'copied'].filter(Boolean).join(' ')} onClick={copy} aria-label={`${copied ? 'Copied' : 'Copy'} ${idea}`}>
+    <button
+      type="button"
+      class={['idea', inline && 'idea-inline', copied && 'copied'].filter(Boolean).join(' ')}
+      onClick={copy}
+      aria-label={`${copied ? 'Copied' : 'Copy'} ${idea}`}
+      data-focus={inline ? `idea-${kind}` : undefined}
+      data-tip={inline ? 'Click to copy' : undefined}
+    >
       <span class="idea-text">{idea}</span>
       {copied ? <CheckIcon /> : <CopyIcon />}
     </button>

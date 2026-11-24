@@ -6,12 +6,13 @@ import { useDismiss } from '../hooks/useDismiss';
 import { useTips } from '../hooks/useTips';
 import { track } from '../lib/events';
 import { moveFocusWithArrows } from '../lib/motion';
+import { nameIdeas, usernameIdeas } from '../lib/ideas';
 import { allPlatforms, isChecked, isFinished, statusOf, type AppState } from '../lib/state';
 import { BlockPartyNote, openBlockPartyNote } from './BlockPartyNote';
 import { Footer } from './Footer';
 import { Ideas } from './Ideas';
 import { ArrowDownIcon } from './icons';
-import { COLUMN_COUNT, Row, type RowActions } from './Row';
+import { COLUMN_COUNT, Row, type RowActions, type RowIdeas } from './Row';
 
 /** Where a platform was added from, for the anonymous counts. */
 export type AddSource = 'search' | 'sheet';
@@ -61,6 +62,18 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
   const rowAct = useMemo<RowActions>(() => ({ ...act, blockPartyInfo: () => openBlockPartyNote(bpDialog.current) }), [act]);
 
   useTips(scroller, tip, state);
+
+  // Each row keeps the same name and username ideas until the page is reloaded. They are never saved.
+  const rowIdeas = useRef(new Map<string, RowIdeas>());
+  const ideasFor = (id: string): RowIdeas | undefined => {
+    if (!state.showIdeas) return undefined;
+    let ideas = rowIdeas.current.get(id);
+    if (!ideas) {
+      ideas = { name: nameIdeas(1)[0], username: usernameIdeas(1)[0] };
+      rowIdeas.current.set(id, ideas);
+    }
+    return ideas;
+  };
 
   const closeInfo = useCallback(
     (reason: 'outside' | 'escape' | 'toggle') => {
@@ -129,7 +142,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           </th>
         </tr>
         {mine.map((p) => (
-          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} />
+          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} ideas={ideasFor(p.id)} />
         ))}
         {showDivider && (
           <tr class="divider" key="divider">
@@ -153,13 +166,13 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
 
   return (
     <main class="sheet" ref={scroller} tabIndex={-1}>
-      <table class="grid" onKeyDown={(e) => moveFocusWithArrows(e, scroller.current)}>
+      <table class={state.showIdeas ? 'grid ideas-on' : 'grid'} onKeyDown={(e) => moveFocusWithArrows(e, scroller.current)}>
         <caption class="visually-hidden">Your accounts and the privacy steps for each one</caption>
         <colgroup>
           <col class="col-platform" />
           <col class="col-plan" />
           {STEPS.map((s) => (
-            <col key={s.id} class="col-step" />
+            <col key={s.id} class={`col-step col-${s.id}`} />
           ))}
           <col class="col-extra" />
         </colgroup>

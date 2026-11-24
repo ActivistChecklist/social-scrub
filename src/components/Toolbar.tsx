@@ -8,11 +8,13 @@ interface ToolbarProps {
   onQuery(q: string): void;
   onlyMine: boolean;
   onOnlyMine(v: boolean): void;
+  showIdeas: boolean;
+  onShowIdeas(v: boolean): void;
   /** Returns false when the name was empty. */
   onAdd(name: string): boolean;
 }
 
-export function Toolbar({ query, onQuery, onlyMine, onOnlyMine, onAdd }: ToolbarProps) {
+export function Toolbar({ query, onQuery, onlyMine, onOnlyMine, showIdeas, onShowIdeas, onAdd }: ToolbarProps) {
   return (
     <div class="tools">
       <label class="search">
@@ -32,6 +34,11 @@ export function Toolbar({ query, onQuery, onlyMine, onOnlyMine, onAdd }: Toolbar
         <input id="only-mine" type="checkbox" checked={onlyMine} onChange={(e) => onOnlyMine(e.currentTarget.checked)} />
         <span class="wide-only">Hide platforms I haven't checked</span>
         <span class="narrow-only">Only checked</span>
+      </label>
+      <label class="switch">
+        <input id="show-ideas" type="checkbox" checked={showIdeas} onChange={(e) => onShowIdeas(e.currentTarget.checked)} />
+        <span class="wide-only">Show name and username ideas</span>
+        <span class="narrow-only">Ideas</span>
       </label>
     </div>
   );

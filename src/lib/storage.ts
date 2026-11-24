@@ -82,7 +82,7 @@ export function parseState(raw: unknown): AppState | null {
   }
 
   const nextOrder = typeof raw.nextOrder === 'number' && Number.isFinite(raw.nextOrder) ? Math.max(Math.floor(raw.nextOrder), maxOrder + 1) : maxOrder + 1;
-  return { version: 2, entries, custom, nextOrder, onlyMine: raw.onlyMine === true };
+  return { version: 2, entries, custom, nextOrder, onlyMine: raw.onlyMine === true, showIdeas: raw.showIdeas === true };
 }
 
 // The first version numbered its steps: 1 was "delete", 2 to 9 match the columns.
@@ -98,7 +98,7 @@ function legacySteps(completed: unknown, skipped: unknown): Entry['steps'] {
 /** Carries progress over from the first version of the site, so returning visitors don't start from zero. */
 export function migrateLegacy(raw: unknown): AppState | null {
   if (!isObject(raw) || !Array.isArray(raw.platforms)) return null;
-  const state: AppState = { version: 2, entries: {}, custom: [], nextOrder: 1, onlyMine: false };
+  const state: AppState = { version: 2, entries: {}, custom: [], nextOrder: 1, onlyMine: false, showIdeas: false };
 
   const add = (id: string, p: Record<string, unknown>) => {
     // "Skipped" in the old flow meant "not for me", and "no" meant no account.

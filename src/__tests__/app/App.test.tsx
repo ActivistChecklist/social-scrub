@@ -188,6 +188,35 @@ describe('App', () => {
     expect(dialog.textContent).toContain('Cleared.');
   });
 
+  it('shows a name and username idea under those steps on each kept row when the switch is on', () => {
+    const toggle = () => act(() => {
+      const input = $<HTMLInputElement>('#show-ideas')!;
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    const idea = (id: string, step: string) => $(`tr[data-id=${id}] .cell[data-focus=step-${step}] + .idea-inline`)?.textContent;
+    expect($$('.idea-inline')).toHaveLength(0);
+
+    toggle();
+    expect($('.grid')?.classList.contains('ideas-on')).toBe(true);
+    expect(idea('facebook', 'name')).toMatch(/^[A-Z][A-Za-z-]+ [A-Z][A-Za-z-]+$/);
+    expect(idea('facebook', 'username')).toMatch(/^[A-Za-z0-9]{1,15}$/);
+    // One under each of the two steps, and none on rows that aren't checked.
+    expect($$('tr[data-id=facebook] .idea-inline')).toHaveLength(2);
+    expect($$('tr[data-id=reddit] .idea-inline')).toHaveLength(0);
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).showIdeas).toBe(true);
+
+    // A row keeps its ideas while other things change, and a delete row has none.
+    const before = idea('facebook', 'name');
+    click($('tr[data-id=facebook] .cell[data-focus=step-email]'));
+    expect(idea('facebook', 'name')).toBe(before);
+    click($('tr[data-id=instagram] [data-v=delete]'));
+    expect($$('tr[data-id=instagram] .idea-inline')).toHaveLength(0);
+
+    toggle();
+    expect($$('.idea-inline')).toHaveLength(0);
+  });
+
   it('puts the Add button on its own line when a search finds nothing', () => {
     type($<HTMLInputElement>('#search')!, 'Ravelry');
     expect($('.add-in')?.classList.contains('stacked')).toBe(true);

@@ -14,4 +14,9 @@ describe('sheet column widths', () => {
   it('centers the Deleted checkbox in the first step column using that same width', () => {
     expect(css).toMatch(/padding: 0 14px 0 calc\(\(var\(--col-step\) - 18px\) \/ 2\)/);
   });
+
+  it('widens the name and username columns for ideas, and keeps the Deleted checkbox centered under the name column', () => {
+    expect(css).toMatch(/\.grid\.ideas-on col\.col-name, \.grid\.ideas-on col\.col-username \{ width: var\(--col-idea\); \}/);
+    expect(css).toMatch(/\.grid\.ideas-on \.del-btn \{ padding-left: calc\(\(var\(--col-idea\) - 18px\) \/ 2\); \}/);
+  });
 });

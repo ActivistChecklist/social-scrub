@@ -40,6 +40,8 @@
   --col-platform: 252px;
   --col-plan: 146px;
   --col-step: 80px;
+  /* The name and username columns while ideas show in the rows. */
+  --col-idea: 156px;
   --col-extra: 236px;
   --row-h: 40px;
   --thead-h: 58px;
@@ -319,6 +321,24 @@ img.logo { object-fit: contain; }
 .cell[data-state="skipped"]::before { background: var(--sunken); border-color: var(--line-strong); }
 .cell[data-state="skipped"]::after { width: 8px; height: 2px; border-radius: 1px; background: var(--muted); }
 
+/* Name and username ideas in the rows (toolbar switch). Those two columns widen to fit them.
+   Each row's controls stay in a top band of the usual row height, so they line up across the
+   row, and the idea sits under its step's box. */
+.grid.ideas-on { min-width: calc(var(--col-platform) + var(--col-plan) + 6 * var(--col-step) + 2 * var(--col-idea) + var(--col-extra)); }
+.grid.ideas-on col.col-name, .grid.ideas-on col.col-username { width: var(--col-idea); }
+.grid.ideas-on .del-btn { padding-left: calc((var(--col-idea) - 18px) / 2); }
+.row.with-ideas td { vertical-align: top; }
+.row.with-ideas .cell { height: var(--row-h); }
+.row.with-ideas .c-plan { padding-top: calc((var(--row-h) - 26px) / 2); }
+.row.with-ideas .extra-notes { min-height: var(--row-h); }
+/* The columns are wide enough for the longest idea on one line; the ellipsis is only a fallback. */
+.idea.idea-inline {
+  display: flex; justify-content: center; gap: 4px; width: calc(100% - 10px); margin: -3px 5px 8px;
+  padding: 3px 6px; font-size: 11.5px; white-space: nowrap;
+}
+.idea.idea-inline .idea-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.idea.idea-inline .i { width: 12px; height: 12px; }
+
 .grid .c-delete { background: var(--del-bg); }
 .grid .c-delete.is-deleted { background: var(--done-bg); }
 .del-btn {
@@ -423,7 +443,7 @@ img.logo { object-fit: contain; }
 
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
-  :root { --col-platform: 178px; --col-plan: 128px; --col-step: 66px; --col-extra: 232px; --row-h: 44px; --thead-h: 52px; }
+  :root { --col-platform: 178px; --col-plan: 128px; --col-step: 66px; --col-idea: 136px; --col-extra: 232px; --row-h: 44px; --thead-h: 52px; }
   /* One row each for the header and the toolbar. Buttons drop their words; their labels stay for screen readers. */
   .bar { flex-wrap: nowrap; gap: 10px; padding-block: 8px; }
   .brand { font-size: 15px; gap: 7px; }
@@ -446,6 +466,9 @@ img.logo { object-fit: contain; }
   /* Group rows scroll away on a phone, so only the column headers stay put. */
   .grp th { position: static; height: 32px; }
   .seg button { padding: 0 8px; }
+  /* Ideas in the rows drop the copy icon to fit the narrower columns. */
+  .idea.idea-inline { font-size: 11px; padding-inline: 5px; }
+  .idea.idea-inline .i { display: none; }
 }
 /* Narrow phones: the words already give the progress, so the meter makes way for the header buttons. */
 @media (max-width: 420px) {
