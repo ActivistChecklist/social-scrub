@@ -1,4 +1,14 @@
 # Supply-chain hardening. pnpm will not install a version until it has been
 # public for 3 days, which gives the registry time to pull compromised releases.
-# Install scripts from dependencies stay blocked (pnpm's default).
+# Install scripts from dependencies stay blocked (pnpm's default) except below.
 minimumReleaseAge: 4320
+
+# umami-extra-privacy is our own package, installed from GitHub by commit SHA. It
+# builds itself on install, so its prepare script must be allowed. pnpm 12 wants the
+# exact tarball URL, so update this SHA together with the one in package.json.
+allowBuilds:
+  "@activistchecklist/umami-extra-privacy@https://codeload.github.com/ActivistChecklist/umami-extra-privacy/tar.gz/cdc7422d143c17ca647133200785d52ac589e259": true
+  "@activistchecklist/umami-extra-privacy": true
+
+onlyBuiltDependencies:
+  - "@activistchecklist/umami-extra-privacy"

@@ -5,11 +5,12 @@
   "type": "module",
   "packageManager": "pnpm@12.16.1",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18"
   },
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "start": "node --env-file-if-exists=.env server/index.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
@@ -17,6 +18,7 @@
     "logos": "node scripts/build-logos.mjs"
   },
   "dependencies": {
+    "@activistchecklist/umami-extra-privacy": "github:ActivistChecklist/umami-extra-privacy#cdc7422d143c17ca647133200785d52ac589e259",
     "@fontsource-variable/public-sans": "^5.3.0",
     "preact": "^11.2.0"
   },

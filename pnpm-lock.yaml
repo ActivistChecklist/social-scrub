@@ -166,6 +166,9 @@ importers:
 
   .:
     dependencies:
+      '@activistchecklist/umami-extra-privacy':
+        specifier: github:ActivistChecklist/umami-extra-privacy#cdc7422d143c17ca647133200785d52ac589e259
+        version: https://codeload.github.com/ActivistChecklist/umami-extra-privacy/tar.gz/cdc7422d143c17ca647133200785d52ac589e259
       '@fontsource-variable/public-sans':
         specifier: ^5.3.0
         version: 5.3.0
@@ -193,6 +196,16 @@ importers:
         version: 5.1.1(@types/node@26.6.6)(happy-dom@21.0.4)(vite@8.3.8(@types/node@26.6.6))
 
 packages:
+
+  '@activistchecklist/umami-extra-privacy@https://codeload.github.com/ActivistChecklist/umami-extra-privacy/tar.gz/cdc7422d143c17ca647133200785d52ac589e259':
+    resolution: {gitHosted: true, integrity: sha512-Qo0XFVI6tsWZlMO7NHYi6St+wjEJzyJYrAPMBhNFxW1v7daY8JKb8PF3oeOTYmsmxsLrCy6UDcb5P4P7KsA7mw==, tarball: https://codeload.github.com/ActivistChecklist/umami-extra-privacy/tar.gz/cdc7422d143c17ca647133200785d52ac589e259}
+    version: 1.0.0
+    engines: {node: '>=18'}
+    peerDependencies:
+      fastify: '>=4'
+    peerDependenciesMeta:
+      fastify:
+        optional: true
 
   '@emnapi/core@2.0.0-beta.2':
     resolution: {integrity: sha512-MzCVoWtcg4Pm2B3je5mMvYMvj3MmBKw+fU7vbsJc9/iT8ip6/eYIHo/Dsm/mr+wsHB6SEyJDuxB09Yy6r/8+4A==}
@@ -783,6 +796,8 @@ packages:
         optional: true
 
 snapshots:
+
+  '@activistchecklist/umami-extra-privacy@https://codeload.github.com/ActivistChecklist/umami-extra-privacy/tar.gz/cdc7422d143c17ca647133200785d52ac589e259': {}
 
   '@emnapi/core@2.0.0-beta.2':
     dependencies:

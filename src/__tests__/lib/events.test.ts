@@ -2,48 +2,55 @@ import { describe, expect, it } from 'vitest';
 import { createTracker, optedOut } from '../../lib/events';
 
 function recorder() {
-  const sent: { url: string; body: any }[] = [];
-  return { sent, send: (url: string, body: string) => void sent.push({ url, body: JSON.parse(body) }) };
+  const sent: unknown[] = [];
+  return { sent, send: (event: unknown) => void sent.push(event) };
 }
 
 describe('createTracker', () => {
-  it('sends nothing when the build has no endpoint', () => {
+  it('sends nothing when counts are off', () => {
     const r = recorder();
-    const t = createTracker({}, r.send, () => false);
+    const t = createTracker(false, r.send, () => false);
     t.track('check_platform', { group: 'highest' });
-    expect(t.enabled).toBe(false);
+    t.pageView();
     expect(r.sent).toHaveLength(0);
   });
 
-  it('sends an Umami-shaped event with only the name and the coarse details', () => {
+  it('sends the action name and its coarse details', () => {
     const r = recorder();
-    const t = createTracker({ url: '/api/send', siteId: 'site-1' }, r.send, () => false);
-    t.track('mark_step', { step: 'email', mark: 'done' });
-    expect(r.sent).toEqual([
-      {
-        url: '/api/send',
-        body: { type: 'event', payload: { website: 'site-1', hostname: location.hostname, url: '/', name: 'mark_step', data: { step: 'email', mark: 'done' } } },
-      },
-    ]);
+    createTracker(true, r.send, () => false).track('mark_step', { step: 'email', mark: 'done' });
+    expect(r.sent).toEqual([{ name: 'mark_step', data: { step: 'email', mark: 'done' } }]);
   });
 
   it('leaves out empty details', () => {
     const r = recorder();
-    createTracker({ url: '/api/send', siteId: 'site-1' }, r.send, () => false).track('clear_data');
-    expect(r.sent[0].body.payload).not.toHaveProperty('data');
+    createTracker(true, r.send, () => false).track('clear_data', {});
+    expect(r.sent).toEqual([{ name: 'clear_data' }]);
+  });
+
+  it('sends a page view with no name, so the helper fills in the page and referrer', () => {
+    const r = recorder();
+    createTracker(true, r.send, () => false).pageView();
+    expect(r.sent).toEqual([{}]);
   });
 
   it('sends nothing when the browser opts out', () => {
     const r = recorder();
-    createTracker({ url: '/api/send', siteId: 'site-1' }, r.send, () => true).track('download', { format: 'csv' });
+    const t = createTracker(true, r.send, () => true);
+    t.track('download', { format: 'csv' });
+    t.pageView();
     expect(r.sent).toHaveLength(0);
   });
 
   it('never throws, even if sending fails', () => {
-    const t = createTracker({ url: '/api/send', siteId: 'site-1' }, () => {
-      throw new Error('offline');
-    }, () => false);
+    const t = createTracker(
+      true,
+      () => {
+        throw new Error('offline');
+      },
+      () => false,
+    );
     expect(() => t.track('open_privacy')).not.toThrow();
+    expect(() => t.pageView()).not.toThrow();
   });
 });
 

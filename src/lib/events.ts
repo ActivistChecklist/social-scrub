@@ -1,42 +1,22 @@
 /**
- * Anonymous counts of what people do on the sheet.
+ * Anonymous counts of visits and of what people do on the sheet, sent the same way
+ * Activist Checklist does it: the browser posts to /api/counter on this site, and the
+ * server scrambles the visitor's IP address before forwarding to Umami
+ * (@activistchecklist/umami-extra-privacy, see server/).
  *
- * Off unless the build sets VITE_EVENTS_URL and VITE_EVENTS_SITE_ID (see .env.example).
- *
- * What's sent: the action's name and a few coarse details, like which priority group
- * or which step column. Never which platform, never anything typed, no cookies, no
- * referrer. Nothing is sent when the browser asks not to be tracked (Global Privacy
- * Control or Do Not Track).
- *
- * The body matches Umami's /api/send, so the URL can be a self-hosted Umami or a path on
- * this site that forwards to one. A same-origin path keeps the Content Security Policy
- * at connect-src 'self' and lets the forwarder drop visitors' IP addresses.
+ * A page view carries the page, the site that linked here, and the browser's language,
+ * screen size and user agent. An action carries its name and a few coarse details, like
+ * the priority group or the step column. Never which platform, never anything typed.
+ * Nothing is sent when the browser sends Do Not Track or Global Privacy Control, and
+ * nothing is sent from the dev server.
  */
+import { sendAnalytics } from '@activistchecklist/umami-extra-privacy/client';
+import type { EventName } from './event-names';
 
-export type EventName =
-  | 'check_platform'
-  | 'uncheck_platform'
-  | 'select_all'
-  | 'set_plan'
-  | 'mark_step'
-  | 'mark_deleted'
-  | 'finish_platform'
-  | 'add_platform'
-  | 'remove_platform'
-  | 'filter_checked'
-  | 'open_help'
-  | 'open_privacy'
-  | 'download'
-  | 'clear_data';
-
+export type { EventName };
 export type EventData = Record<string, string | number | boolean>;
 
-export interface EventConfig {
-  url?: string;
-  siteId?: string;
-}
-
-type Send = (url: string, body: string) => void;
+export const COUNTER_ENDPOINT = '/api/counter';
 
 /** True when the browser has asked sites not to track it. */
 export function optedOut(nav: (Navigator & { globalPrivacyControl?: boolean }) | undefined = globalThis.navigator): boolean {
@@ -44,39 +24,34 @@ export function optedOut(nav: (Navigator & { globalPrivacyControl?: boolean }) |
   return nav.globalPrivacyControl === true || nav.doNotTrack === '1';
 }
 
-export function createTracker(config: EventConfig, send: Send, isOptedOut: () => boolean = () => optedOut()) {
-  const url = config.url?.trim();
-  const siteId = config.siteId?.trim();
-  const enabled = Boolean(url && siteId);
+type Send = (event: { name?: EventName; data?: EventData }) => void;
+
+export function createTracker(enabled: boolean, send: Send, isOptedOut: () => boolean = () => optedOut()) {
+  const safely = (event: Parameters<Send>[0]) => {
+    if (!enabled || isOptedOut()) return;
+    try {
+      send(event);
+    } catch {
+      // A count is never worth breaking the page over.
+    }
+  };
   return {
     enabled,
     track(name: EventName, data?: EventData) {
-      if (!enabled || isOptedOut()) return;
-      const payload: Record<string, unknown> = { website: siteId, hostname: globalThis.location?.hostname ?? '', url: '/', name };
-      if (data && Object.keys(data).length) payload.data = data;
-      try {
-        send(url!, JSON.stringify({ type: 'event', payload }));
-      } catch {
-        // A count is never worth breaking the page over.
-      }
+      safely(data && Object.keys(data).length ? { name, data } : { name });
+    },
+    /** Counts a visit. The browser helper fills in the page, the referrer, language and screen size. */
+    pageView() {
+      safely({});
     },
   };
 }
 
-const post: Send = (url, body) => {
-  void fetch(url, {
-    method: 'POST',
-    body,
-    keepalive: true,
-    credentials: 'omit',
-    cache: 'no-store',
-    referrerPolicy: 'no-referrer',
-    headers: { 'Content-Type': 'application/json' },
-  }).catch(() => {});
-};
+const tracker = createTracker(import.meta.env.PROD, (event) => {
+  void sendAnalytics(event, { endpoint: COUNTER_ENDPOINT });
+});
 
-const tracker = createTracker({ url: import.meta.env.VITE_EVENTS_URL, siteId: import.meta.env.VITE_EVENTS_SITE_ID }, post);
-
-/** Whether this build sends counts at all. The privacy note mentions them only when it does. */
+/** Production builds count; the dev server doesn't. The privacy note mentions counts only when they're on. */
 export const eventsEnabled = tracker.enabled;
 export const track = tracker.track;
+export const trackPageView = tracker.pageView;
