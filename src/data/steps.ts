@@ -7,7 +7,6 @@ export const STEPS: Step[] = [
   {
     id: 'name',
     label: 'Change display name',
-    title: 'Change your display name',
     desc: "Use a name that isn't your real one. Your real name is the easiest way for a stranger to connect this account to you.",
     how: 'Open your profile or account settings and look for "Name" or "Display name". Pick a nickname you don\'t use anywhere else.',
     ideas: 'names',
@@ -15,7 +14,6 @@ export const STEPS: Step[] = [
   {
     id: 'photo',
     label: 'Remove or change photo',
-    title: 'Change your profile photo',
     desc: 'Remove your photo or swap it for one without your face. Reverse image search can match the same photo across sites.',
     how: "Remove the photo or replace it with a simple pattern or illustration. Don't reuse the same image on another site.",
     links: [
@@ -29,7 +27,6 @@ export const STEPS: Step[] = [
   {
     id: 'username',
     label: 'Use a random username',
-    title: 'Change your username',
     desc: "Use a username you don't use anywhere else. The same handle on two sites links those accounts.",
     how: 'Look for "Username" or "Handle" in account settings and change it to something random. Some sites won\'t let you.',
     ideas: 'usernames',
@@ -37,7 +34,6 @@ export const STEPS: Step[] = [
   {
     id: 'email',
     label: 'Use a unique email',
-    title: 'Use a different email address',
     desc: "Give each site its own address so a leaked email can't tie your accounts together.",
     how: 'If you use Gmail, add "+sitename" before the @, like alex+facebook@gmail.com. Mail still reaches your inbox. For more privacy, use an alias service.',
     links: [
@@ -50,40 +46,36 @@ export const STEPS: Step[] = [
   {
     id: 'bio',
     label: 'Remove bio & location',
-    title: 'Remove location and bio details',
     desc: 'Take out your city, employer, school and anything else that narrows down who you are.',
     how: 'Edit your profile. Remove specific places, workplaces, school names and graduation years.',
   },
   {
     id: 'posts',
     label: 'Clean up old posts',
-    title: 'Review old posts and photos',
     desc: 'Old posts can show where you live, work and spend time. Photos can carry hidden location data.',
     how: 'Scroll back through your posts. Delete or hide anything that shows your home, your neighborhood, your workplace or your routine.',
   },
   {
     id: 'friends',
     label: 'Hide friends list',
-    title: 'Hide your friends list',
     desc: "Your connections can identify you even when your profile doesn't.",
     how: 'In privacy settings, look for "Who can see your friends" or "Who can see who you follow" and set it to "Only me".',
   },
   {
     id: 'privacy',
     label: 'Lock down privacy',
-    title: 'Lock down privacy settings',
     desc: 'Most sites start with everything public. Pick the most private option for each setting.',
     how: 'Go to Settings, then Privacy. Check who can see your posts and who can find you by email or phone number.',
   },
 ];
 
 export const PLATFORM_INFO: ColumnInfo = {
-  title: 'Your accounts',
+  label: 'Platform',
   desc: 'Check every platform you have an account on, including ones you stopped using. Old accounts still turn up in searches.',
 };
 
 export const PLAN_INFO: ColumnInfo = {
-  title: 'Keep or delete',
+  label: 'Keep or delete',
   desc: 'Ask whether you still need this account. Deleting it is the most effective way to protect yourself, and then that row is done.',
   how: 'Look for "Delete account" or "Close account" in settings. Most sites wait about 30 days before the account is gone for good.',
 };

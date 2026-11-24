@@ -101,6 +101,17 @@ describe('App', () => {
     expect(headers).toContain('Use a random username');
   });
 
+  it('titles each column popover with the words of its column header', () => {
+    const headers = $$('.th-btn');
+    expect(headers.length).toBeGreaterThan(9);
+    for (const header of headers) {
+      click(header);
+      expect($('#column-info h2')?.textContent).toBe(header.textContent);
+      expect($('#column-info')?.getAttribute('aria-label')).toBe(header.textContent);
+      click(header);
+    }
+  });
+
   it('lists email alias services in the email help', () => {
     click($$('.th-btn').find((b) => b.textContent === 'Use a unique email')!);
     const links = [...root.querySelectorAll<HTMLAnchorElement>('#column-info .pop-links a')];

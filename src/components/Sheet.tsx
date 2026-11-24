@@ -88,7 +88,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
     setInfo({ key, info: content, trigger, ...place });
   };
 
-  const headerButton = (key: string, label: string, content: ColumnInfo) => (
+  const headerButton = (key: string, content: ColumnInfo) => (
     <button
       type="button"
       class="th-btn"
@@ -97,7 +97,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
       onPointerDown={(e) => info?.key === key && e.stopPropagation()}
       onClick={(e) => toggleInfo(key, content, e.currentTarget)}
     >
-      {label}
+      {content.label}
     </button>
   );
 
@@ -166,14 +166,14 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
         <thead>
           <tr>
             <th class="c-platform" scope="col">
-              {headerButton('platform', 'Platform', PLATFORM_INFO)}
+              {headerButton('platform', PLATFORM_INFO)}
             </th>
             <th class="c-plan" scope="col">
-              {headerButton('plan', 'Keep or delete', PLAN_INFO)}
+              {headerButton('plan', PLAN_INFO)}
             </th>
             {STEPS.map((s) => (
               <th key={s.id} class="c-step" scope="col">
-                {headerButton(s.id, s.label, s)}
+                {headerButton(s.id, s)}
               </th>
             ))}
             <th />
@@ -192,7 +192,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           class="pop"
           id="column-info"
           role="dialog"
-          aria-label={info.info.title}
+          aria-label={info.info.label}
           ref={pop}
           style={{
             left: `${info.left}px`,
@@ -201,7 +201,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
             maxHeight: `${info.maxHeight}px`,
           }}
         >
-          <h2>{info.info.title}</h2>
+          <h2>{info.info.label}</h2>
           <p>{info.info.desc}</p>
           {info.info.how && (
             <p class="how">

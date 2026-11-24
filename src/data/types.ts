@@ -29,8 +29,8 @@ export interface ResourceLink {
 
 /** What a column's popover explains. */
 export interface ColumnInfo {
-  /** Popover heading */
-  title: string;
+  /** Column header, and the heading of its popover. Steps start with what to do. */
+  label: string;
   desc: string;
   how?: string;
   /** Random ideas to copy, made on the device. */
@@ -40,6 +40,4 @@ export interface ColumnInfo {
 
 export interface Step extends ColumnInfo {
   id: StepId;
-  /** Column header. Starts with what to do. */
-  label: string;
 }
