@@ -32,6 +32,7 @@
   --col-platform: 252px;
   --col-plan: 146px;
   --col-step: 80px;
+  --col-extra: 236px;
   --row-h: 40px;
   --thead-h: 58px;
 
@@ -158,10 +159,11 @@ button, input { font: inherit; color: inherit; }
   scroll-padding-top: calc(var(--thead-h) + 36px); scroll-padding-left: var(--col-platform);
 }
 .grid { border-collapse: separate; border-spacing: 0; table-layout: fixed; width: 100%; font-size: 13.5px;
-  min-width: calc(var(--col-platform) + var(--col-plan) + 8 * var(--col-step) + 16px); }
+  min-width: calc(var(--col-platform) + var(--col-plan) + 8 * var(--col-step) + var(--col-extra)); }
 .grid col.col-platform { width: var(--col-platform); }
 .grid col.col-plan { width: var(--col-plan); }
 .grid col.col-step { width: var(--col-step); }
+.grid col.col-extra { width: var(--col-extra); }
 .grid th, .grid td { padding: 0; height: var(--row-h); border-bottom: 1px solid var(--line); background: var(--surface); vertical-align: middle; }
 
 .grid thead th {
@@ -182,6 +184,10 @@ button, input { font: inherit; color: inherit; }
 }
 .grid .c-plan { text-align: center; border-right: 1px solid var(--line); }
 .grid .c-step { border-right: 1px solid var(--line); }
+/* Right of the last step: a short pointer to Block Party on the platforms it supports. */
+.grid .c-extra { padding: 0 12px; }
+.bp-note { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.bp-note a { color: var(--ink-2); font-weight: 600; text-underline-offset: 2px; }
 
 .grp th {
   position: sticky; top: var(--thead-h); z-index: 2; height: 36px; text-align: left;
@@ -296,6 +302,9 @@ img.logo { object-fit: contain; }
 .add-row td { height: 52px; }
 .add-in { position: sticky; left: 0; display: flex; align-items: center; gap: 10px; padding-left: var(--gut-l); padding-right: 12px; width: min(580px, calc(100vw - 8px)); }
 .add-note { color: var(--muted); font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* No search results: the message on one line, the Add button under it. */
+.add-in.stacked { flex-direction: column; align-items: flex-start; gap: 8px; padding-block: 14px; }
+.add-in.stacked .add-note { white-space: normal; }
 
 /* ---------- Footer, inside the scroller after the sheet ---------- */
 .foot {
@@ -304,6 +313,8 @@ img.logo { object-fit: contain; }
   font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between;
 }
 .foot p { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.clear-actions { display: inline-flex; gap: 8px; }
+.modal .clear-data { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
 .foot-links { display: flex; flex-wrap: wrap; gap: 6px 16px; }
 .foot a { color: var(--ink-2); text-underline-offset: 2px; }
 
@@ -349,7 +360,7 @@ img.logo { object-fit: contain; }
 
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
-  :root { --col-platform: 178px; --col-plan: 128px; --col-step: 66px; --row-h: 44px; }
+  :root { --col-platform: 178px; --col-plan: 128px; --col-step: 66px; --col-extra: 232px; --row-h: 44px; }
   .bar { padding-block: 10px; }
   .summary { order: 3; flex-basis: 100%; }
   .meter { width: 96px; }

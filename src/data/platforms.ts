@@ -7,22 +7,24 @@ import type { Platform } from './types';
  * - `icon`: a simple-icons slug (https://simpleicons.org). Run `pnpm logos` after adding one.
  * - `image`: a file in public/logos/.
  * Leave both out and the sheet shows the platform's first letter.
+ *
+ * `blockParty`: Block Party (blockpartyapp.com) can lock down this platform's privacy settings.
  */
 export const PLATFORMS: Platform[] = [
   // Highest priority
-  { id: 'facebook', name: 'Facebook', priority: 'highest', icon: 'facebook', url: 'https://facebook.com', why: 'Can reveal your social network, location, and photos' },
-  { id: 'linkedin', name: 'LinkedIn', priority: 'highest', icon: 'linkedin', url: 'https://linkedin.com', why: 'Can reveal your current employer, location, and social network' },
-  { id: 'instagram', name: 'Instagram', priority: 'highest', icon: 'instagram', url: 'https://instagram.com', why: 'Can reveal your social network and location' },
-  { id: 'venmo', name: 'Venmo', priority: 'highest', icon: 'venmo', url: 'https://venmo.com', why: 'Can reveal where you most frequently spend time and your activities' },
-  { id: 'google', name: 'Google Account', priority: 'highest', image: '/logos/google.svg', url: 'https://myaccount.google.com', why: 'Can reveal your profile picture and make it easier to identify you on other platforms' },
-  { id: 'googlemaps', name: 'Google Maps Reviews', priority: 'highest', image: '/logos/googlemaps.svg', url: 'https://maps.google.com', why: 'Reviews can reveal where you live and visit' },
-  { id: 'reddit', name: 'Reddit', priority: 'highest', icon: 'reddit', url: 'https://reddit.com', why: 'Can reveal your interests and community memberships' },
-  { id: 'youtube', name: 'YouTube', priority: 'highest', icon: 'youtube', url: 'https://youtube.com', why: 'Can reveal your interests and possibly your location' },
-  { id: 'tiktok', name: 'TikTok', priority: 'highest', icon: 'tiktok', url: 'https://tiktok.com', why: 'Can reveal location and social network' },
-  { id: 'snapchat', name: 'SnapChat', priority: 'highest', icon: 'snapchat', url: 'https://snapchat.com', why: 'Can reveal location and social network' },
-  { id: 'twitter', name: 'X / Twitter', priority: 'highest', icon: 'x', url: 'https://x.com', why: 'Can reveal your social network and location' },
-  { id: 'bluesky', name: 'Bluesky', priority: 'highest', icon: 'bluesky', url: 'https://bsky.app', why: 'Can reveal location and social network' },
-  { id: 'strava', name: 'Strava', priority: 'highest', icon: 'strava', url: 'https://strava.com', why: 'Can reveal your home address through activity patterns' },
+  { id: 'facebook', name: 'Facebook', priority: 'highest', icon: 'facebook', url: 'https://facebook.com', why: 'Can reveal your social network, location, and photos', blockParty: true },
+  { id: 'linkedin', name: 'LinkedIn', priority: 'highest', icon: 'linkedin', url: 'https://linkedin.com', why: 'Can reveal your current employer, location, and social network', blockParty: true },
+  { id: 'instagram', name: 'Instagram', priority: 'highest', icon: 'instagram', url: 'https://instagram.com', why: 'Can reveal your social network and location', blockParty: true },
+  { id: 'venmo', name: 'Venmo', priority: 'highest', icon: 'venmo', url: 'https://venmo.com', why: 'Can reveal where you most frequently spend time and your activities', blockParty: true },
+  { id: 'google', name: 'Google Account', priority: 'highest', image: '/logos/google.svg', url: 'https://myaccount.google.com', why: 'Can reveal your profile picture and make it easier to identify you on other platforms', blockParty: true },
+  { id: 'googlemaps', name: 'Google Maps Reviews', priority: 'highest', image: '/logos/googlemaps.svg', url: 'https://maps.google.com', why: 'Reviews can reveal where you live and visit', blockParty: true },
+  { id: 'reddit', name: 'Reddit', priority: 'highest', icon: 'reddit', url: 'https://reddit.com', why: 'Can reveal your interests and community memberships', blockParty: true },
+  { id: 'youtube', name: 'YouTube', priority: 'highest', icon: 'youtube', url: 'https://youtube.com', why: 'Can reveal your interests and possibly your location', blockParty: true },
+  { id: 'tiktok', name: 'TikTok', priority: 'highest', icon: 'tiktok', url: 'https://tiktok.com', why: 'Can reveal location and social network', blockParty: true },
+  { id: 'snapchat', name: 'SnapChat', priority: 'highest', icon: 'snapchat', url: 'https://snapchat.com', why: 'Can reveal location and social network', blockParty: true },
+  { id: 'twitter', name: 'X / Twitter', priority: 'highest', icon: 'x', url: 'https://x.com', why: 'Can reveal your social network and location', blockParty: true },
+  { id: 'bluesky', name: 'Bluesky', priority: 'highest', icon: 'bluesky', url: 'https://bsky.app', why: 'Can reveal location and social network', blockParty: true },
+  { id: 'strava', name: 'Strava', priority: 'highest', icon: 'strava', url: 'https://strava.com', why: 'Can reveal your home address through activity patterns', blockParty: true },
 
   // High priority
   { id: 'partiful', name: 'Partiful', priority: 'high', image: '/logos/partiful.jpeg', url: 'https://partiful.com', why: 'Past events can reveal your address and friends' },

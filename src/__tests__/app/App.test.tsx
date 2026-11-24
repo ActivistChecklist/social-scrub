@@ -106,6 +106,43 @@ describe('App', () => {
     expect(dialog.open).toBe(false);
   });
 
+  it('can clear all data from the privacy note', () => {
+    click($('tr[data-id=reddit] .pc-btn'));
+    click($('.privacy-btn'));
+    const dialog = $<HTMLDialogElement>('dialog.modal')!;
+    click([...dialog.querySelectorAll('button')].find((b) => b.textContent === 'Clear all data')!);
+    click([...dialog.querySelectorAll('button')].find((b) => b.textContent === 'Clear everything')!);
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    expect(dialog.textContent).toContain('Cleared.');
+  });
+
+  it('puts the Add button on its own line when a search finds nothing', () => {
+    type($<HTMLInputElement>('#search')!, 'Ravelry');
+    expect($('.add-in')?.classList.contains('stacked')).toBe(true);
+    type($<HTMLInputElement>('#search')!, 'face');
+    expect($('.add-in')?.classList.contains('stacked')).toBe(false);
+  });
+
+  it('points to Block Party next to Privacy settings on the platforms it supports', () => {
+    const note = (id: string) => $(`tr[data-id=${id}] .bp-note`);
+    expect(note('facebook')?.textContent).toBe('Block Party can make this easier');
+    expect(note('facebook')?.querySelector('a')?.getAttribute('href')).toBe('https://www.blockpartyapp.com');
+    // Not on platforms Block Party doesn't cover, or on rows that aren't checked.
+    click($('tr[data-id=whatsapp] .pc-btn'));
+    expect(note('whatsapp')).toBeNull();
+    expect(note('reddit')).toBeNull();
+    // Gone once the privacy settings step is marked, or when deleting.
+    click($('tr[data-id=facebook] .cell[data-focus=step-privacy]'));
+    expect(note('facebook')).toBeNull();
+    click($('tr[data-id=instagram] [data-v=delete]'));
+    expect(note('instagram')).toBeNull();
+  });
+
+  it('links to the contact page from the footer', () => {
+    const contact = $$('.foot-links a').find((a) => a.textContent === 'Contact') as HTMLAnchorElement;
+    expect(contact.href).toBe('https://activistchecklist.org/contact/');
+  });
+
   it('shows the reason on unchecked rows', () => {
     expect($('tr[data-id=reddit] .why')?.textContent).toBe('Can reveal your interests and community memberships');
   });

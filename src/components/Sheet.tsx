@@ -137,7 +137,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           {STEPS.map((s) => (
             <col key={s.id} class="col-step" />
           ))}
-          <col />
+          <col class="col-extra" />
         </colgroup>
         <thead>
           <tr>
@@ -174,7 +174,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           {info.info.tool && (
             <p class="tool">
               {info.info.tool.text}{' '}
-              <a href={info.info.tool.href} target="_blank" rel="noopener noreferrer">
+              <a href={info.info.tool.href} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'help' })}>
                 {info.info.tool.linkText}
               </a>
             </p>
@@ -193,7 +193,7 @@ function AddRow({ query, found, onAdd }: { query: string; found: number; onAdd: 
   return (
     <tr class="add-row">
       <td colSpan={COLUMN_COUNT}>
-        <div class="add-in">
+        <div class={typed && !found ? 'add-in stacked' : 'add-in'}>
           {typed ? (
             <>
               <span class="add-note">{found ? 'Not the one you meant?' : `No listed platform matches "${typed}".`}</span>

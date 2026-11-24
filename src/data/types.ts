@@ -11,6 +11,8 @@ export interface Platform {
   url?: string;
   /** One line on what this platform can reveal about someone */
   why?: string;
+  /** Block Party can lock down this platform's privacy settings */
+  blockParty?: boolean;
 }
 
 export type StepId = 'name' | 'photo' | 'username' | 'email' | 'bio' | 'posts' | 'friends' | 'privacy';

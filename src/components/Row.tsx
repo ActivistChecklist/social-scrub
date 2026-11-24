@@ -1,5 +1,6 @@
 import { STEPS } from '../data/steps';
 import type { Platform, Step, StepId } from '../data/types';
+import { track } from '../lib/events';
 import { statusOf, type Entry, type Mark, type Plan } from '../lib/state';
 import { Logo } from './Logo';
 import { StatusIcon } from './StatusIcon';
@@ -23,6 +24,8 @@ function stepHint(step: Step, mark: Mark | undefined): string {
 const MARK_WORD = { done: 'done', skipped: 'skipped' } as const;
 
 export const COLUMN_COUNT = STEPS.length + 3;
+
+const BLOCK_PARTY_URL = 'https://www.blockpartyapp.com';
 
 export function Row({ platform: p, entry, act }: { platform: Platform; entry: Entry | undefined; act: RowActions }) {
   const checked = entry?.checked === true;
@@ -111,7 +114,16 @@ export function Row({ platform: p, entry, act }: { platform: Platform; entry: En
           )}
         </td>
       )}
-      <td />
+      <td class="c-extra">
+        {checked && entry && p.blockParty && entry.plan === 'keep' && !entry.steps.privacy && (
+          <span class="bp-note">
+            <a href={BLOCK_PARTY_URL} target="_blank" rel="noopener noreferrer" onClick={() => track('open_block_party', { from: 'row' })}>
+              Block Party
+            </a>{' '}
+            can make this easier
+          </span>
+        )}
+      </td>
     </tr>
   );
 }
