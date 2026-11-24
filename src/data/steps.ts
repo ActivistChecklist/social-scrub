@@ -34,7 +34,7 @@ export const STEPS: Step[] = [
     desc: "Give each site its own address so a leaked email can't tie your accounts together.",
     how: 'If you use Gmail, add "+sitename" before the @, like alex+facebook@gmail.com. Mail still reaches your inbox. For more privacy, use an alias service.',
     links: [
-      { name: 'DuckDuckGo Email Protection', note: 'makes free addresses that forward to your inbox.', href: 'https://duckduckgo.com/email/' },
+      { name: 'Qwacky', note: 'is a Chrome extension that makes free DuckDuckGo addresses that forward to your inbox.', href: 'https://chromewebstore.google.com/detail/qwacky/kieehbhdbincplacegpjdkoglfakboeo' },
       { name: 'Firefox Relay', note: 'makes free forwarding addresses, from Mozilla.', href: 'https://relay.firefox.com/' },
       { name: 'SimpleLogin', note: 'is an open-source alias service from Proton.', href: 'https://simplelogin.io/' },
       { name: 'The Gmail + trick', note: 'is explained by Google here.', href: 'https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html' },
