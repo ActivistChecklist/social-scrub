@@ -29,7 +29,6 @@ const MARK_WORD = { done: 'done', skipped: 'skipped' } as const;
 
 export const COLUMN_COUNT = STEPS.length + 3;
 
-
 export function Row({ platform: p, entry, act }: { platform: Platform; entry: Entry | undefined; act: RowActions }) {
   const checked = entry?.checked === true;
   const status = statusOf(entry);

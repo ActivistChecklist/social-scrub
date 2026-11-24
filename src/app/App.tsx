@@ -127,22 +127,22 @@ export function App() {
     <div class="app">
       <div class={topAway ? 'top away' : 'top'} ref={top}>
         <Header
-        state={state}
-        onClearAll={clearAll}
-        onDownload={(format) => {
-          downloadExport(current.current, format);
-          track('download', { format });
-        }}
-      />
-      <Toolbar
-        query={query}
-        onQuery={setQuery}
-        onlyMine={state.onlyMine}
-        onOnlyMine={(on) => {
-          if (commit(setOnlyMine(current.current, on))) track('filter_checked', { on });
-        }}
-        onAdd={(name) => addPlatform(name, 'toolbar')}
-      />
+          state={state}
+          onClearAll={clearAll}
+          onDownload={(format) => {
+            downloadExport(current.current, format);
+            track('download', { format });
+          }}
+        />
+        <Toolbar
+          query={query}
+          onQuery={setQuery}
+          onlyMine={state.onlyMine}
+          onOnlyMine={(on) => {
+            if (commit(setOnlyMine(current.current, on))) track('filter_checked', { on });
+          }}
+          onAdd={(name) => addPlatform(name, 'toolbar')}
+        />
       </div>
       <Sheet state={state} query={query} act={act} scroller={scroller} onAdd={addPlatform} onClearAll={clearAll} />
     </div>
