@@ -26,6 +26,8 @@ export interface AppState {
   custom: CustomPlatform[];
   nextOrder: number;
   onlyMine: boolean;
+  /** Shows a random name and username under those two steps on each row. */
+  showIdeas: boolean;
 }
 
 export type Status = 'unchecked' | 'not-started' | 'in-progress' | 'done' | 'to-delete' | 'deleted';
@@ -37,7 +39,7 @@ export function createInitialState(): AppState {
   STARTERS.forEach((id, i) => {
     entries[id] = { checked: true, plan: 'keep', steps: {}, deleted: false, order: i + 1 };
   });
-  return { version: 2, entries, custom: [], nextOrder: STARTERS.length + 1, onlyMine: false };
+  return { version: 2, entries, custom: [], nextOrder: STARTERS.length + 1, onlyMine: false, showIdeas: false };
 }
 
 export function customToPlatform(c: CustomPlatform): Platform {
@@ -118,6 +120,10 @@ export function toggleDeleted(state: AppState, id: string): AppState {
 
 export function setOnlyMine(state: AppState, onlyMine: boolean): AppState {
   return { ...state, onlyMine };
+}
+
+export function setShowIdeas(state: AppState, showIdeas: boolean): AppState {
+  return state.showIdeas === showIdeas ? state : { ...state, showIdeas };
 }
 
 export function cleanName(raw: string): string {

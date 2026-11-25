@@ -13,6 +13,7 @@ export const EVENT_NAMES = [
   'add_platform',
   'remove_platform',
   'filter_checked',
+  'show_ideas',
   'open_help',
   'open_privacy',
   'open_block_party',

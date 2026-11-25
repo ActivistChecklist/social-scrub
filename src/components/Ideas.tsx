@@ -1,37 +1,69 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { track } from '../lib/events';
 import { nameIdeas, usernameIdeas } from '../lib/ideas';
+import { CheckIcon, CopyIcon, RefreshIcon } from './icons';
 
-/** A few random names or usernames to copy, with a button for more. */
-export function Ideas({ kind }: { kind: 'names' | 'usernames' }) {
+export type IdeaKind = 'names' | 'usernames';
+
+/**
+ * A few random names or usernames to copy. The button for new ones sits beside the heading,
+ * so it stays in the same place however long the ideas are.
+ */
+export function Ideas({ kind }: { kind: IdeaKind }) {
   const make = () => (kind === 'names' ? nameIdeas(3) : usernameIdeas(3));
   const [ideas, setIdeas] = useState(make);
-  const [copied, setCopied] = useState<string | null>(null);
 
-  const copy = async (idea: string) => {
+  return (
+    <div class="ideas">
+      <div class="ideas-head">
+        <b>{kind === 'names' ? 'Name ideas' : 'Username ideas'}</b>
+        <button type="button" class="btn btn-xs ideas-new" onClick={() => setIdeas(make())}>
+          <RefreshIcon />
+          New ideas
+        </button>
+      </div>
+      <div class="idea-list" aria-live="polite">
+        {ideas.map((idea) => (
+          <IdeaChip key={idea} idea={idea} kind={kind} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * One idea. Clicking copies it, and the copy icon turns into a check for a moment.
+ * `inline` is for the idea shown in a row, under the step's box.
+ */
+export function IdeaChip({ idea, kind, inline = false }: { idea: string; kind: IdeaKind; inline?: boolean }) {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const t = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(t);
+  }, [copied]);
+
+  const copy = async () => {
     try {
       await navigator.clipboard.writeText(idea);
-      setCopied(idea);
-      setTimeout(() => setCopied((c) => (c === idea ? null : c)), 1500);
-      track('copy_idea', { kind });
+      setCopied(true);
+      track('copy_idea', { kind, from: inline ? 'row' : 'help' });
     } catch {
       // Copying can be blocked. The idea is still on screen to type or select.
     }
   };
 
   return (
-    <div class="ideas">
-      <b>{kind === 'names' ? 'Name ideas' : 'Username ideas'}</b>
-      <div class="idea-list">
-        {ideas.map((idea) => (
-          <button key={idea} type="button" class="idea" onClick={() => copy(idea)} aria-label={`Copy ${idea}`}>
-            {copied === idea ? 'Copied' : idea}
-          </button>
-        ))}
-        <button type="button" class="link-btn idea-more" onClick={() => setIdeas(make())}>
-          More
-        </button>
-      </div>
-    </div>
+    <button
+      type="button"
+      class={['idea', inline && 'idea-inline', copied && 'copied'].filter(Boolean).join(' ')}
+      onClick={copy}
+      aria-label={`${copied ? 'Copied' : 'Copy'} ${idea}`}
+      data-focus={inline ? `idea-${kind}` : undefined}
+      data-tip={inline ? 'Click to copy' : undefined}
+    >
+      <span class="idea-text">{idea}</span>
+      {copied ? <CheckIcon /> : <CopyIcon />}
+    </button>
   );
 }

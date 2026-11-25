@@ -67,6 +67,7 @@ describe('parseState', () => {
       version: 2,
       nextOrder: 'x',
       onlyMine: 'yes',
+      showIdeas: 1,
       custom: [
         { id: 'custom-ok', name: '  Ravelry ' },
         { id: '<script>', name: 'bad id' },
@@ -86,6 +87,7 @@ describe('parseState', () => {
     expect(Object.keys(s!.entries).sort()).toEqual(['custom-ok', 'reddit']);
     expect(s!.nextOrder).toBe(5);
     expect(s!.onlyMine).toBe(false);
+    expect(s!.showIdeas).toBe(false);
   });
 
   it('rejects other versions', () => {

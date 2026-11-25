@@ -3,6 +3,7 @@ import type { Platform, StepId } from '../data/types';
 import { track } from '../lib/events';
 import { statusOf, type Entry, type Mark, type Plan } from '../lib/state';
 import { BLOCK_PARTY_URL } from './BlockPartyNote';
+import { IdeaChip, type IdeaKind } from './Ideas';
 import { QuestionIcon } from './icons';
 import { Logo } from './Logo';
 import { StatusIcon } from './StatusIcon';
@@ -29,16 +30,25 @@ const MARK_WORD = { done: 'done', skipped: 'skipped' } as const;
 
 export const COLUMN_COUNT = STEPS.length + 3;
 
+/** A random name and username shown under those two steps when the toolbar switch is on. */
+export interface RowIdeas {
+  name: string;
+  username: string;
+}
+
+const IDEA_STEPS: Partial<Record<StepId, IdeaKind>> = { name: 'names', username: 'usernames' };
+
 /** Cyd backs up and deletes old posts on X and Bluesky. */
 const CYD_URL = 'https://cyd.social/';
 
-export function Row({ platform: p, entry, act }: { platform: Platform; entry: Entry | undefined; act: RowActions }) {
+export function Row({ platform: p, entry, act, ideas }: { platform: Platform; entry: Entry | undefined; act: RowActions; ideas?: RowIdeas }) {
   const checked = entry?.checked === true;
   const status = statusOf(entry);
   const custom = p.priority === 'custom';
+  const showIdeas = ideas !== undefined && checked && entry?.plan === 'keep';
 
   return (
-    <tr class={`row st-${status}${checked ? '' : ' dim'}`} data-id={p.id}>
+    <tr class={`row st-${status}${checked ? '' : ' dim'}${showIdeas ? ' with-ideas' : ''}`} data-id={p.id}>
       <td class="c-platform">
         <div class="pc">
           <button
@@ -89,6 +99,8 @@ export function Row({ platform: p, entry, act }: { platform: Platform; entry: En
           ) : (
             STEPS.map((s) => {
               const mark = entry.steps[s.id];
+              // Once the box is marked, done or skipped, the idea has done its job.
+              const ideaKind = showIdeas && !mark ? IDEA_STEPS[s.id] : undefined;
               return (
                 <td class="c-step" key={s.id}>
                   <button
@@ -100,6 +112,7 @@ export function Row({ platform: p, entry, act }: { platform: Platform; entry: En
                     aria-label={`${p.name}, ${s.label}: ${mark ? MARK_WORD[mark] : 'not done'}`}
                     onClick={() => act.step(p.id, s.id)}
                   />
+                  {ideaKind && ideas && <IdeaChip idea={ideaKind === 'names' ? ideas.name : ideas.username} kind={ideaKind} inline />}
                 </td>
               );
             })

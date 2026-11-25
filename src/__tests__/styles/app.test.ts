@@ -20,3 +20,19 @@ describe('dark colors', () => {
     expect(fromMenu).toEqual(fromDevice);
   });
 });
+
+describe('row tints', () => {
+  it('color the whole row, green when finished and red while waiting to be deleted', () => {
+    expect(css).toContain('.row.st-done td, .row.st-deleted td { background: var(--done-bg);');
+    expect(css).toContain('.row.st-to-delete td { background: var(--del-bg);');
+  });
+
+  it('stay tinted on hover, in a deeper shade of the same color', () => {
+    expect(css).toContain('.row.st-done:hover td, .row.st-deleted:hover td { background: var(--done-bg-hover); }');
+    expect(css).toContain('.row.st-to-delete:hover td { background: var(--del-bg-hover); }');
+    for (const palette of [tokens(':root'), tokens(':root[data-theme="dark"]')]) {
+      expect(palette['--done-bg-hover']).not.toBe(palette['--done-bg']);
+      expect(palette['--del-bg-hover']).not.toBe(palette['--del-bg']);
+    }
+  });
+});

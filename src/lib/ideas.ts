@@ -1,4 +1,4 @@
-import { ADJECTIVES, FIRST_NAMES, LAST_NAMES, NOUNS } from '../data/wordlists';
+import { ADJECTIVES, FIRST_NAME_GROUPS, LAST_NAMES, NOUNS } from '../data/wordlists';
 
 /** X allows 15 characters, the shortest limit of the big platforms. */
 export const MAX_USERNAME = 15;
@@ -21,9 +21,12 @@ function unique(count: number, make: () => string | null): string[] {
   return [...out];
 }
 
-/** Display names like "Jordan Ellis". Made on the device; nothing is sent anywhere. */
+/**
+ * Display names like "Jordan Ellis". Made on the device; nothing is sent anywhere.
+ * The first name comes from the femme, masculine or gender-neutral list, picked evenly.
+ */
 export function nameIdeas(count = 3, random = secureRandom): string[] {
-  return unique(count, () => `${pick(FIRST_NAMES, random)} ${pick(LAST_NAMES, random)}`);
+  return unique(count, () => `${pick(pick(FIRST_NAME_GROUPS, random), random)} ${pick(LAST_NAMES, random)}`);
 }
 
 const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();

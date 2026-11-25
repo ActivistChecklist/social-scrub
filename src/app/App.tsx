@@ -17,6 +17,7 @@ import {
   removeCustom,
   setOnlyMine,
   setPlan,
+  setShowIdeas,
   statusOf,
   toggleChecked,
   toggleDeleted,
@@ -149,6 +150,10 @@ export function App() {
           onlyMine={state.onlyMine}
           onOnlyMine={(on) => {
             if (commit(setOnlyMine(current.current, on))) track('filter_checked', { on });
+          }}
+          showIdeas={state.showIdeas}
+          onShowIdeas={(on) => {
+            if (commit(setShowIdeas(current.current, on))) track('show_ideas', { on });
           }}
           onAdd={(name) => addPlatform(name, 'toolbar')}
         />

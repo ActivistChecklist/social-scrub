@@ -71,7 +71,7 @@ Run a single test file: `pnpm test:run src/__tests__/lib/storage.test.ts`
 index.html, privacy.html   The two pages
 src/main.tsx               Mounts <App />
 src/app/App.tsx            Owns state, saves on every change, runs row animations and focus restore
-src/components/            Header (summary, privacy note, Download, theme menu), Toolbar (search, Add platform, filter),
+src/components/            Header (summary, privacy note, Download, theme menu), Toolbar (search, Add platform, filter, ideas switch),
                            Sheet (table, groups, column popovers, add row), Row, StatusIcon, Logo, Footer
 src/hooks/                 useTips (hover hints), useDismiss (closing popovers)
 src/lib/state.ts           Pure state functions: check, plan, cycle steps, add/remove custom platforms

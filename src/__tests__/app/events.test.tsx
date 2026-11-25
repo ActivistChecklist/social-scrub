@@ -57,4 +57,20 @@ describe('anonymous counts', () => {
     expect(sent.map(([name]) => name)).toContain('add_platform');
     for (const secret of ['reddit', 'facebook', 'church', 'custom-']) expect(all).not.toContain(secret);
   });
+
+  it('counts turning on ideas and copying one, but never sends the idea itself', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.resolve() }, configurable: true });
+    act(() => {
+      const input = $<HTMLInputElement>('#show-ideas')!;
+      input.checked = true;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    const chip = $<HTMLButtonElement>('tr[data-id=facebook] .idea-inline')!;
+    await act(async () => chip.click());
+    expect(sent).toEqual([
+      ['show_ideas', { on: true }],
+      ['copy_idea', { kind: 'names', from: 'row' }],
+    ]);
+    expect(JSON.stringify(sent)).not.toContain(chip.textContent!.split(' ')[0]);
+  });
 });

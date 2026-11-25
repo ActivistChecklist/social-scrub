@@ -1,6 +1,6 @@
 import { render } from 'preact';
 import { act } from 'preact/test-utils';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../app/App';
 import { STARTERS } from '../../data/steps';
 import { STORAGE_KEY } from '../../lib/storage';
@@ -101,6 +101,17 @@ describe('App', () => {
     expect(headers).toContain('Use a random username');
   });
 
+  it('titles each column popover with the words of its column header', () => {
+    const headers = $$('.th-btn');
+    expect(headers.length).toBeGreaterThan(9);
+    for (const header of headers) {
+      click(header);
+      expect($('#column-info h2')?.textContent).toBe(header.textContent);
+      expect($('#column-info')?.getAttribute('aria-label')).toBe(header.textContent);
+      click(header);
+    }
+  });
+
   it('lists email alias services in the email help', () => {
     click($$('.th-btn').find((b) => b.textContent === 'Use a unique email')!);
     const links = [...root.querySelectorAll<HTMLAnchorElement>('#column-info .pop-links a')];
@@ -124,6 +135,29 @@ describe('App', () => {
     const ideas = [...root.querySelectorAll<HTMLButtonElement>('#column-info .idea')].map((b) => b.textContent!);
     expect(ideas).toHaveLength(3);
     for (const idea of ideas) expect(idea).toMatch(/^[A-Za-z0-9]{1,15}$/);
+  });
+
+  it('keeps the New ideas button beside the heading, outside the list it refreshes', () => {
+    click($$('.th-btn').find((b) => b.textContent === 'Change display name')!);
+    const button = $<HTMLButtonElement>('#column-info .ideas-new')!;
+    expect(button.textContent).toBe('New ideas');
+    expect(button.closest('.ideas-head')).not.toBeNull();
+    expect(button.closest('.idea-list')).toBeNull();
+    click(button);
+    expect($$('#column-info .idea')).toHaveLength(3);
+    expect($('#column-info .ideas-new')).toBe(button);
+  });
+
+  it('copies an idea when it is clicked and marks it copied', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    click($$('.th-btn').find((b) => b.textContent === 'Change display name')!);
+    const chip = $<HTMLButtonElement>('#column-info .idea')!;
+    const name = chip.textContent!;
+    await act(async () => chip.click());
+    expect(writeText).toHaveBeenCalledWith(name);
+    expect(chip.classList.contains('copied')).toBe(true);
+    expect(chip.getAttribute('aria-label')).toBe(`Copied ${name}`);
   });
 
   it('keeps the platform and privacy settings help short', () => {
@@ -152,6 +186,46 @@ describe('App', () => {
     click([...dialog.querySelectorAll('button')].find((b) => b.textContent === 'Clear everything')!);
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
     expect(dialog.textContent).toContain('Cleared.');
+  });
+
+  it('shows a name and username idea under those steps on each kept row when the switch is on', () => {
+    const toggle = () => act(() => {
+      const input = $<HTMLInputElement>('#show-ideas')!;
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    const idea = (id: string, step: string) => $(`tr[data-id=${id}] .cell[data-focus=step-${step}] + .idea-inline`)?.textContent;
+    expect($$('.idea-inline')).toHaveLength(0);
+
+    toggle();
+    expect($('.grid')?.classList.contains('ideas-on')).toBe(true);
+    expect(idea('facebook', 'name')).toMatch(/^[A-Z][A-Za-z-]+ [A-Z][A-Za-z-]+$/);
+    expect(idea('facebook', 'username')).toMatch(/^[A-Za-z0-9]{1,15}$/);
+    // One under each of the two steps, and none on rows that aren't checked.
+    expect($$('tr[data-id=facebook] .idea-inline')).toHaveLength(2);
+    expect($$('tr[data-id=reddit] .idea-inline')).toHaveLength(0);
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).showIdeas).toBe(true);
+
+    // A row keeps its ideas while other things change, and a delete row has none.
+    const before = idea('facebook', 'name');
+    click($('tr[data-id=facebook] .cell[data-focus=step-email]'));
+    expect(idea('facebook', 'name')).toBe(before);
+    click($('tr[data-id=instagram] [data-v=delete]'));
+    expect($$('tr[data-id=instagram] .idea-inline')).toHaveLength(0);
+
+    // Marking the box, done or skipped, hides that step's idea. Clearing it brings the same idea back.
+    const nameBox = () => $('tr[data-id=facebook] .cell[data-focus=step-name]')!;
+    click(nameBox());
+    expect(idea('facebook', 'name')).toBeUndefined();
+    expect(idea('facebook', 'username')).toBeTruthy();
+    click(nameBox());
+    expect(nameBox().dataset.state).toBe('skipped');
+    expect(idea('facebook', 'name')).toBeUndefined();
+    click(nameBox());
+    expect(idea('facebook', 'name')).toBe(before);
+
+    toggle();
+    expect($$('.idea-inline')).toHaveLength(0);
   });
 
   it('puts the Add button on its own line when a search finds nothing', () => {

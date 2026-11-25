@@ -6,12 +6,13 @@ import { useDismiss } from '../hooks/useDismiss';
 import { useTips } from '../hooks/useTips';
 import { track } from '../lib/events';
 import { moveFocusWithArrows } from '../lib/motion';
+import { nameIdeas, usernameIdeas } from '../lib/ideas';
 import { allPlatforms, isChecked, isFinished, statusOf, type AppState } from '../lib/state';
 import { BlockPartyNote, openBlockPartyNote } from './BlockPartyNote';
 import { Footer } from './Footer';
 import { Ideas } from './Ideas';
 import { ArrowDownIcon } from './icons';
-import { COLUMN_COUNT, Row, type RowActions } from './Row';
+import { COLUMN_COUNT, Row, type RowActions, type RowIdeas } from './Row';
 
 /** Where a platform was added from, for the anonymous counts. */
 export type AddSource = 'search' | 'sheet';
@@ -62,6 +63,18 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
 
   useTips(scroller, tip, state);
 
+  // Each row keeps the same name and username ideas until the page is reloaded. They are never saved.
+  const rowIdeas = useRef(new Map<string, RowIdeas>());
+  const ideasFor = (id: string): RowIdeas | undefined => {
+    if (!state.showIdeas) return undefined;
+    let ideas = rowIdeas.current.get(id);
+    if (!ideas) {
+      ideas = { name: nameIdeas(1)[0], username: usernameIdeas(1)[0] };
+      rowIdeas.current.set(id, ideas);
+    }
+    return ideas;
+  };
+
   const closeInfo = useCallback(
     (reason: 'outside' | 'escape' | 'toggle') => {
       setInfo((open) => {
@@ -88,7 +101,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
     setInfo({ key, info: content, trigger, ...place });
   };
 
-  const headerButton = (key: string, label: string, content: ColumnInfo) => (
+  const headerButton = (key: string, content: ColumnInfo) => (
     <button
       type="button"
       class="th-btn"
@@ -97,7 +110,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
       onPointerDown={(e) => info?.key === key && e.stopPropagation()}
       onClick={(e) => toggleInfo(key, content, e.currentTarget)}
     >
-      {label}
+      {content.label}
     </button>
   );
 
@@ -129,7 +142,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           </th>
         </tr>
         {mine.map((p) => (
-          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} />
+          <Row key={p.id} platform={p} entry={state.entries[p.id]} act={rowAct} ideas={ideasFor(p.id)} />
         ))}
         {showDivider && (
           <tr class="divider" key="divider">
@@ -153,27 +166,27 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
 
   return (
     <main class="sheet" ref={scroller} tabIndex={-1}>
-      <table class="grid" onKeyDown={(e) => moveFocusWithArrows(e, scroller.current)}>
+      <table class={state.showIdeas ? 'grid ideas-on' : 'grid'} onKeyDown={(e) => moveFocusWithArrows(e, scroller.current)}>
         <caption class="visually-hidden">Your accounts and the privacy steps for each one</caption>
         <colgroup>
           <col class="col-platform" />
           <col class="col-plan" />
           {STEPS.map((s) => (
-            <col key={s.id} class="col-step" />
+            <col key={s.id} class={`col-step col-${s.id}`} />
           ))}
           <col class="col-extra" />
         </colgroup>
         <thead>
           <tr>
             <th class="c-platform" scope="col">
-              {headerButton('platform', 'Platform', PLATFORM_INFO)}
+              {headerButton('platform', PLATFORM_INFO)}
             </th>
             <th class="c-plan" scope="col">
-              {headerButton('plan', 'Keep or delete', PLAN_INFO)}
+              {headerButton('plan', PLAN_INFO)}
             </th>
             {STEPS.map((s) => (
               <th key={s.id} class="c-step" scope="col">
-                {headerButton(s.id, s.label, s)}
+                {headerButton(s.id, s)}
               </th>
             ))}
             <th />
@@ -192,7 +205,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
           class="pop"
           id="column-info"
           role="dialog"
-          aria-label={info.info.title}
+          aria-label={info.info.label}
           ref={pop}
           style={{
             left: `${info.left}px`,
@@ -201,7 +214,7 @@ export function Sheet({ state, query, act, scroller, onAdd, onClearAll }: SheetP
             maxHeight: `${info.maxHeight}px`,
           }}
         >
-          <h2>{info.info.title}</h2>
+          <h2>{info.info.label}</h2>
           <p>{info.info.desc}</p>
           {info.info.how && (
             <p class="how">
